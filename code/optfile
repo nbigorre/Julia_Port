@@ -23,16 +23,16 @@ define_netcdf=T
 
 # define_gotm=T|F tells whether GOTM is|isn't coupled to PSOM.
 # (note: it is also needed to define gotm_call in cppdefs.h to allow this option)
-define_gotm=T
+define_gotm=F
 
 # define_parallel=T|F compiles PSOM with openmp|non-openmp flags.
-define_parallel=T
+define_parallel=F
 # (note: only available with ifort)
 
 # define_debug=T|F compiles PSOM with|without debugging options.
 # Debug option is available with define_parallel=F.
 # (note: debugging with gfortran results in better error explanations than with ifort)
-define_debug=T
+define_debug=F
 
 #
 ###########################################################
@@ -41,14 +41,14 @@ define_debug=T
 # .
 # dirc is the directory where 2012_psom has been installed.
 # Example: dirc="/Users/jstudent/ocean_dynamics/2012_psom" 
-dirc=/Users/yuewu/master
+dirc=/home/noe/REPOS/Julia_Port
 
 # netcdf_dir_lib, _dir_inc and _lnk_flag tell where the netcdf libraries may be found, not used if define_netcdf=F
-netcdf_dir_lib=-L/usr/local/lib 
-netcdf_dir_inc=-I/usr/local/include
+netcdf_dir_lib=-L/usr/lib/x86_64
+netcdf_dir_inc=-I/usr/include
 
 #nelnk_flag=-lnetcdff -lnetcdf
-netcdf_lnk_flag=-lnetcdff -lnetcdf -lnetcdf
+netcdf_lnk_flag=-lnetcdff -Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -flto=auto -Wl,-z,relro -Wl,-z,now -lnetcdf -lnetcdf -lm
 
 # gotm_dir_lib and _dir_inc tell where the gotm libraries may be found, not used if define_gotm=F
 # (note: the libraries are compiler dependent)

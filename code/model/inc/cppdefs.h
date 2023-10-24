@@ -8,6 +8,6 @@
 #define file_output
 #define file_output_cdf
 #define file_output_bin
-#define gotm_call
+#undef gotm_call
 #undef  implicit
 #define parallel
