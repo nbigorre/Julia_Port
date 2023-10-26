@@ -344,7 +344,9 @@ echo "# "
 # Building of the executable
 make -C $dirc/code/mkfile $EXE
 #make -C $dirc/code/mkfile clean
-cp $dirc/code/mkfile/$EXE $dirc/code/exe/$exef
+
+./tools/load_jl_files.sh "$dir_alt"
+cp $dirc/code/mkfile/$EXE $dirc/code/exe/$exef/PSOM_LIB.so
 
 echo "#-------------------------------------------------------"
 
@@ -355,7 +357,7 @@ echo "#-------------------------------------------------------"
 list_of_files
 
 echo "# "
-echo "# `ls -al $dirc/code/exe/$exef`"
+echo "# `ls -al $dirc/code/exe/$exef/PSOM_LIB.so`"
 
 rm -f cmp.tmp cmp2.tmp
 

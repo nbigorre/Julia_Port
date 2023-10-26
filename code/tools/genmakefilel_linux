@@ -105,8 +105,8 @@ if [ "$fcomp" = "ifort" ]; then
         else
 
                 # Flags that work for HPC Poseidon
-                fflags_o="-fpp -real-size 64 -mcmodel=large -u"
-                fflags_e="-fpp -real-size 64 -mcmodel=large -u"
+                fflags_o="-fpp -fPIC -real-size 64 -mcmodel=large -u"
+                fflags_e="-fpp -fPIC -real-size 64 -mcmodel=large -u"
 
                 # Flags to profile the code on HPC
 #                fflags_o="-profile-functions -fpp -real-size 64 -mcmodel=large -u"
@@ -225,7 +225,7 @@ cat >>$filt <<EOF
 #----------
 
 \$(EXE) : $maolist 
-	\$(FC) $fflags_e -o \$(EXE) $maolist \$(INCLUDE) \$(LIB_DIR) \$(LNK_FLAGS)
+	\$(FC) $fflags_e -fPIC -shared -o \$(EXE) $maolist \$(INCLUDE) \$(LIB_DIR) \$(LNK_FLAGS)
 
 
 EOF
