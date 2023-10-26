@@ -19,8 +19,9 @@ function advection_and_mixing(m, n, dtimel, step)
     
     heat_flux(T_h, step)
     #@ccall "./PSOM_LIB.so".heat_flux_(pointer(T_h)::Ptr{rc_kind}, Ref(step)::Ptr{Int})::Cvoid
-    
-    @ccall "./PSOM_LIB.so".wind_stress_(pointer(u_w)::Ptr{rc_kind}, pointer(v_w)::Ptr{rc_kind}, Ref(step)::Ptr{Int})::Cvoid
+
+    wind_stress(u_w, v_w, step)
+    #@ccall "./PSOM_LIB.so".wind_stress_(pointer(u_w)::Ptr{rc_kind}, pointer(v_w)::Ptr{rc_kind}, Ref(step)::Ptr{Int})::Cvoid
     
     local uvarx = zeros(rc_kind, (NI + 2, NJ + 2, NK + 2))
     local uvarx_advec = zeros(rc_kind, (NI + 2, NJ + 2, NK + 2))
