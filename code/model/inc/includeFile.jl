@@ -16,4 +16,5 @@ if (!@isdefined(INCLUDE_All))
     include("../src/advect.jl")
     include("../src/mixing_horizontal.jl")
     include("../src/mixing_vertical.jl")
+    include("../src/heat_flux.jl")
 end

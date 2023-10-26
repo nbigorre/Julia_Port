@@ -55,6 +55,9 @@ global const uf = @fortGetArr("uf", rc_kind, (NI + 1, NJ, NK))
 global const vf = @fortGetArr("vf", rc_kind, (NI, NJ + 1, NK))
 global const wf = @fortGetArr("wf", rc_kind, (NI, NJ, NK + 1))
 
+global const swr = @fortGetArr("swr", rc_kind, (NJ+2))
+global const qloss = @fortGetArr("qloss", rc_kind, (NJ+2))
+
 if (cppdefs.implicit)
     global const mat_A = zeros(rc_kind, (NI, NJ, NK, 5))
     global const mat_B = zeros(rc_kind, (NI, NJ, NK, 5))
