@@ -20,7 +20,8 @@ function momentum(pcorr, step)
 
         @fortSet("tsp", dtim[]*1e05,rc_kind)
         
-        @ccall "./PSOM_LIB.so".findzall_()::Cvoid
+        findzall()
+        #@ccall "./PSOM_LIB.so".findzall_()::Cvoid
 
         sigma()
         #@ccall "./PSOM_LIB.so".sigma_()::Cvoid

@@ -40,7 +40,8 @@ function main()
 
     @ccall "./PSOM_LIB.so".meanh_(Ref(NI)::Ptr{Int}, Ref(NJ)::Ptr{Int}, @lkGet("h", rc_kind)::Ptr{rc_kind}, @lkGet("hmean", rc_kind)::Ptr{rc_kind})::Cvoid
 
-    @ccall "./PSOM_LIB.so".sigma_()::Cvoid
+    sigma()
+    #@ccall "./PSOM_LIB.so".sigma_()::Cvoid
     @ccall "./PSOM_LIB.so".staticsigma_()::Cvoid
 
     @ccall "./PSOM_LIB.so".tracerinit_(Ref(0)::Ptr{Int})::Cvoid

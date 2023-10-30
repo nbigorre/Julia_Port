@@ -20,4 +20,5 @@ if (!@isdefined(INCLUDE_All))
     include("../src/wind_stress.jl")
     include("../src/intpol_3rdorder.jl")
     include("../src/sigma_toplayer.jl")
+    include("../src/findz_topmoves.jl")
 end

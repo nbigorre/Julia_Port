@@ -57,6 +57,7 @@ global const gqi = @fortGetArr("gqi", rc_kind, (NI + 1, NJ, NK, 2))
 global const gj = @fortGetArr("gj", rc_kind, (NI, NJ + 1, NK, 2))
 global const gqj = @fortGetArr("gqj", rc_kind, (NI, NJ + 1, NK, 2))
 
+global const zc = @fortGetArr("zc", rc_kind, (NI + 2, NJ + 2, NK + 2))
 global const wx = @fortGetArr("wx", rc_kind, (NI + 2, NJ + 2, NK + 2))
 global const wy = @fortGetArr("wy", rc_kind, (NI + 2, NJ + 2, NK + 2))
 global const wz = @fortGetArr("wz", rc_kind, (NI + 2, NJ + 2, NK + 2))
@@ -107,6 +108,7 @@ global const hdt = @fortGetArr("hdt", rc_kind, (NI + 2, NJ + 2))
 global const g11 = @fortGetArr("g11", rc_kind, (NI + 2, NJ + 2))
 global const g12 = @fortGetArr("g12", rc_kind, (NI + 2, NJ + 2))
 global const g22 = @fortGetArr("g22", rc_kind, (NI + 2, NJ + 2))
+global const D = @fortGetArr("d", rc_kind, (NI + 2, NJ + 2))
 
 global const wfbcb = @fortGetArr("ufbce", rc_kind, (NI, NJ))
 
