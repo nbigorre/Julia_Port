@@ -13,6 +13,7 @@ end
 #preproc allow_particle
 if (cppdefs.allow_particle)
     include("particles.jl")
+    using .particles
 end
 
 # Main decl                                      
@@ -151,6 +152,6 @@ function main()
     end
 end
 
-main()
-#@time main()
+#main()
+@time main()
 #@profview main()

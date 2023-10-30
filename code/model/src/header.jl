@@ -10,6 +10,9 @@ global const rc_kind = Float64
 # SIZE
 include("../inc/size.jl")
 
+
+###############     CONSTANTS     ###############
+
 global const EPS::rc_kind = 0.1e0
 global const FPAR::rc_kind=1e-4
 global const AL::rc_kind=1.e7
@@ -18,6 +21,9 @@ global const LEN::rc_kind=1e5
 global const DL::rc_kind=1e3
 global const R0::rc_kind=1027e0
 global const PI::rc_kind=3.14159265358979323846e0
+global const periodicew=true
+
+###############      ARRAYS       ###############
 
 global const drpx = @fortGetArr("drpx", rc_kind, (NI, NJ, NK))
 global const ru4_Sche = @fortGetArr("ru4_sche", rc_kind, (NI+2,NJ+2,NK))
@@ -27,40 +33,62 @@ global const grpifc = @fortGetArr("grpifc", rc_kind, (NI+1, NJ, NK))
 global const ru2_Sche = @fortGetArr("ru2_sche", rc_kind, (NI+2,NJ+2,NK))
 global const grpjfc = @fortGetArr("grpjfc", rc_kind, (NI, NJ+1, NK))
 global const rv2_Sche = @fortGetArr("rv2_sche", rc_kind, (NI+2,NJ+2,NK))
-global const Jac = @fortGetArr("jac", rc_kind, (NI + 2, NJ + 2, NK + 2))
-global const wz = @fortGetArr("wz", rc_kind, (NI + 2, NJ + 2, NK + 2))
-global const JacInv = @fortGetArr("jacinv", rc_kind, (NI + 2, NJ + 2, NK + 2))
 global const T = @fortGetArr("t", rc_kind, (NI + 2, NJ + 2, NK + 2, 2))
 global const T_ref = @fortGetArr("t_ref", rc_kind, (NI + 2, NJ + 2, NK + 2))
 global const s = @fortGetArr("s", rc_kind, (NI + 2, NJ + 2, NK + 2, 2))
-global const cx = @fortGetArr("cx", rc_kind, (NI + 2, NJ + 2, NK + 2))
 global const u = @fortGetArr("u", rc_kind, (NI + 2, NJ + 2, NK + 2, 2))
-global const cy = @fortGetArr("cy", rc_kind, (NI + 2, NJ + 2, NK + 2))
 global const v = @fortGetArr("v", rc_kind, (NI + 2, NJ + 2, NK + 2, 2))
-global const cz = @fortGetArr("cz", rc_kind, (NI + 2, NJ + 2, NK + 2))
 global const w = @fortGetArr("w", rc_kind, (NI + 2, NJ + 2, NK + 2, 2))
 global const Tr = @fortGetArr("tr", rc_kind, (ntr, NI + 2, NJ + 2, NK + 2, 2))
 global const h = @fortGetArr("h", rc_kind, (NI+2, NJ+2))
 global const oldh = @fortGetArr("oldh", rc_kind, (NI+2, NJ+2))
-global const vor = @fortGetArr("vor", rc_kind, (NI+2,NJ+2,NK+2))
-global const shear = @fortGetArr("shear", rc_kind, (NI+2,NJ+2,NK+2))
-global const strain = @fortGetArr("strain", rc_kind, (NI+2,NJ+2,NK+2))
-global const rho = @fortGetArr("rho", rc_kind, (NI+2,NJ+2,NK+2))
-global const rho_old = @fortGetArr("rho_old", rc_kind, (NI+2, NJ+2, NK+2))
 global const r_sponge = @fortGetArr("r_sponge", rc_kind, (NJ+2))
 global const stress_top = @fortGetArr("stress_top", rc_kind, (NI, NJ))
 global const stress_top_x = @fortGetArr("stress_top_x", rc_kind, (NI, NJ))
 global const stress_top_y = @fortGetArr("stress_top_y", rc_kind, (NI, NJ))
 global const ffc = @fortGetArr("ffc", rc_kind, (NI + 2, NJ + 2))
+
+global const wx = @fortGetArr("wx", rc_kind, (NI + 2, NJ + 2, NK + 2))
+global const wy = @fortGetArr("wy", rc_kind, (NI + 2, NJ + 2, NK + 2))
+global const wz = @fortGetArr("wz", rc_kind, (NI + 2, NJ + 2, NK + 2))
+global const shear = @fortGetArr("shear", rc_kind, (NI+2,NJ+2,NK+2))
+global const strain = @fortGetArr("strain", rc_kind, (NI+2,NJ+2,NK+2))
+global const Jac = @fortGetArr("jac", rc_kind, (NI + 2, NJ + 2, NK + 2))
+global const JacInv = @fortGetArr("jacinv", rc_kind, (NI + 2, NJ + 2, NK + 2))
+global const vor = @fortGetArr("vor", rc_kind, (NI+2,NJ+2,NK+2))
+global const rho = @fortGetArr("rho", rc_kind, (NI+2,NJ+2,NK+2))
+global const rho_old = @fortGetArr("rho_old", rc_kind, (NI+2, NJ+2, NK+2))
+
+global const czf = @fortGetArr("czf", rc_kind, (NI, NJ, NK + 1))
 global const Kz = @fortGetArr("kz", rc_kind, (NI, NJ, NK + 1))
+global const wf = @fortGetArr("wf", rc_kind, (NI, NJ, NK + 1))
+
+global const cx = @fortGetArr("cx", rc_kind, (NI + 2, NJ + 2, NK + 2))
+global const cy = @fortGetArr("cy", rc_kind, (NI + 2, NJ + 2, NK + 2))
+global const cz = @fortGetArr("cz", rc_kind, (NI + 2, NJ + 2, NK + 2))
+
+global const ufbcw = @fortGetArr("ufbcw", rc_kind, (NJ, NK))
+global const ufbce = @fortGetArr("ufbce", rc_kind, (NJ, NK))
+
+
+global const vfbcn = @fortGetArr("vfbcn", rc_kind, (NI, NK))
+global const vfbcs = @fortGetArr("vfbcs", rc_kind, (NI, NK))
+
+global const Jjfc = @fortGetArr("jjfc", rc_kind, (NI, NJ + 1, NK))
+global const cyf = @fortGetArr("cyf", rc_kind, (NI, NJ + 1, NK))
+global const vf = @fortGetArr("vf", rc_kind, (NI, NJ + 1, NK))
+
+global const Jifc = @fortGetArr("jifc", rc_kind, (NI + 1, NJ, NK))
+global const cxf = @fortGetArr("cxf", rc_kind, (NI + 1, NJ, NK))
+global const uf = @fortGetArr("uf", rc_kind, (NI + 1, NJ, NK))
+
 global const zf = @fortGetArr("zf", rc_kind, (NI + 2, NJ + 2, NK + 3))
 global const vy = @fortGetArr("vy", rc_kind, (NI + 2, NJ + 2))
 global const ux = @fortGetArr("ux", rc_kind, (NI + 2, NJ + 2))
-global const uf = @fortGetArr("uf", rc_kind, (NI + 1, NJ, NK))
-global const Jifc = @fortGetArr("jifc", rc_kind, (NI + 1, NJ, NK))
-global const vf = @fortGetArr("vf", rc_kind, (NI, NJ + 1, NK))
-global const Jjfc = @fortGetArr("jjfc", rc_kind, (NI, NJ + 1, NK))
-global const wf = @fortGetArr("wf", rc_kind, (NI, NJ, NK + 1))
+global const uy = @fortGetArr("uy", rc_kind, (NI + 2, NJ + 2))
+global const vx = @fortGetArr("vx", rc_kind, (NI + 2, NJ + 2))
+
+global const wfbcb = @fortGetArr("ufbce", rc_kind, (NI, NJ))
 
 global const swr = @fortGetArr("swr", rc_kind, (NJ+2))
 global const qloss = @fortGetArr("qloss", rc_kind, (NJ+2))
@@ -100,7 +128,6 @@ kaphinv=0e0::rc_kind
 
 
 rect=true
-periodicew=true
 dx=0e0::rc_kind
 dy=0e0::rc_kind
 lv_flat_bottom=true

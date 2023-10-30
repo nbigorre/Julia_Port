@@ -24,7 +24,9 @@ function momentum(pcorr, step)
         @ccall "./PSOM_LIB.so".sigma_()::Cvoid
         advection_and_mixing(ivs[], ivf[], dtim[], step)
         #@ccall "./PSOM_LIB.so".advection_and_mixing_(ivs::Ref{Int}, ivf::Ref{Int}, dtim::Ref{rc_kind}, Ref(step)::Ref{Int})::Cvoid
-        @ccall "./PSOM_LIB.so".intpol_()::Cvoid
+
+        intpol()
+        #@ccall "./PSOM_LIB.so".intpol_()::Cvoid
 
         if (! @fortGet("use_shchepetkin", Bool))
             @ccall "./PSOM_LIB.so".rpevalgrad_song_(ivf::Ref{Int})::Cvoid
