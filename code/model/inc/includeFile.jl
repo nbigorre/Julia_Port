@@ -21,4 +21,5 @@ if (!@isdefined(INCLUDE_All))
     include("../src/intpol_3rdorder.jl")
     include("../src/sigma_toplayer.jl")
     include("../src/findz_topmoves.jl")
+    include("../src/coriolis.jl")
 end

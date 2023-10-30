@@ -46,7 +46,9 @@ function momentum(pcorr, step)
             @inbounds @. @views grpjfc[1:NI, 1:NJ+1, 1:NK] = rv2_Sche[2:NI+1, 1:NJ+1, 1:NK]
         end
         
-        @ccall "./PSOM_LIB.so".coriolis_(ivs::Ref{Int})::Cvoid
+        coriolis(ivs[])
+        #@ccall "./PSOM_LIB.so".coriolis_(ivs::Ref{Int})::Cvoid
+
         @ccall "./PSOM_LIB.so".srcface_(ivs::Ref{Int}, Ref(step)::Ref{Int})::Cvoid
         @ccall "./PSOM_LIB.so".hsolve_(@lkGet("h", rc_kind)::Ref{rc_kind}, @lkGet("oldh", rc_kind)::Ref{rc_kind}, @lkGet("hdt", rc_kind)::Ref{rc_kind}, dtim::Ref{rc_kind})::Cvoid
         @ccall "./PSOM_LIB.so".calcskfc_()::Cvoid

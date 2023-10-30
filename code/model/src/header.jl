@@ -22,12 +22,11 @@ global const DL::rc_kind=1e3
 global const R0::rc_kind=1027e0
 global const PI::rc_kind=3.14159265358979323846e0
 global const periodicew=true
+global const apr::rc_kind=0.6371e0
 
 ###############      ARRAYS       ###############
 
-global const drpx = @fortGetArr("drpx", rc_kind, (NI, NJ, NK))
 global const ru4_Sche = @fortGetArr("ru4_sche", rc_kind, (NI+2,NJ+2,NK))
-global const drpy = @fortGetArr("drpy", rc_kind, (NI, NJ, NK))
 global const rv4_Sche = @fortGetArr("rv4_sche", rc_kind, (NI+2,NJ+2,NK))
 global const grpifc = @fortGetArr("grpifc", rc_kind, (NI+1, NJ, NK))
 global const ru2_Sche = @fortGetArr("ru2_sche", rc_kind, (NI+2,NJ+2,NK))
@@ -41,7 +40,6 @@ global const r_sponge = @fortGetArr("r_sponge", rc_kind, (NJ+2))
 global const stress_top = @fortGetArr("stress_top", rc_kind, (NI, NJ))
 global const stress_top_x = @fortGetArr("stress_top_x", rc_kind, (NI, NJ))
 global const stress_top_y = @fortGetArr("stress_top_y", rc_kind, (NI, NJ))
-global const ffc = @fortGetArr("ffc", rc_kind, (NI + 2, NJ + 2))
 
 global const u = @fortGetArr("u", rc_kind, (NI + 2, NJ + 2, NK + 2, 2))
 global const v = @fortGetArr("v", rc_kind, (NI + 2, NJ + 2, NK + 2, 2))
@@ -57,6 +55,8 @@ global const gqi = @fortGetArr("gqi", rc_kind, (NI + 1, NJ, NK, 2))
 global const gj = @fortGetArr("gj", rc_kind, (NI, NJ + 1, NK, 2))
 global const gqj = @fortGetArr("gqj", rc_kind, (NI, NJ + 1, NK, 2))
 
+global const zf = @fortGetArr("zf", rc_kind, (NI + 2, NJ + 2, NK + 3))
+
 global const zc = @fortGetArr("zc", rc_kind, (NI + 2, NJ + 2, NK + 2))
 global const wx = @fortGetArr("wx", rc_kind, (NI + 2, NJ + 2, NK + 2))
 global const wy = @fortGetArr("wy", rc_kind, (NI + 2, NJ + 2, NK + 2))
@@ -69,6 +69,10 @@ global const vor = @fortGetArr("vor", rc_kind, (NI+2,NJ+2,NK+2))
 global const rho = @fortGetArr("rho", rc_kind, (NI+2,NJ+2,NK+2))
 global const rho_old = @fortGetArr("rho_old", rc_kind, (NI+2, NJ+2, NK+2))
 
+global const si = @fortGetArr("si", rc_kind, (NI+2, NJ+2, NK+2))
+global const sj = @fortGetArr("sj", rc_kind, (NI+2, NJ+2, NK+2))
+global const sk = @fortGetArr("sk", rc_kind, (NI+2, NJ+2, NK+2))
+
 global const wt = @fortGetArr("wt", rc_kind, (NI+2, NJ+2, NK+1))
 global const wzk = @fortGetArr("wzk", rc_kind, (NI+2, NJ+2, NK+1))
 
@@ -80,9 +84,12 @@ global const cx = @fortGetArr("cx", rc_kind, (NI + 2, NJ + 2, NK + 2))
 global const cy = @fortGetArr("cy", rc_kind, (NI + 2, NJ + 2, NK + 2))
 global const cz = @fortGetArr("cz", rc_kind, (NI + 2, NJ + 2, NK + 2))
 
+global const uvis = @fortGetArr("uvis", rc_kind, (NI, NJ, NK))
+global const vvis = @fortGetArr("vvis", rc_kind, (NI, NJ, NK))
+global const wvis = @fortGetArr("wvis", rc_kind, (NI, NJ, NK))
+
 global const ufbcw = @fortGetArr("ufbcw", rc_kind, (NJ, NK))
 global const ufbce = @fortGetArr("ufbce", rc_kind, (NJ, NK))
-
 
 global const vfbcn = @fortGetArr("vfbcn", rc_kind, (NI, NK))
 global const vfbcs = @fortGetArr("vfbcs", rc_kind, (NI, NK))
@@ -99,16 +106,22 @@ global const gi3 = @fortGetArr("gi3", rc_kind, (NI + 1, NJ, NK))
 global const gqi3 = @fortGetArr("gqi3", rc_kind, (NI + 1, NJ, NK))
 global const uf = @fortGetArr("uf", rc_kind, (NI + 1, NJ, NK))
 
-global const zf = @fortGetArr("zf", rc_kind, (NI + 2, NJ + 2, NK + 3))
-global const vy = @fortGetArr("vy", rc_kind, (NI + 2, NJ + 2))
 global const ux = @fortGetArr("ux", rc_kind, (NI + 2, NJ + 2))
 global const uy = @fortGetArr("uy", rc_kind, (NI + 2, NJ + 2))
 global const vx = @fortGetArr("vx", rc_kind, (NI + 2, NJ + 2))
+global const vy = @fortGetArr("vy", rc_kind, (NI + 2, NJ + 2))
+global const ffc = @fortGetArr("ffc", rc_kind, (NI + 2, NJ + 2))
+global const bbc = @fortGetArr("bbc", rc_kind, (NI + 2, NJ + 2))
 global const hdt = @fortGetArr("hdt", rc_kind, (NI + 2, NJ + 2))
 global const g11 = @fortGetArr("g11", rc_kind, (NI + 2, NJ + 2))
 global const g12 = @fortGetArr("g12", rc_kind, (NI + 2, NJ + 2))
 global const g22 = @fortGetArr("g22", rc_kind, (NI + 2, NJ + 2))
 global const D = @fortGetArr("d", rc_kind, (NI + 2, NJ + 2))
+
+
+
+global const drpx = @fortGetArr("drpx", rc_kind, (NI, NJ, NK))
+global const drpy = @fortGetArr("drpy", rc_kind, (NI, NJ, NK))
 
 global const wfbcb = @fortGetArr("ufbce", rc_kind, (NI, NJ))
 
@@ -137,7 +150,6 @@ T0=15e0::rc_kind
 
 OMEGA=7.272e-5::rc_kind
 gpr= 0.981e0::rc_kind
-apr=0.6371::rc_kind
 
 nsteps=0::Int
 dtf=0e0::rc_kind
