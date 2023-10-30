@@ -42,6 +42,9 @@ global const w = @fortGetArr("w", rc_kind, (NI + 2, NJ + 2, NK + 2, 2))
 global const Tr = @fortGetArr("tr", rc_kind, (ntr, NI + 2, NJ + 2, NK + 2, 2))
 global const h = @fortGetArr("h", rc_kind, (NI+2, NJ+2))
 global const oldh = @fortGetArr("oldh", rc_kind, (NI+2, NJ+2))
+global const vor = @fortGetArr("vor", rc_kind, (NI+2,NJ+2,NK+2))
+global const shear = @fortGetArr("shear", rc_kind, (NI+2,NJ+2,NK+2))
+global const strain = @fortGetArr("strain", rc_kind, (NI+2,NJ+2,NK+2))
 global const rho = @fortGetArr("rho", rc_kind, (NI+2,NJ+2,NK+2))
 global const rho_old = @fortGetArr("rho_old", rc_kind, (NI+2, NJ+2, NK+2))
 global const r_sponge = @fortGetArr("r_sponge", rc_kind, (NJ+2))
@@ -54,7 +57,9 @@ global const zf = @fortGetArr("zf", rc_kind, (NI + 2, NJ + 2, NK + 3))
 global const vy = @fortGetArr("vy", rc_kind, (NI + 2, NJ + 2))
 global const ux = @fortGetArr("ux", rc_kind, (NI + 2, NJ + 2))
 global const uf = @fortGetArr("uf", rc_kind, (NI + 1, NJ, NK))
+global const Jifc = @fortGetArr("jifc", rc_kind, (NI + 1, NJ, NK))
 global const vf = @fortGetArr("vf", rc_kind, (NI, NJ + 1, NK))
+global const Jjfc = @fortGetArr("jjfc", rc_kind, (NI, NJ + 1, NK))
 global const wf = @fortGetArr("wf", rc_kind, (NI, NJ, NK + 1))
 
 global const swr = @fortGetArr("swr", rc_kind, (NJ+2))
@@ -68,6 +73,12 @@ if (cppdefs.implicit)
     global const mat_D = zeros(rc_kind, (NI, NJ, NK, 5))
     global const mat_test = zeros(rc_kind, (NI, NJ, NK, 5))
 end
+
+if (cppdefs.allow_particle)
+    global parti_file_num::Int = 0
+    global NPR::Int = 0
+end
+global const J2d = @fortGetArr("j2d", rc_kind, (NI+2, NJ+2))
 
 #=
 
