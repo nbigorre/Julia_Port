@@ -19,4 +19,5 @@ if (!@isdefined(INCLUDE_All))
     include("../src/heat_flux.jl")
     include("../src/wind_stress.jl")
     include("../src/intpol_3rdorder.jl")
+    include("../src/sigma_toplayer.jl")
 end

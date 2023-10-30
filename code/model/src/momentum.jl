@@ -21,7 +21,10 @@ function momentum(pcorr, step)
         @fortSet("tsp", dtim[]*1e05,rc_kind)
         
         @ccall "./PSOM_LIB.so".findzall_()::Cvoid
-        @ccall "./PSOM_LIB.so".sigma_()::Cvoid
+
+        sigma()
+        #@ccall "./PSOM_LIB.so".sigma_()::Cvoid
+
         advection_and_mixing(ivs[], ivf[], dtim[], step)
         #@ccall "./PSOM_LIB.so".advection_and_mixing_(ivs::Ref{Int}, ivf::Ref{Int}, dtim::Ref{rc_kind}, Ref(step)::Ref{Int})::Cvoid
 
