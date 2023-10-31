@@ -33,9 +33,11 @@ function momentum(pcorr, step)
         #@ccall "./PSOM_LIB.so".intpol_()::Cvoid
 
         if (! @fortGet("use_shchepetkin", Bool))
-            @ccall "./PSOM_LIB.so".rpevalgrad_song_(ivf::Ref{Int})::Cvoid
+            rpevalgrad_Song(ivf[])
+            #@ccall "./PSOM_LIB.so".rpevalgrad_song_(ivf::Ref{Int})::Cvoid
         else
-            @ccall "./PSOM_LIB.so".rpevalgrad_song_(ivf::Ref{Int})::Cvoid
+            rpevalgrad_Song(ivf[])
+            #@ccall "./PSOM_LIB.so".rpevalgrad_song_(ivf::Ref{Int})::Cvoid
             @ccall "./PSOM_LIB.so".rpevalgrad_sche_(ivf::Ref{Int})::Cvoid
             @inbounds @. @views drpx[1:NI, 1:NJ, 1:NK] = ru4_Sche[2:NI+1, 2:NJ+1, 1:NK]
 

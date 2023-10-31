@@ -24,6 +24,7 @@ global const PI::rc_kind=3.14159265358979323846e0
 global const periodicew=true
 global const gpr::rc_kind = 0.981e0
 global const apr::rc_kind=0.6371e0
+global const rect=true
 
 ###############      ARRAYS       ###############
 
@@ -73,6 +74,7 @@ global const rho_old = @fortGetArr("rho_old", rc_kind, (NI+2, NJ+2, NK+2))
 global const si = @fortGetArr("si", rc_kind, (NI+2, NJ+2, NK+2))
 global const sj = @fortGetArr("sj", rc_kind, (NI+2, NJ+2, NK+2))
 global const sk = @fortGetArr("sk", rc_kind, (NI+2, NJ+2, NK+2))
+global const rp = @fortGetArr("rp", rc_kind, (NI+2, NJ+2, NK+2))
 
 global const wt = @fortGetArr("wt", rc_kind, (NI+2, NJ+2, NK+1))
 global const wzk = @fortGetArr("wzk", rc_kind, (NI+2, NJ+2, NK+1))
@@ -164,7 +166,6 @@ kappah=0e0::rc_kind
 kaphinv=0e0::rc_kind
 
 
-rect=true
 dx=0e0::rc_kind
 dy=0e0::rc_kind
 lv_flat_bottom=true
