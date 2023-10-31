@@ -22,4 +22,5 @@ if (!@isdefined(INCLUDE_All))
     include("../src/sigma_toplayer.jl")
     include("../src/findz_topmoves.jl")
     include("../src/coriolis.jl")
+    include("../src/calcskfc.jl")
 end

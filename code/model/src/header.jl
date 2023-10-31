@@ -22,6 +22,7 @@ global const DL::rc_kind=1e3
 global const R0::rc_kind=1027e0
 global const PI::rc_kind=3.14159265358979323846e0
 global const periodicew=true
+global const gpr::rc_kind = 0.981e0
 global const apr::rc_kind=0.6371e0
 
 ###############      ARRAYS       ###############
@@ -75,6 +76,7 @@ global const sk = @fortGetArr("sk", rc_kind, (NI+2, NJ+2, NK+2))
 
 global const wt = @fortGetArr("wt", rc_kind, (NI+2, NJ+2, NK+1))
 global const wzk = @fortGetArr("wzk", rc_kind, (NI+2, NJ+2, NK+1))
+global const skfc = @fortGetArr("skfc", rc_kind, (NI+2, NJ+2, NK+1))
 
 global const czf = @fortGetArr("czf", rc_kind, (NI, NJ, NK + 1))
 global const Kz = @fortGetArr("kz", rc_kind, (NI, NJ, NK + 1))
@@ -105,6 +107,8 @@ global const cxf = @fortGetArr("cxf", rc_kind, (NI + 1, NJ, NK))
 global const gi3 = @fortGetArr("gi3", rc_kind, (NI + 1, NJ, NK))
 global const gqi3 = @fortGetArr("gqi3", rc_kind, (NI + 1, NJ, NK))
 global const uf = @fortGetArr("uf", rc_kind, (NI + 1, NJ, NK))
+
+global const gradhn = @fortGetArr("gradhn", rc_kind, (NI + 2, NJ + 2, 2))
 
 global const ux = @fortGetArr("ux", rc_kind, (NI + 2, NJ + 2))
 global const uy = @fortGetArr("uy", rc_kind, (NI + 2, NJ + 2))
@@ -149,7 +153,6 @@ S0=35.7e0::rc_kind
 T0=15e0::rc_kind
 
 OMEGA=7.272e-5::rc_kind
-gpr= 0.981e0::rc_kind
 
 nsteps=0::Int
 dtf=0e0::rc_kind
