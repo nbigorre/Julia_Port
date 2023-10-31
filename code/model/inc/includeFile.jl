@@ -23,4 +23,8 @@ if (!@isdefined(INCLUDE_All))
     include("../src/findz_topmoves.jl")
     include("../src/coriolis.jl")
     include("../src/calcskfc.jl")
+    include("../src/evalrho.jl")
+    include("../src/potdens.jl")
+    include("../src/evalrho_sT.jl")
+    include("../src/evalrho_rho.jl")
 end

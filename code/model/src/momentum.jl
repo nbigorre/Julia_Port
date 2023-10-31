@@ -69,7 +69,9 @@ function momentum(pcorr, step)
         @ccall "./PSOM_LIB.so".cdiv_(dtim::Ref{rc_kind}, ctrdiv::Ref{rc_kind}, ivf::Ref{Int})::Cvoid
 
     end
-    @ccall "./PSOM_LIB.so".evalrho_(@lkGet("rho", rc_kind)::Ref{rc_kind}, Ref(0)::Ref{Int})::Cvoid
+    evalrho(rho, 0)
+    #@ccall "./PSOM_LIB.so".evalrho_(@lkGet("rho", rc_kind)::Ref{rc_kind}, Ref(0)::Ref{Int})::Cvoid
+    
     @ccall "./PSOM_LIB.so".conadjust_(Ref(step)::Ref{Int}, Ref(0)::Ref{Int})::Cvoid
     @ccall "./PSOM_LIB.so".diag_n2_()::Cvoid
 end
