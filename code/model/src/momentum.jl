@@ -38,7 +38,9 @@ function momentum(pcorr, step)
         else
             rpevalgrad_Song(ivf[])
             #@ccall "./PSOM_LIB.so".rpevalgrad_song_(ivf::Ref{Int})::Cvoid
-            @ccall "./PSOM_LIB.so".rpevalgrad_sche_(ivf::Ref{Int})::Cvoid
+            
+            rpevalgrad_Sche(ivf[])
+            #@ccall "./PSOM_LIB.so".rpevalgrad_sche_(ivf::Ref{Int})::Cvoid
             @inbounds @. @views drpx[1:NI, 1:NJ, 1:NK] = ru4_Sche[2:NI+1, 2:NJ+1, 1:NK]
 
             @inbounds @. @views drpy[1:NI, 1:NJ, 1:NK] = rv4_Sche[2:NI+1, 2:NJ+1, 1:NK]
@@ -53,8 +55,10 @@ function momentum(pcorr, step)
 
         @ccall "./PSOM_LIB.so".srcface_(ivs::Ref{Int}, Ref(step)::Ref{Int})::Cvoid
         @ccall "./PSOM_LIB.so".hsolve_(@lkGet("h", rc_kind)::Ref{rc_kind}, @lkGet("oldh", rc_kind)::Ref{rc_kind}, @lkGet("hdt", rc_kind)::Ref{rc_kind}, dtim::Ref{rc_kind})::Cvoid
+        
         calcfkfc()
         #@ccall "./PSOM_LIB.so".calcskfc_()::Cvoid
+        
         @ccall "./PSOM_LIB.so".vhydro_(dtim::Ref{rc_kind})::Cvoid
         
         cfdiv(cfcdiv)

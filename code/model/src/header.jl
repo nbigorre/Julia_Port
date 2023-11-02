@@ -28,12 +28,16 @@ global const rect=true
 
 ###############      ARRAYS       ###############
 
+global const ru_Sche = @fortGetArr("ru_sche", rc_kind, (NI+2,NJ+2,NK))
+global const rv_Sche = @fortGetArr("rv_sche", rc_kind, (NI+2,NJ+2,NK))
+global const ru2_Sche = @fortGetArr("ru2_sche", rc_kind, (NI+2,NJ+2,NK))
+global const rv2_Sche = @fortGetArr("rv2_sche", rc_kind, (NI+2,NJ+2,NK))
+global const ru3_Sche = @fortGetArr("ru3_sche", rc_kind, (NI+2,NJ+2,NK))
+global const rv3_Sche = @fortGetArr("rv3_sche", rc_kind, (NI+2,NJ+2,NK))
 global const ru4_Sche = @fortGetArr("ru4_sche", rc_kind, (NI+2,NJ+2,NK))
 global const rv4_Sche = @fortGetArr("rv4_sche", rc_kind, (NI+2,NJ+2,NK))
 global const grpifc = @fortGetArr("grpifc", rc_kind, (NI+1, NJ, NK))
-global const ru2_Sche = @fortGetArr("ru2_sche", rc_kind, (NI+2,NJ+2,NK))
 global const grpjfc = @fortGetArr("grpjfc", rc_kind, (NI, NJ+1, NK))
-global const rv2_Sche = @fortGetArr("rv2_sche", rc_kind, (NI+2,NJ+2,NK))
 global const T_ref = @fortGetArr("t_ref", rc_kind, (NI + 2, NJ + 2, NK + 2))
 global const Tr = @fortGetArr("tr", rc_kind, (ntr, NI + 2, NJ + 2, NK + 2, 2))
 global const h = @fortGetArr("h", rc_kind, (NI+2, NJ+2))
