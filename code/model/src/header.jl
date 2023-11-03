@@ -67,6 +67,7 @@ global const zc = @fortGetArr("zc", rc_kind, (NI + 2, NJ + 2, NK + 2))
 global const wx = @fortGetArr("wx", rc_kind, (NI + 2, NJ + 2, NK + 2))
 global const wy = @fortGetArr("wy", rc_kind, (NI + 2, NJ + 2, NK + 2))
 global const wz = @fortGetArr("wz", rc_kind, (NI + 2, NJ + 2, NK + 2))
+global const p = @fortGetArr("p", rc_kind, (NI + 2, NJ + 2, NK + 2))
 global const shear = @fortGetArr("shear", rc_kind, (NI+2,NJ+2,NK+2))
 global const strain = @fortGetArr("strain", rc_kind, (NI+2,NJ+2,NK+2))
 global const Jac = @fortGetArr("jac", rc_kind, (NI + 2, NJ + 2, NK + 2))
@@ -102,12 +103,14 @@ global const ufbce = @fortGetArr("ufbce", rc_kind, (NJ, NK))
 global const vfbcn = @fortGetArr("vfbcn", rc_kind, (NI, NK))
 global const vfbcs = @fortGetArr("vfbcs", rc_kind, (NI, NK))
 
+global const sjfc = @fortGetArr("sjfc", rc_kind, (NI, NJ + 1, NK))
 global const Jjfc = @fortGetArr("jjfc", rc_kind, (NI, NJ + 1, NK))
 global const cyf = @fortGetArr("cyf", rc_kind, (NI, NJ + 1, NK))
 global const gj3 = @fortGetArr("gj3", rc_kind, (NI, NJ + 1, NK))
 global const gqj3 = @fortGetArr("gqj3", rc_kind, (NI, NJ + 1, NK))
 global const vf = @fortGetArr("vf", rc_kind, (NI, NJ + 1, NK))
 
+global const sifc = @fortGetArr("sifc", rc_kind, (NI + 1, NJ, NK))
 global const Jifc = @fortGetArr("jifc", rc_kind, (NI + 1, NJ, NK))
 global const cxf = @fortGetArr("cxf", rc_kind, (NI + 1, NJ, NK))
 global const gi3 = @fortGetArr("gi3", rc_kind, (NI + 1, NJ, NK))
@@ -133,10 +136,18 @@ global const D = @fortGetArr("d", rc_kind, (NI + 2, NJ + 2))
 global const drpx = @fortGetArr("drpx", rc_kind, (NI, NJ, NK))
 global const drpy = @fortGetArr("drpy", rc_kind, (NI, NJ, NK))
 
+global const ffj = @fortGetArr("ffj", rc_kind, (NI, NJ+1))
+global const bbj = @fortGetArr("bbj", rc_kind, (NI, NJ+1))
+
+global const ffi = @fortGetArr("ffi", rc_kind, (NI+1, NJ))
+global const bbi = @fortGetArr("bbi", rc_kind, (NI+1, NJ))
+
 global const wfbcb = @fortGetArr("ufbce", rc_kind, (NI, NJ))
+
 
 global const swr = @fortGetArr("swr", rc_kind, (NJ+2))
 global const qloss = @fortGetArr("qloss", rc_kind, (NJ+2))
+
 global const yc = @fortGetArr("yc", rc_kind, (NJ+2))
 
 if (cppdefs.implicit)

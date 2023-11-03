@@ -29,4 +29,6 @@ if (!@isdefined(INCLUDE_All))
     include("../src/evalrho_rho.jl")
     include("../src/rpevalgrad_Song.jl")
     include("../src/rpevalgrad_Sche.jl")
+    include("../src/cdiv.jl")
+    include("../src/srcface_3rdorder.jl")
 end

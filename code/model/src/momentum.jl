@@ -53,7 +53,9 @@ function momentum(pcorr, step)
         coriolis(ivs[])
         #@ccall "./PSOM_LIB.so".coriolis_(ivs::Ref{Int})::Cvoid
 
-        @ccall "./PSOM_LIB.so".srcface_(ivs::Ref{Int}, Ref(step)::Ref{Int})::Cvoid
+        srcface(ivs[], step)
+        #@ccall "./PSOM_LIB.so".srcface_(ivs::Ref{Int}, Ref(step)::Ref{Int})::Cvoid
+
         @ccall "./PSOM_LIB.so".hsolve_(@lkGet("h", rc_kind)::Ref{rc_kind}, @lkGet("oldh", rc_kind)::Ref{rc_kind}, @lkGet("hdt", rc_kind)::Ref{rc_kind}, dtim::Ref{rc_kind})::Cvoid
         
         calcfkfc()
@@ -62,6 +64,7 @@ function momentum(pcorr, step)
         @ccall "./PSOM_LIB.so".vhydro_(dtim::Ref{rc_kind})::Cvoid
         
         cfdiv(cfcdiv)
+
         @ccall "./PSOM_LIB.so".newcor_(dtim::Ref{rc_kind}, ivs::Ref{Int})::Cvoid
         @ccall "./PSOM_LIB.so".newsrc_()::Cvoid
         edt[] = EPS / dtim[]
@@ -72,7 +75,9 @@ function momentum(pcorr, step)
             @ccall "./PSOM_LIB.so".pcorrect_(pointer(pcorr)::Ptr{rc_kind})::Cvoid
         end
         @ccall "./PSOM_LIB.so".facediv_(dtim::Ref{rc_kind}, fdiv::Ref{rc_kind})::Cvoid
-        @ccall "./PSOM_LIB.so".cdiv_(dtim::Ref{rc_kind}, ctrdiv::Ref{rc_kind}, ivf::Ref{Int})::Cvoid
+
+        ctrdiv[] = cdiv(dtim[], ivf[])
+        #@ccall "./PSOM_LIB.so".cdiv_(dtim::Ref{rc_kind}, ctrdiv::Ref{rc_kind}, ivf::Ref{Int})::Cvoid
 
     end
     evalrho(rho, 0)
