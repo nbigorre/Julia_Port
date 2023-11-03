@@ -31,4 +31,6 @@ if (!@isdefined(INCLUDE_All))
     include("../src/rpevalgrad_Sche.jl")
     include("../src/cdiv.jl")
     include("../src/srcface_3rdorder.jl")
+    include("../src/newcor.jl")
+    include("../src/newsrc.jl")
 end

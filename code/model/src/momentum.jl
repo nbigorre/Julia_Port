@@ -65,8 +65,12 @@ function momentum(pcorr, step)
         
         cfdiv(cfcdiv)
 
-        @ccall "./PSOM_LIB.so".newcor_(dtim::Ref{rc_kind}, ivs::Ref{Int})::Cvoid
-        @ccall "./PSOM_LIB.so".newsrc_()::Cvoid
+        newcor(dtim[], ivs[])
+        #@ccall "./PSOM_LIB.so".newcor_(dtim::Ref{rc_kind}, ivs::Ref{Int})::Cvoid
+
+        newsrc()
+        #@ccall "./PSOM_LIB.so".newsrc_()::Cvoid
+
         edt[] = EPS / dtim[]
         @ccall "./PSOM_LIB.so".mgrid_(pointer(pcorr)::Ptr{rc_kind}, dtim::Ref{rc_kind}, edt::Ref{rc_kind}, cfcdiv::Ref{rc_kind})::Cvoid
         @ccall "./PSOM_LIB.so".vface_(pointer(pcorr)::Ptr{rc_kind}, dtim::Ref{rc_kind})::Cvoid
