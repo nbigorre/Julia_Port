@@ -13,7 +13,7 @@ function hsolve(h,oldh,hdt,dtime)
   local rlx::rc_kind = 1.72e0
 
   for iter in 1:100
-    for j in NJ:-1:1
+    for j in 1:NJ
       local i = 1
       local hstar = ( ch[2, i, j] * h[i+2, j+1]
                     + ch[3, i, j] * h[NI+1, j+1] 
@@ -69,7 +69,9 @@ function hsolve(h,oldh,hdt,dtime)
       + ch[7, i, j] * h[NI+1, j+2] 
       + ch[8, i, j] * h[i+2, j] 
       + ch[9, i, j] * h[NI+1, j])
-      maxres = max(abs(res), maxres)
+      if (abs(res) > maxres)
+        maxres = abs(res)
+      end
       for i in 2:NI-1
         local res = rhs[i,j] - ( 
           ch[1, i, j] * h[i+1, j+1]
@@ -81,8 +83,11 @@ function hsolve(h,oldh,hdt,dtime)
         + ch[7, i, j] * h[i, j+2] 
         + ch[8, i, j] * h[i+2, j] 
         + ch[9, i, j] * h[i, j])
-        maxres = max(abs(res), maxres)
+        if (abs(res) > maxres)
+          maxres = abs(res)
+        end
       end
+      local i = NI
       local res = rhs[i,j] - ( 
         ch[1, i, j] * h[i+1, j+1]
       + ch[2, i, j] * h[2, j+1]
@@ -93,12 +98,18 @@ function hsolve(h,oldh,hdt,dtime)
       + ch[7, i, j] * h[i, j+2] 
       + ch[8, i, j] * h[2, j] 
       + ch[9, i, j] * h[i, j])
-      maxres = max(abs(res), maxres)
+      if (abs(res) > maxres)
+        maxres = abs(res)
+      end
     end
 
     if (maxres > 3000)
       println("hsolve.jl: STOP. res too large, i,j,maxres=",i,",",j,",",maxres)
       exit(1)
+    end
+
+    if (maxres < tol)
+      break
     end
   end
 
