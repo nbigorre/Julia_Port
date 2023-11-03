@@ -34,4 +34,5 @@ if (!@isdefined(INCLUDE_All))
     include("../src/newcor.jl")
     include("../src/newsrc.jl")
     include("../src/hsolve.jl")
+    include("../src/vhydro.jl")
 end

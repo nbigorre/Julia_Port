@@ -62,7 +62,8 @@ function momentum(pcorr, step)
         calcfkfc()
         #@ccall "./PSOM_LIB.so".calcskfc_()::Cvoid
         
-        @ccall "./PSOM_LIB.so".vhydro_(dtim::Ref{rc_kind})::Cvoid
+        vhydro(dtim[])
+        #@ccall "./PSOM_LIB.so".vhydro_(dtim::Ref{rc_kind})::Cvoid
         
         cfdiv(cfcdiv)
 
