@@ -35,4 +35,5 @@ if (!@isdefined(INCLUDE_All))
     include("../src/newsrc.jl")
     include("../src/hsolve.jl")
     include("../src/vhydro.jl")
+    include("../src/mgrid.jl")
 end
