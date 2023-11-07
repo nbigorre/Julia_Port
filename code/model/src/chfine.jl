@@ -15,7 +15,9 @@ function chfine(dtimel,chf,fn)
    local gpkinv = 1e0 / (gpr * @fortGet("kappah", rc_kind))
    local dtinv = @fortGet("hdl", rc_kind) / (dtimel * @fortGet("kappah", rc_kind))
    local constv = @fortGet("kaphinv", rc_kind) - 1e0
-   @ccall "./PSOM_LIB.so".hbc_(pointer(chf)::Ptr{rc_kind}, pointer(fn)::Ptr{rc_kind}, Ref(dtimel)::Ref{rc_kind})::Cvoid
+   
+   hbc(chf, fn, dtimel)
+   #@ccall "./PSOM_LIB.so".hbc_(pointer(chf)::Ptr{rc_kind}, pointer(fn)::Ptr{rc_kind}, Ref(dtimel)::Ref{rc_kind})::Cvoid
    
    
    for i in 1:NI

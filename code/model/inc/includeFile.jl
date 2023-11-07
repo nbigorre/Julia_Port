@@ -37,4 +37,5 @@ if (!@isdefined(INCLUDE_All))
     include("../src/vhydro.jl")
     include("../src/mgrid.jl")
     include("../src/chfine.jl")
+    include("../src/hbc.jl")
 end
