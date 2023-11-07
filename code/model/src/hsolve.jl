@@ -8,7 +8,8 @@ function hsolve(h,oldh,hdt,dtime)
   local dti::rc_kind = 1e0 / dtime
   local kount::Int = 0
 
-  @ccall "./PSOM_LIB.so".chfine_(Ref(dtime)::Ref{rc_kind}, pointer(ch)::Ptr{rc_kind}, pointer(rhs)::Ptr{rc_kind})::Cvoid
+  chfine(dtime, ch, rhs)
+  #@ccall "./PSOM_LIB.so".chfine_(Ref(dtime)::Ref{rc_kind}, pointer(ch)::Ptr{rc_kind}, pointer(rhs)::Ptr{rc_kind})::Cvoid
 
   local rlx::rc_kind = 1.72e0
 
@@ -101,12 +102,12 @@ function hsolve(h,oldh,hdt,dtime)
       if (abs(res) > maxres)
         maxres = abs(res)
       end
+      if (maxres > 3000)
+        println("hsolve.jl: STOP. res too large, i,j,maxres=",i,",",j,",",maxres)
+        exit(1)
+      end
     end
 
-    if (maxres > 3000)
-      println("hsolve.jl: STOP. res too large, i,j,maxres=",i,",",j,",",maxres)
-      exit(1)
-    end
 
     if (maxres < tol)
       break
