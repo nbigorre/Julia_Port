@@ -1,15 +1,33 @@
 
+# precalculates hfill sums to avoid recalculations
+function hsolve_getSum()
+    return (
+      sumvf = [sum(@view vfbcs[i, 1:NK]) for i in 1:NI],
+      sumcyfj = [sum(@view cyf[i, 1, 1:NK]) for i in 1:NI],
+      sumsjfj = [sum(@view sjfc[i, 1, 1:NK]) for i in 1:NI],
+      sumhynj = [sum(@view hyn[i, 1, 1:NK]) for i in 1:NI],
+      sumgjj = [(sum(@view gj[i, 1, 1:NK, 1]), sum(@view gj[i, 1, 1:NK, 2])) for i in 1:NI],
+
+      sumcyfnj = [sum(@view cyf[i, NJ+1, 1:NK]) for i in 1:NI],
+      sumsjfnj = [sum(@view sjfc[i, NJ+1, 1:NK]) for i in 1:NI],
+      sumhynnj = [sum(@view hyn[i, NJ+1, 1:NK]) for i in 1:NI],
+      sumgjnj = [(sum(@view gj[i, NJ+1, 1:NK, 1]), sum(@view gj[i, NJ+1, 1:NK, 2])) for i in 1:NI],
+    )
+end
+
+
 function hsolve(h,oldh,hdt,dtime)
   local ch = zeros(rc_kind, (9, NI, NJ))
   local rhs = zeros(rc_kind, (NI, NJ))
-
 
   local tol::rc_kind = 1e-12
   local dti::rc_kind = 1e0 / dtime
   local kount::Int = 0
 
+  local sums = hsolve_getSum()
   chfine(dtime, ch, rhs)
   #@ccall "./PSOM_LIB.so".chfine_(Ref(dtime)::Ref{rc_kind}, pointer(ch)::Ptr{rc_kind}, pointer(rhs)::Ptr{rc_kind})::Cvoid
+
 
   local rlx::rc_kind = 1.72e0
 
@@ -53,7 +71,8 @@ function hsolve(h,oldh,hdt,dtime)
     end
 
     for l in 1:3
-      @ccall "./PSOM_LIB.so".hfill_(Ref(dtime)::Ref{rc_kind}, pointer(h)::Ptr{rc_kind})::Cvoid
+      hfill(dtime, h, sums)
+      #@ccall "./PSOM_LIB.so".hfill_(Ref(dtime)::Ref{rc_kind}, pointer(h)::Ptr{rc_kind})::Cvoid
     end
 
     local maxres = 0e0
@@ -115,7 +134,8 @@ function hsolve(h,oldh,hdt,dtime)
   end
 
   for l in 1:1
-    @ccall "./PSOM_LIB.so".mprove_(pointer(h)::Ptr{rc_kind}, pointer(ch)::Ptr{rc_kind}, pointer(rhs)::Ptr{rc_kind}, Ref(dtime)::Ref{rc_kind})::Cvoid
+    mprove(h, ch, rhs, dtime)
+    #@ccall "./PSOM_LIB.so".mprove_(pointer(h)::Ptr{rc_kind}, pointer(ch)::Ptr{rc_kind}, pointer(rhs)::Ptr{rc_kind}, Ref(dtime)::Ref{rc_kind})::Cvoid
   end
 
 end

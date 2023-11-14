@@ -38,4 +38,6 @@ if (!@isdefined(INCLUDE_All))
     include("../src/mgrid.jl")
     include("../src/chfine.jl")
     include("../src/hbc.jl")
+    include("../src/hfill.jl")
+    include("../src/mprove.jl")
 end

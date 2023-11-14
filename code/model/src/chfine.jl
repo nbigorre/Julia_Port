@@ -1,14 +1,36 @@
+global const chfine_sumsif = zeros(rc_kind, (NI,NJ))
+global const chfine_sumsjf = zeros(rc_kind, (NI,NJ))
+global const chfine_sumcxf = zeros(rc_kind, (NI,NJ))
+global const chfine_sumcyf = zeros(rc_kind, (NI,NJ))
+global const chfine_sumuf  = zeros(rc_kind, (NI,NJ))
+global const chfine_sumvf  = zeros(rc_kind, (NI,NJ))
+global const chfine_sumhxn = zeros(rc_kind, (NI,NJ))
+global const chfine_sumhyn = zeros(rc_kind, (NI,NJ))
+global const chfine_sumgi = zeros(rc_kind, (NI,NJ,2))
+global const chfine_sumgj = zeros(rc_kind, (NI,NJ,2))
+
 function chfine(dtimel,chf,fn)
-   local sumsif = zeros(rc_kind, (NI,NJ))
-   local sumsjf = zeros(rc_kind, (NI,NJ))
-   local sumcxf = zeros(rc_kind, (NI,NJ))
-   local sumcyf = zeros(rc_kind, (NI,NJ))
-   local sumuf  = zeros(rc_kind, (NI,NJ))
-   local sumvf  = zeros(rc_kind, (NI,NJ))
-   local sumhxn = zeros(rc_kind, (NI,NJ))
-   local sumhyn = zeros(rc_kind, (NI,NJ))
-   local sumgi = zeros(rc_kind, (NI,NJ,2))
-   local sumgj = zeros(rc_kind, (NI,NJ,2))
+   chfine_sumsjf .= 0e0
+   chfine_sumcyf .= 0e0
+   chfine_sumvf .= 0e0
+   chfine_sumhyn .= 0e0
+   chfine_sumgj .= 0e0
+   chfine_sumsif .= 0e0
+   chfine_sumcxf .= 0e0
+   chfine_sumuf .= 0e0
+   chfine_sumhxn .= 0e0
+   chfine_sumgi .= 0e0
+   local sumsif = chfine_sumsif
+   local sumsjf = chfine_sumsjf
+   local sumcxf = chfine_sumcxf
+   local sumcyf = chfine_sumcyf
+   local sumuf  = chfine_sumuf
+   local sumvf  = chfine_sumvf
+   local sumhxn = chfine_sumhxn
+   local sumhyn = chfine_sumhyn
+   local sumgi = chfine_sumgi
+   local sumgj = chfine_sumgj
+
    
    local edt = EPS / dtimel
    local edtg = edt / (gpr * @fortGet("kappah", rc_kind))
@@ -91,6 +113,4 @@ function chfine(dtimel,chf,fn)
          chf[9, i, j] = 0.25e0 * (sumgi[i-1,j,2] + sumgj[i,j-1,1])
       end
    end
-   #=
-   =#
 end
