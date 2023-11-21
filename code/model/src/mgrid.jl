@@ -54,7 +54,10 @@ function mgrid(p,dtime,edt,cfcdiv)
      #@ccall "./PSOM_LIB.so".cpfine_(Ref(dtime)::Ref{rc_kind}, pointer(cp)::Ptr{rc_kind}, pointer(rhs)::Ptr{rc_kind})::Cvoid
      
      for m in 2:ngrid
-          @ccall "./PSOM_LIB.so".cpcors_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(cp,loccp[m-1])::Ptr{rc_kind}, pointer(cp,loccp[m])::Ptr{rc_kind})::Cvoid
+          local cpf = reshape(view(cp, loccp[m-1]:(loccp[m-1]- 1 +(19*nx[m] * 2 * ny[m] * 2 * nz[m] * 2))), 19, nx[m] * 2, ny[m] * 2, nz[m] * 2)
+          local cpc = reshape(view(cp, loccp[m]:(loccp[m]-1+(19*nx[m] * ny[m] * nz[m]))), 19, nx[m], ny[m], nz[m])
+          cpcors(nx[m], ny[m], nz[m], cpf, cpc)
+          #@ccall "./PSOM_LIB.so".cpcors_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(cp,loccp[m-1])::Ptr{rc_kind}, pointer(cp,loccp[m])::Ptr{rc_kind})::Cvoid
      end
 
      for ncycle in 1:noc

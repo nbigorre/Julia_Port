@@ -42,4 +42,5 @@ if (!@isdefined(INCLUDE_All))
     include("../src/mprove.jl")
     include("../src/vface.jl")
     include("../src/cpfine.jl")
+    include("../src/cpcors.jl")
 end
