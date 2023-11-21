@@ -41,4 +41,5 @@ if (!@isdefined(INCLUDE_All))
     include("../src/hfill.jl")
     include("../src/mprove.jl")
     include("../src/vface.jl")
+    include("../src/cpfine.jl")
 end

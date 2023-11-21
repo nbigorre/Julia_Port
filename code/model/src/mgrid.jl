@@ -50,7 +50,8 @@ function mgrid(p,dtime,edt,cfcdiv)
           loccp[m] = loccp[m-1] + 19 * ntint[m - 1]
      end
 
-     @ccall "./PSOM_LIB.so".cpfine_(Ref(dtime)::Ref{rc_kind}, pointer(cp)::Ptr{rc_kind}, pointer(rhs)::Ptr{rc_kind})::Cvoid
+     cpfine(dtime, cp, rhs)
+     #@ccall "./PSOM_LIB.so".cpfine_(Ref(dtime)::Ref{rc_kind}, pointer(cp)::Ptr{rc_kind}, pointer(rhs)::Ptr{rc_kind})::Cvoid
      
      for m in 2:ngrid
           @ccall "./PSOM_LIB.so".cpcors_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(cp,loccp[m-1])::Ptr{rc_kind}, pointer(cp,loccp[m])::Ptr{rc_kind})::Cvoid
