@@ -46,4 +46,5 @@ if (!@isdefined(INCLUDE_All))
     include("../src/pbc.jl")
     include("../src/linerelax_periodicew.jl")
     include("../src/dgtsl.jl")
+    include("../src/mgpfill.jl")
 end

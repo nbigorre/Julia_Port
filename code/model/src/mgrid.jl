@@ -73,7 +73,8 @@ function mgrid(p, dtime, edt, cfcdiv)
                linerelax(nx[m], ny[m], nz[m], cp_r, p_r, rhs_r)
                #@ccall "./PSOM_LIB.so".linerelax_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(cp_r)::Ptr{rc_kind}, pointer(p, loco[m])::Ptr{rc_kind}, pointer(rhs, loci[m])::Ptr{rc_kind})::Cvoid
 
-               @ccall "./PSOM_LIB.so".mgpfill_(Ref(dtime)::Ref{rc_kind}, pointer(p)::Ptr{rc_kind})::Cvoid
+               mgpfill(dtime, reshape(view(p, 1:((NI+2)*(NJ+2)*(NK+2))), (NI + 2), (NJ + 2), (NK + 2)))
+               #@ccall "./PSOM_LIB.so".mgpfill_(Ref(dtime)::Ref{rc_kind}, pointer(p)::Ptr{rc_kind})::Cvoid
           end
           @ccall "./PSOM_LIB.so".resid_(Ref(m)::Ref{Int}, Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(cp, loccp[m])::Ptr{rc_kind}, pointer(p, loco[m])::Ptr{rc_kind}, pointer(rhs, loci[m])::Ptr{rc_kind}, pointer(res)::Ptr{rc_kind}, maxres::Ref{rc_kind})::Cvoid
           if (maxres[] < tol)
