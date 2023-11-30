@@ -43,4 +43,5 @@ if (!@isdefined(INCLUDE_All))
     include("../src/vface.jl")
     include("../src/cpfine.jl")
     include("../src/cpcors.jl")
+    include("../src/pbc.jl")
 end

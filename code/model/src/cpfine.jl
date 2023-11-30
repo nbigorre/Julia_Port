@@ -3,7 +3,8 @@ function cpfine(dtimel,cpf,fn)
     fn = reshape(view(fn, 1:(NI*NJ*NK)), NI, NJ, NK)
     local edt = EPS / dtimel
     
-    @ccall "./PSOM_LIB.so".pbc_(pointer(cpf)::Ptr{rc_kind}, pointer(fn)::Ptr{rc_kind}, Ref(dtimel)::Ref{rc_kind})::Cvoid
+    pbc(cpf, fn, dtimel)
+    #@ccall "./PSOM_LIB.so".pbc_(pointer(cpf)::Ptr{rc_kind}, pointer(fn)::Ptr{rc_kind}, Ref(dtimel)::Ref{rc_kind})::Cvoid
 
     for i in 1:NI
         for j in 2:NJ-1
