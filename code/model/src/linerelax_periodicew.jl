@@ -48,7 +48,8 @@ function linerelax_segment(chunk, nxm, nym, nzm, cp, p, fn)
       rh[1] -= cp[7, i, j, 1] * p[i+1, j+1, 1]
       rh[nzm] -= cp[6, i, j, nzm] * p[i+1, j+1, nzm+2]
 
-      @ccall "./PSOM_LIB.so".dgtsl_(Ref(nzm)::Ref{Int}, pointer(subd)::Ptr{rc_kind}, pointer(dia)::Ptr{rc_kind}, pointer(supd)::Ptr{rc_kind}, pointer(rh)::Ptr{rc_kind}, info::Ref{Int})::Cvoid
+      info[] = dgtsl(nzm, subd, dia, supd, rh)
+      #@ccall "./PSOM_LIB.so".dgtsl_(Ref(nzm)::Ref{Int}, pointer(subd)::Ptr{rc_kind}, pointer(dia)::Ptr{rc_kind}, pointer(supd)::Ptr{rc_kind}, pointer(rh)::Ptr{rc_kind}, info::Ref{Int})::Cvoid
       if (info[] != 0)
         println("error in linerelax")
         exit(1)

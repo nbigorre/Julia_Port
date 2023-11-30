@@ -44,4 +44,6 @@ if (!@isdefined(INCLUDE_All))
     include("../src/cpfine.jl")
     include("../src/cpcors.jl")
     include("../src/pbc.jl")
+    include("../src/linerelax_periodicew.jl")
+    include("../src/dgtsl.jl")
 end
