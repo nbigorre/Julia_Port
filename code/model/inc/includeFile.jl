@@ -49,5 +49,6 @@ if (!@isdefined(INCLUDE_All))
     include("../src/mgpfill.jl")
     include("../src/resid.jl")
     include("../src/restrict.jl")
+    include("../src/sor.jl")
     
 end
