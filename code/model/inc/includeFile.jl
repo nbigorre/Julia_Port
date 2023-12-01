@@ -52,5 +52,6 @@ if (!@isdefined(INCLUDE_All))
     include("../src/sor.jl")
     include("../src/efill.jl")
     include("../src/prolong.jl")
+    include("../src/uvchy.jl")
     
 end

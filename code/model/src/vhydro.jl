@@ -49,5 +49,6 @@ function vhydro(dtimel)
     end
   end
 
-  @ccall "./PSOM_LIB.so".uvchy_(Ref(dtimel)::Ref{rc_kind})::Cvoid
+  uvchy(dtimel)
+  #@ccall "./PSOM_LIB.so".uvchy_(Ref(dtimel)::Ref{rc_kind})::Cvoid
 end
