@@ -108,7 +108,9 @@ function mgrid(p, dtime, edt, cfcdiv)
                          #@ccall "./PSOM_LIB.so".linerelax_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(cp, loccp[m])::Ptr{rc_kind}, pointer(p, loco[m])::Ptr{rc_kind}, pointer(rhs, loci[m])::Ptr{rc_kind})::Cvoid
                     end
                end
-               @ccall "./PSOM_LIB.so".efill_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(p, loco[m])::Ptr{rc_kind})::Cvoid
+               efill(nx[m], ny[m], nz[m], p_r)
+               #@ccall "./PSOM_LIB.so".efill_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(p, loco[m])::Ptr{rc_kind})::Cvoid
+               
                @ccall "./PSOM_LIB.so".prolong_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(p, loco[m])::Ptr{rc_kind}, pointer(p, loco[m-1])::Ptr{rc_kind})::Cvoid
           end
      end
