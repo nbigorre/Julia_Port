@@ -48,4 +48,6 @@ if (!@isdefined(INCLUDE_All))
     include("../src/dgtsl.jl")
     include("../src/mgpfill.jl")
     include("../src/resid.jl")
+    include("../src/restrict.jl")
+    
 end

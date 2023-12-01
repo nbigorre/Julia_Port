@@ -89,8 +89,12 @@ function mgrid(p, dtime, edt, cfcdiv)
           if (maxres[] < tol)
                return
           end
-          @ccall "./PSOM_LIB.so".restrict_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(res)::Ptr{rc_kind}, pointer(rhs, loci[m+1])::Ptr{rc_kind})::Cvoid
-
+          let
+               local res_r = reshape(view(res, 1:(nx[m]*ny[m]*nz[m])), nx[m], ny[m], nz[m])
+               local rhs_r = reshape(view(rhs, loci[m+1]:(loci[m+1]-1+(nx[m]*ny[m]*nz[m]))), nx[m], ny[m], nz[m])
+               restrict(nx[m], ny[m], nz[m], res_r, rhs_r)
+               #@ccall "./PSOM_LIB.so".restrict_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(res)::Ptr{rc_kind}, pointer(rhs, loci[m+1])::Ptr{rc_kind})::Cvoid
+          end
           for m in ngrid:-1:2
                if m == ngrid
                     @ccall "./PSOM_LIB.so".sor_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(cp, loccp[m])::Ptr{rc_kind}, pointer(p, loco[m])::Ptr{rc_kind}, pointer(rhs, loci[m])::Ptr{rc_kind})::Cvoid
