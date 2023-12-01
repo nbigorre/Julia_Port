@@ -121,7 +121,8 @@ function advection_and_mixing(m, n, dtimel, step)
                             mat_B[i,j,1:NK, selvar] = (dtimel * JacInv[i+1, j+1, 2:NK+1] * mat_B[i,j,1:NK, selvar]) .- 1
                             mat_C[i,j,1:NK-1, selvar] .*= dtimel * JacInv[i+1, j+1, 2:NK]
                             mat_D[i,j,1:NK, selvar] .= 0e0 .- var0[i+1, j+1, 2:NK+1] - (dtimel * JacInv[i+1, j+1, 2:NK+1] * mat_D[i,j,1:NK, selvar]) + (dtimel * JacInv[i+1, j+1, 2:NK+1] * uvarx_advec[i+1,j+1,2:NK+1]) 
-                            @ccall "./PSOM_LIB.so".solve_tridiag_(pointer(mat_A[i,j,1:NK, selvar])::Ptr{rc_kind},pointer(mat_B[i,j,1:NK, selvar])::Ptr{rc_kind},pointer(mat_C[i,j,1:NK, selvar])::Ptr{rc_kind},pointer(mat_D[i,j,1:NK, selvar])::Ptr{rc_kind},pointer(mat_test[i,j,1:NK, selvar])::Ptr{rc_kind}, Ref(NK)::Ref{rc_kind})::Cvoid
+                            solve_tridiag(view(mat_A,i,j,1:NK, selvar), view(mat_B,i,j,1:NK, selvar), view(mat_C,i,j,1:NK, selvar), view(mat_D,i,j,1:NK, selvar), view(mat_test,i,j,1:NK, selvar), NK)
+                            #@ccall "./PSOM_LIB.so".solve_tridiag_(pointer(mat_A[i,j,1:NK, selvar])::Ptr{rc_kind},pointer(mat_B[i,j,1:NK, selvar])::Ptr{rc_kind},pointer(mat_C[i,j,1:NK, selvar])::Ptr{rc_kind},pointer(mat_D[i,j,1:NK, selvar])::Ptr{rc_kind},pointer(mat_test[i,j,1:NK, selvar])::Ptr{rc_kind}, Ref(NK)::Ref{rc_kind})::Cvoid
                         end
                     end
                     if (selvar == 1)

@@ -54,5 +54,7 @@ if (!@isdefined(INCLUDE_All))
     include("../src/prolong.jl")
     include("../src/uvchy.jl")
     include("../src/vcenter.jl")
+    include("../src/solve_tridiag2.jl")
+    
     
 end
