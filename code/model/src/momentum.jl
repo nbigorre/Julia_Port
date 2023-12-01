@@ -84,9 +84,11 @@ function momentum(pcorr, step)
         #@ccall "./PSOM_LIB.so".vcenter_(pointer(pcorr)::Ptr{rc_kind}, dtim::Ref{rc_kind}, ivf::Ref{Int})::Cvoid
         
         if (@fortGet("fnhhy", rc_kind) != 0e0)
-            @ccall "./PSOM_LIB.so".pcorrect_(pointer(pcorr)::Ptr{rc_kind})::Cvoid
+            pcorrect(reshape(view(pcorr, 1:(NI+2)*(NJ+2)*(NK+2)), (NI+2), (NJ+2), (NK+2)))
+            #@ccall "./PSOM_LIB.so".pcorrect_(pointer(pcorr)::Ptr{rc_kind})::Cvoid
         end
-        @ccall "./PSOM_LIB.so".facediv_(dtim::Ref{rc_kind}, fdiv::Ref{rc_kind})::Cvoid
+        fdiv[] = facediv(dtim[])
+        #@ccall "./PSOM_LIB.so".facediv_(dtim::Ref{rc_kind}, fdiv::Ref{rc_kind})::Cvoid
 
         ctrdiv[] = cdiv(dtim[], ivf[])
         #@ccall "./PSOM_LIB.so".cdiv_(dtim::Ref{rc_kind}, ctrdiv::Ref{rc_kind}, ivf::Ref{Int})::Cvoid

@@ -55,6 +55,8 @@ if (!@isdefined(INCLUDE_All))
     include("../src/uvchy.jl")
     include("../src/vcenter.jl")
     include("../src/solve_tridiag2.jl")
+    include("../src/pcorrect.jl")
+    include("../src/facediv.jl")
     
     
 end
