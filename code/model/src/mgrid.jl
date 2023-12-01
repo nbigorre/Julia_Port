@@ -85,7 +85,7 @@ function mgrid(p, dtime, edt, cfcdiv)
                maxres[] = resid(m, nx[m], ny[m], nz[m], cp_r, p_r, rhs_r, res_r)
                #@ccall "./PSOM_LIB.so".resid_(Ref(m)::Ref{Int}, Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(cp, loccp[m])::Ptr{rc_kind}, pointer(p, loco[m])::Ptr{rc_kind}, pointer(rhs, loci[m])::Ptr{rc_kind}, pointer(res)::Ptr{rc_kind}, maxres::Ref{rc_kind})::Cvoid
           end
-          
+
           if (maxres[] < tol)
                return
           end
@@ -110,9 +110,9 @@ function mgrid(p, dtime, edt, cfcdiv)
                end
                efill(nx[m], ny[m], nz[m], p_r)
                #@ccall "./PSOM_LIB.so".efill_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(p, loco[m])::Ptr{rc_kind})::Cvoid
-               
+
                let
-                    local p_fin = reshape(view(p, loco[m-1]:(loco[m-1]-1+((2*nx[m]+2)*(2*ny[m]+2)*(2*nz[m]+2)))), (2*nx[m] + 2), (2*ny[m] + 2), (2*nz[m] + 2))
+                    local p_fin = reshape(view(p, loco[m-1]:(loco[m-1]-1+((2*nx[m]+2)*(2*ny[m]+2)*(2*nz[m]+2)))), (2 * nx[m] + 2), (2 * ny[m] + 2), (2 * nz[m] + 2))
                     prolong(nx[m], ny[m], nz[m], p_r, p_fin)
                     #@ccall "./PSOM_LIB.so".prolong_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(p, loco[m])::Ptr{rc_kind}, pointer(p, loco[m-1])::Ptr{rc_kind})::Cvoid
                end
@@ -120,14 +120,22 @@ function mgrid(p, dtime, edt, cfcdiv)
      end
 
      local m = 1
-     for l in 1:nu1
-          @ccall "./PSOM_LIB.so".linerelax_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(cp, loccp[m])::Ptr{rc_kind}, pointer(p, loco[m])::Ptr{rc_kind}, pointer(rhs, loci[m])::Ptr{rc_kind})::Cvoid
-          @ccall "./PSOM_LIB.so".mgpfill_(Ref(dtime)::Ref{rc_kind}, pointer(p)::Ptr{rc_kind})::Cvoid
+     let
+          local cp_r = reshape(view(cp, loccp[m]:(loccp[m]-1+(19*nx[m]*ny[m]*nz[m]))), 19, nx[m], ny[m], nz[m])
+          local p_r = reshape(view(p, loco[m]:(loco[m]-1+((nx[m]+2)*(ny[m]+2)*(nz[m]+2)))), (nx[m] + 2), (ny[m] + 2), (nz[m] + 2))
+          local p_base = reshape(view(p, 1:((NI+2)*(NJ+2)*(NK+2))), (NI + 2), (NJ + 2), (NK + 2))
+          for l in 1:nu1
+               linerelax(nx[m], ny[m], nz[m], cp_r, p_r, rhs_r)
+               #@ccall "./PSOM_LIB.so".linerelax_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(cp, loccp[m])::Ptr{rc_kind}, pointer(p, loco[m])::Ptr{rc_kind}, pointer(rhs, loci[m])::Ptr{rc_kind})::Cvoid
+               
+               mgpfill(dtime, p_base)
+               #@ccall "./PSOM_LIB.so".mgpfill_(Ref(dtime)::Ref{rc_kind}, pointer(p)::Ptr{rc_kind})::Cvoid
+          end
+          local rhs_r = reshape(view(rhs, loci[m]:(loci[m]-1+(nx[m]*ny[m]*nz[m]))), nx[m], ny[m], nz[m])
+          local res_r = reshape(view(res, 1:(nx[m]*ny[m]*nz[m])), nx[m], ny[m], nz[m])
+          maxres[] = resid(m, nx[m], ny[m], nz[m], cp_r, p_r, rhs_r, res_r)
+          #@ccall "./PSOM_LIB.so".resid_(Ref(m)::Ref{Int}, Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(cp, loccp[m])::Ptr{rc_kind}, pointer(p, loco[m])::Ptr{rc_kind}, pointer(rhs, loci[m])::Ptr{rc_kind}, pointer(res)::Ptr{rc_kind}, maxres::Ref{rc_kind})::Cvoid
      end
-
-     local m = 1
-     @ccall "./PSOM_LIB.so".resid_(Ref(m)::Ref{Int}, Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(cp, loccp[m])::Ptr{rc_kind}, pointer(p, loco[m])::Ptr{rc_kind}, pointer(rhs, loci[m])::Ptr{rc_kind}, pointer(res)::Ptr{rc_kind}, maxres::Ref{rc_kind})::Cvoid
-
      maxres[] = maxres[] / edt
 
 end
