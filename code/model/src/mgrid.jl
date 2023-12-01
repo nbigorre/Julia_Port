@@ -111,7 +111,11 @@ function mgrid(p, dtime, edt, cfcdiv)
                efill(nx[m], ny[m], nz[m], p_r)
                #@ccall "./PSOM_LIB.so".efill_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(p, loco[m])::Ptr{rc_kind})::Cvoid
                
-               @ccall "./PSOM_LIB.so".prolong_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(p, loco[m])::Ptr{rc_kind}, pointer(p, loco[m-1])::Ptr{rc_kind})::Cvoid
+               let
+                    local p_fin = reshape(view(p, loco[m-1]:(loco[m-1]-1+((2*nx[m]+2)*(2*ny[m]+2)*(2*nz[m]+2)))), (2*nx[m] + 2), (2*ny[m] + 2), (2*nz[m] + 2))
+                    prolong(nx[m], ny[m], nz[m], p_r, p_fin)
+                    #@ccall "./PSOM_LIB.so".prolong_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(p, loco[m])::Ptr{rc_kind}, pointer(p, loco[m-1])::Ptr{rc_kind})::Cvoid
+               end
           end
      end
 
