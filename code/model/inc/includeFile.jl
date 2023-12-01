@@ -57,6 +57,8 @@ if (!@isdefined(INCLUDE_All))
     include("../src/solve_tridiag2.jl")
     include("../src/pcorrect.jl")
     include("../src/facediv.jl")
+    include("../src/conadjust_sT.jl")
+    include("../src/diag_n2.jl")
     
     
 end

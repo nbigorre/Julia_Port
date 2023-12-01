@@ -28,6 +28,9 @@ global const rect=true
 
 ###############      ARRAYS       ###############
 
+global const conv = @fortGetArr("conv", Int, (NI + 2, NJ + 2, NK + 2))
+global const con100 = @fortGetArr("con100", Int, (NI + 2, NJ + 2, NK + 2))
+
 global const ru_Sche = @fortGetArr("ru_sche", rc_kind, (NI+2,NJ+2,NK))
 global const rv_Sche = @fortGetArr("rv_sche", rc_kind, (NI+2,NJ+2,NK))
 global const ru2_Sche = @fortGetArr("ru2_sche", rc_kind, (NI+2,NJ+2,NK))
@@ -76,6 +79,9 @@ global const vor = @fortGetArr("vor", rc_kind, (NI+2,NJ+2,NK+2))
 global const rho = @fortGetArr("rho", rc_kind, (NI+2,NJ+2,NK+2))
 global const rho_old = @fortGetArr("rho_old", rc_kind, (NI+2, NJ+2, NK+2))
 
+global const freqby = @fortGetArr("freqby", rc_kind, (NI+2, NJ+2, NK+2))
+global const freqbz = @fortGetArr("freqbz", rc_kind, (NI+2, NJ+2, NK+2))
+global const freqN2 = @fortGetArr("freqn2", rc_kind, (NI+2, NJ+2, NK+2))
 global const si = @fortGetArr("si", rc_kind, (NI+2, NJ+2, NK+2))
 global const sj = @fortGetArr("sj", rc_kind, (NI+2, NJ+2, NK+2))
 global const sk = @fortGetArr("sk", rc_kind, (NI+2, NJ+2, NK+2))
