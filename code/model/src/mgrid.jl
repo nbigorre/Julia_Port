@@ -71,12 +71,21 @@ function mgrid(p, dtime, edt, cfcdiv)
                local p_r = reshape(view(p, loco[m]:(loco[m]-1+((nx[m]+2)*(ny[m]+2)*(nz[m]+2)))), (nx[m] + 2), (ny[m] + 2), (nz[m] + 2))
                local rhs_r = reshape(view(rhs, loci[m]:(loci[m]-1+(nx[m]*ny[m]*nz[m]))), nx[m], ny[m], nz[m])
                linerelax(nx[m], ny[m], nz[m], cp_r, p_r, rhs_r)
-               #@ccall "./PSOM_LIB.so".linerelax_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(cp_r)::Ptr{rc_kind}, pointer(p, loco[m])::Ptr{rc_kind}, pointer(rhs, loci[m])::Ptr{rc_kind})::Cvoid
+               #@ccall "./PSOM_LIB.so".linerelax_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(cp,loccp[m])::Ptr{rc_kind}, pointer(p, loco[m])::Ptr{rc_kind}, pointer(rhs, loci[m])::Ptr{rc_kind})::Cvoid
 
                mgpfill(dtime, reshape(view(p, 1:((NI+2)*(NJ+2)*(NK+2))), (NI + 2), (NJ + 2), (NK + 2)))
                #@ccall "./PSOM_LIB.so".mgpfill_(Ref(dtime)::Ref{rc_kind}, pointer(p)::Ptr{rc_kind})::Cvoid
           end
-          @ccall "./PSOM_LIB.so".resid_(Ref(m)::Ref{Int}, Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(cp, loccp[m])::Ptr{rc_kind}, pointer(p, loco[m])::Ptr{rc_kind}, pointer(rhs, loci[m])::Ptr{rc_kind}, pointer(res)::Ptr{rc_kind}, maxres::Ref{rc_kind})::Cvoid
+
+          let
+               local cp_r = reshape(view(cp, loccp[m]:(loccp[m]-1+(19*nx[m]*ny[m]*nz[m]))), 19, nx[m], ny[m], nz[m])
+               local p_r = reshape(view(p, loco[m]:(loco[m]-1+((nx[m]+2)*(ny[m]+2)*(nz[m]+2)))), (nx[m] + 2), (ny[m] + 2), (nz[m] + 2))
+               local rhs_r = reshape(view(rhs, loci[m]:(loci[m]-1+(nx[m]*ny[m]*nz[m]))), nx[m], ny[m], nz[m])
+               local res_r = reshape(view(res, 1:(nx[m]*ny[m]*nz[m])), nx[m], ny[m], nz[m])
+               maxres[] = resid(m, nx[m], ny[m], nz[m], cp_r, p_r, rhs_r, res_r)
+               #@ccall "./PSOM_LIB.so".resid_(Ref(m)::Ref{Int}, Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(cp, loccp[m])::Ptr{rc_kind}, pointer(p, loco[m])::Ptr{rc_kind}, pointer(rhs, loci[m])::Ptr{rc_kind}, pointer(res)::Ptr{rc_kind}, maxres::Ref{rc_kind})::Cvoid
+          end
+          
           if (maxres[] < tol)
                return
           end
