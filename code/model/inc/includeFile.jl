@@ -53,5 +53,6 @@ if (!@isdefined(INCLUDE_All))
     include("../src/efill.jl")
     include("../src/prolong.jl")
     include("../src/uvchy.jl")
+    include("../src/vcenter.jl")
     
 end

@@ -80,7 +80,9 @@ function momentum(pcorr, step)
         vface(pcorr, dtim[])
         #@ccall "./PSOM_LIB.so".vface_(pointer(pcorr)::Ptr{rc_kind}, dtim::Ref{rc_kind})::Cvoid
         
-        @ccall "./PSOM_LIB.so".vcenter_(pointer(pcorr)::Ptr{rc_kind}, dtim::Ref{rc_kind}, ivf::Ref{Int})::Cvoid
+        vcenter(reshape(view(pcorr, 1:(NI+2)*(NJ+2)*(NK+2)), (NI+2), (NJ+2), (NK+2)), dtim[], ivf[])
+        #@ccall "./PSOM_LIB.so".vcenter_(pointer(pcorr)::Ptr{rc_kind}, dtim::Ref{rc_kind}, ivf::Ref{Int})::Cvoid
+        
         if (@fortGet("fnhhy", rc_kind) != 0e0)
             @ccall "./PSOM_LIB.so".pcorrect_(pointer(pcorr)::Ptr{rc_kind})::Cvoid
         end
