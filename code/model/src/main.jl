@@ -6,12 +6,13 @@ using .cppdefs
 
 
 #preproc relaxation
-if (cppdefs.relaxation)
+@static if (cppdefs.relaxation)
     include("relaxation.jl")
+    using .relaxation
 end
 
 #preproc allow_particle
-if (cppdefs.allow_particle)
+@static if (cppdefs.allow_particle)
     include("particles.jl")
     using .particles
 end
@@ -28,11 +29,11 @@ function main()
 
     include("../inc/ini_param.jl")
 
-    if (cppdefs.relaxation)
+    @static if (cppdefs.relaxation)
         set_coef()
     end
 
-    if (cppdefs.allow_particle)
+    @static if (cppdefs.allow_particle)
         # ALLOCATE ARRAY
     end
 
@@ -50,9 +51,11 @@ function main()
 
     @ccall "./PSOM_LIB.so".ini_uv_(Ref(0)::Ptr{Int})::Cvoid
 
-    @ccall "./PSOM_LIB.so".facediv_(Ref(EPS)::Ptr{rc_kind}, Ref(fdiv)::Ptr{rc_kind})::Cvoid
+    fdiv = facediv(EPS)
+    #@ccall "./PSOM_LIB.so".facediv_(Ref(EPS)::Ptr{rc_kind}, Ref(fdiv)::Ptr{rc_kind})::Cvoid
 
-    @ccall "./PSOM_LIB.so".cdiv_(Ref(EPS)::Ptr{rc_kind}, Ref(ctrdiv)::Ptr{rc_kind}, Ref(0)::Ptr{Int})::Cvoid
+    ctrdiv = cdiv(EPS, 0)
+    #@ccall "./PSOM_LIB.so".cdiv_(Ref(EPS)::Ptr{rc_kind}, Ref(ctrdiv)::Ptr{rc_kind}, Ref(0)::Ptr{Int})::Cvoid
 
     @ccall "./PSOM_LIB.so".vort_(Ref(0)::Ptr{Int})::Cvoid
 
@@ -60,16 +63,18 @@ function main()
     @fortSet("time_nondim", @fortGet("dtf", rc_kind) * step, rc_kind)
     @fortSet("time_seconds", @fortGet("time_nondim", rc_kind) * @fortGet("tl", rc_kind), rc_kind)
 
-    if (cppdefs.gotm_call)
+    @static if (cppdefs.gotm_call)
         @ccall "./PSOM_LIB.so".initial_tke_()::Cvoid
     end
-    if (cppdefs.implicit)
+    @static if (cppdefs.implicit)
         println("mixing implicit")
     else
         println("mixing explicit")
     end
 
-    @ccall "./PSOM_LIB.so".diag_n2_()::Cvoid
+    diag_n2()
+    #@ccall "./PSOM_LIB.so".diag_n2_()::Cvoid
+    
     @ccall "./PSOM_LIB.so".diag_n2budget_(Ref(step)::Ptr{Int})::Cvoid
 
     #tim = dtime
@@ -97,11 +102,11 @@ function main()
 
     end
 
-    if (cppdefs.file_output)
-        if (cppdefs.file_output_cdf)
+    @static if (cppdefs.file_output)
+        @static if (cppdefs.file_output_cdf)
             @ccall "./PSOM_LIB.so".write_cdf_(Ref(step)::Ptr{Int}, Ref(0)::Ptr{Int})::Cvoid
         end
-        if (cppdefs.file_output_bin)
+        @static if (cppdefs.file_output_bin)
             @ccall "./PSOM_LIB.so".write_bin_(Ref(step)::Ptr{Int})::Cvoid
         end
     end
@@ -121,10 +126,11 @@ function main()
         @fortSet("time_seconds", @fortGet("time_nondim", rc_kind) * @fortGet("tl", rc_kind), rc_kind)
 
         #preproc allow_particle
-        if (cppdefs.allow_particle)
+        @static if (cppdefs.allow_particle)
             #                       IMPLEM JULIA
         end
 
+        diag_n2()
         @ccall "./PSOM_LIB.so".diag_n2_()::Cvoid
 
         #@ccall "./PSOM_LIB.so".momentum_(pointer(pcorr)::Ptr{rc_kind}, Ref(step)::Ptr{Int})::Cvoid
@@ -137,15 +143,15 @@ function main()
 
         @ccall "./PSOM_LIB.so".meanh_(Ref(NI)::Ptr{Int}, Ref(NJ)::Ptr{Int}, @lkGet("h", rc_kind)::Ptr{rc_kind}, @lkGet("hmean", rc_kind)::Ptr{rc_kind})::Cvoid
 
-        if (cppdefs.allow_particle)
+        @static if (cppdefs.allow_particle)
             #                       IMPLEM JULIA
         end
 
-        if (cppdefs.file_output)
-            if (cppdefs.file_output_cdf)
+        @static if (cppdefs.file_output)
+            @static if (cppdefs.file_output_cdf)
                 @ccall "./PSOM_LIB.so".write_cdf_(Ref(step)::Ptr{Int}, Ref(0)::Ptr{Int})::Cvoid
             end
-            if (cppdefs.file_output_bin)
+            @static if (cppdefs.file_output_bin)
                 @ccall "./PSOM_LIB.so".write_bin_(Ref(step)::Ptr{Int})::Cvoid
             end
         end

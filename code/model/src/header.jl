@@ -158,7 +158,7 @@ global const qloss = @fortGetArr("qloss", rc_kind, (NJ+2))
 
 global const yc = @fortGetArr("yc", rc_kind, (NJ+2))
 
-if (cppdefs.implicit)
+@static if (cppdefs.implicit)
     global const mat_A = zeros(rc_kind, (NI, NJ, NK, 5))
     global const mat_B = zeros(rc_kind, (NI, NJ, NK, 5))
     global const mat_C = zeros(rc_kind, (NI, NJ, NK, 5))
@@ -166,7 +166,7 @@ if (cppdefs.implicit)
     global const mat_test = zeros(rc_kind, (NI, NJ, NK, 5))
 end
 
-if (cppdefs.allow_particle)
+@static if (cppdefs.allow_particle)
     global parti_file_num::Int = 0
     global NPR::Int = 0
 end

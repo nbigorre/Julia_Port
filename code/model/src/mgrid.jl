@@ -91,10 +91,26 @@ function mgrid(p, dtime, edt, cfcdiv)
           end
           let
                local res_r = reshape(view(res, 1:(nx[m]*ny[m]*nz[m])), nx[m], ny[m], nz[m])
-               local rhs_r = reshape(view(rhs, loci[m+1]:(loci[m+1]-1+(nx[m]*ny[m]*nz[m]))), nx[m], ny[m], nz[m])
-               restrict(nx[m], ny[m], nz[m], res_r, rhs_r)
+               local rhs_rp1 = reshape(view(rhs, loci[m+1]:(loci[m+1]-1+(nx[m]*ny[m]*nz[m]))), nx[m], ny[m], nz[m])
+               restrict(nx[m], ny[m], nz[m], res_r, rhs_rp1)
                #@ccall "./PSOM_LIB.so".restrict_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(res)::Ptr{rc_kind}, pointer(rhs, loci[m+1])::Ptr{rc_kind})::Cvoid
           end
+          for m in ngrid:-1:2
+               local cp_r = reshape(view(cp, loccp[m]:(loccp[m]-1+(19*nx[m]*ny[m]*nz[m]))), 19, nx[m], ny[m], nz[m])
+               local p_r = reshape(view(p, loco[m]:(loco[m]-1+((nx[m]+2)*(ny[m]+2)*(nz[m]+2)))), (nx[m] + 2), (ny[m] + 2), (nz[m] + 2))
+               local rhs_r = reshape(view(rhs, loci[m]:(loci[m]-1+(nx[m]*ny[m]*nz[m]))), nx[m], ny[m], nz[m])
+               local res_r = reshape(view(res, 1:(nx[m]*ny[m]*nz[m])), nx[m], ny[m], nz[m])
+               local rhs_rp1 = reshape(view(rhs, loci[m+1]:(loci[m+1]-1+(nx[m]*ny[m]*nz[m]))), nx[m], ny[m], nz[m])
+               for l in 1:nu2
+                    linerelax(nx[m], ny[m], nz[m], cp_r, p_r, rhs_r)
+                    #@ccall "./PSOM_LIB.so".linerelax_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(cp, loccp[m])::Ptr{rc_kind}, pointer(p, loco[m])::Ptr{rc_kind}, pointer(rhs, loci[m])::Ptr{rc_kind})::Cvoid
+               end
+               maxres[] = resid(m, nx[m], ny[m], nz[m], cp_r, p_r, rhs_r, res_r)
+               restrict(nx[m], ny[m], nz[m], res_r, rhs_rp1)
+               #@ccall "./PSOM_LIB.so".restrict_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(res)::Ptr{rc_kind}, pointer(rhs, loci[m+1])::Ptr{rc_kind})::Cvoid
+          end
+
+
           for m in ngrid:-1:2
                local cp_r = reshape(view(cp, loccp[m]:(loccp[m]-1+(19*nx[m]*ny[m]*nz[m]))), 19, nx[m], ny[m], nz[m])
                local p_r = reshape(view(p, loco[m]:(loco[m]-1+((nx[m]+2)*(ny[m]+2)*(nz[m]+2)))), (nx[m] + 2), (ny[m] + 2), (nz[m] + 2))
