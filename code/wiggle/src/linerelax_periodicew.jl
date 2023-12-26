@@ -4,8 +4,9 @@ function linerelax_segment(chunk, nxm, nym, nzm, cp, p, fn)
   local subd = zeros(rc_kind, NK)
   local supd = zeros(rc_kind, NK)
   local dia = zeros(rc_kind, NK)
+  local seed = Ref(91294)
   for j in chunk
-    local istart = div(NI, 2)
+    local istart =  div(NI, 2) #Int(floor((@ccall "./PSOM_LIB".ran3_(seed::Ref{Int})::rc_kind) * (nxm + 1)))
     for ii in 1:nxm
       local i = ii + istart
       i = mod(i-1, nxm) + 1

@@ -41,7 +41,7 @@ function prolong(nxm, nym, nzm, cor, fin)
             for j in 0:nym
                   local js = j * 2
                   for i in 0:nxm
-                        local is = i * 2
+                        local iw = i * 2
                         fin[iw+1, js+1, kb+1] = fin[iw+1, js+1, kb+1] +
                                                 an[1] * cor[i+1, j+1, k+1] + an[2] * cor[i+2, j+1, k+1] +
                                                 an[3] * cor[i+2, j+2, k+1] + an[4] * cor[i+1, j+2, k+1] +

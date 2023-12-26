@@ -4,7 +4,7 @@ function sor(nxm, nym, nzm, cp, p, fn)
             for k in 1:nzm
                   for j in 1:nym
                         for i in nxm
-                              pstar= ( cp(2,i,j,k)*p(i+1,j,k) 
+                              pstar= ( cp[2,i,j,k]*p[i+1,j,k] 
                                             +cp[3,i,j,k ]*p[i+1,j+2,k+1]
                                             +cp[4,i,j,k ]*p[i,j+1,k+1]
                                             +cp[5,i,j,k ]*p[i+1,j,k+1]
