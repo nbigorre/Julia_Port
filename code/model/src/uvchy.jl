@@ -18,8 +18,8 @@ function uvchy(dtimel)
           peta = p[i, j, k] - p[i, j-1, k]
         end
         local psig = 0.5e0 * (p[i, j, k+1] - p[i, j, k-1])
-        local px = ux[i, j] * pxi + vx[i, j] * peta + wx[i+1, j+1, k+1] * psig
-        local py = uy[i, j] * pxi + vy[i, j] * peta + wy[i+1, j+1, k+1] * psig
+        local px = ux[i, j] * pxi + vx[i, j] * peta + wx[i, j, k] * psig
+        local py = uy[i, j] * pxi + vy[i, j] * peta + wy[i, j, k] * psig
 
         cx[i, j, k] = cx[i, j, k] - dte * (gpr * (@fortGet("kappah", rc_kind) * hx + kaph1 * gradhn[i, j, 1]) + si[i, j, k] + @fortGet("qpr", rc_kind) * px)
         cy[i, j, k] = cy[i, j, k] - dte * (gpr * (@fortGet("kappah", rc_kind) * hy + kaph1 * gradhn[i, j, 2]) + sj[i, j, k] + @fortGet("qpr", rc_kind) * py)
@@ -33,7 +33,7 @@ function uvchy(dtimel)
     for i in 1:NI
       for k in 1:NK
         local wfk = 0.5e0 * (czf[i, j, k] + czf[i, j, k-1])
-        cz[i, j, k] = (wfk / Jac[i, j, k] - cx[i, j, k] * wx[i+1, j+1, k+1] - cy[i, j, k] * wy[i+1, j+1, k+1]) / (EPS * wz[i+1, j+1, k+1])
+        cz[i, j, k] = (wfk / Jac[i, j, k] - cx[i, j, k] * wx[i, j, k] - cy[i, j, k] * wy[i+1, j+1, k+1]) / (EPS * wz[i, j, k])
       end
     end
   end

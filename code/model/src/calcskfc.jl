@@ -19,10 +19,10 @@ function calcfkfc()
             
 
             for k in 1:NK-1
-                local wxk = 0.5e0 * (wx[i+1, j+1, k+2] + wx[i+1, j+1, k+1])
+                local wxk = 0.5e0 * (wx[i, j, k+1] + wx[i, j, k])
                 local wxsk = wxk * (0.5e0 * (si[i,j,k+1] + si[i,j,k]) + hx)
 
-                local wyk = 0.5e0 * (wy[i+1, j+1, k+2] + wy[i+1, j+1, k+1])
+                local wyk = 0.5e0 * (wy[i, j, k+1] + wy[i, j, k])
                 local wysk = wyk * (0.5e0 * (sj[i,j,k+1] + sj[i,j,k]) + hy)
                 
                 local wzsk = wzk[i, j, k] * (sk[i, j, k+1] + sk[i, j, k]) * 0.5e0
@@ -34,8 +34,8 @@ function calcfkfc()
             local k = 0
 
             local wzsk = wzk[i, j, k] * 0.5e0 * (3e0 * sk[i,j,k+1] - sk[i,j, k+2])
-            local wxsk = wx[i+1, j+1, k+2] * (si[i, j, k+1] + hx)
-            local wysk = wy[i+1, j+1, k+2] * (sj[i, j, k+1] + hy)
+            local wxsk = wx[i, j, k+1] * (si[i, j, k+1] + hx)
+            local wysk = wy[i, j, k+1] * (sj[i, j, k+1] + hy)
 
             local Jack = Jac[i, j, k+1]
             skfc[i, j, k] = (be2 * wzsk + wxsk + wysk) * Jack
@@ -43,8 +43,8 @@ function calcfkfc()
             local k = NK
 
             local wzsk = wzk[i, j, k] * 0.5e0 * (3e0 * sk[i,j,k] - sk[i,j, k-1])
-            local wxsk = 0.5e0 * (wx[i+1, j+1, k+2] + wx[i+1, j+1, k+1]) * (si[i,j,k] + hx)
-            local wysk = 0.5e0 * (wy[i+1, j+1, k+2] + wy[i+1, j+1, k+1]) * (sj[i,j,k] + hy)
+            local wxsk = 0.5e0 * (wx[i, j, k+1] + wx[i, j, k]) * (si[i,j,k] + hx)
+            local wysk = 0.5e0 * (wy[i, j, k+1] + wy[i, j, k]) * (sj[i,j,k] + hy)
 
             local Jack = Jac[i, j, k]
             skfc[i, j, k] = (be2 * wzsk + wxsk + wysk) * Jack

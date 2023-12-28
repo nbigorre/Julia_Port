@@ -41,8 +41,8 @@ function wind_stress(udif,vdif,step)
             local Kdudzt = stress_top_x[i,j] * rhoinv * fact
             local Kdvdzt = stress_top_y[i,j] * rhoinv * fact
             
-            udif[i,j,NK] = fac * Jac[i,j,NK] * wz[i+1,j+1,NK+1] * Kdudzt
-            vdif[i,j,NK] = fac * Jac[i,j,NK] * wz[i+1,j+1,NK+1] * Kdvdzt
+            udif[i,j,NK] = fac * Jac[i,j,NK] * wz[i,j,NK] * Kdudzt
+            vdif[i,j,NK] = fac * Jac[i,j,NK] * wz[i,j,NK] * Kdvdzt
         end
     end
 

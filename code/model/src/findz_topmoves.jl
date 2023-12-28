@@ -20,11 +20,11 @@ function findzall()
       local hpd = h[i+1, j+1] * @fortGet("hdl",rc_kind) + @fortGet("dztop", rc_kind)
       for k in NK:NK+1
         local sigma = rc_kind(k) - 0.5e0
-        zc[i+1, j+1, k+1] = (sigma - dnkm1) * hpd - @fortGet("dztop", rc_kind)
+        zc[i, j, k] = (sigma - dnkm1) * hpd - @fortGet("dztop", rc_kind)
       end
       for k in NK-1:NK+1
         local sigma = rc_kind(k)
-        zf[i+1, j+1, k+2] = (sigma - dnkm1) * hpd - @fortGet("dztop", rc_kind)
+        zf[i, j, k] = (sigma - dnkm1) * hpd - @fortGet("dztop", rc_kind)
       end
     end
   end
@@ -46,9 +46,9 @@ function findzall()
         local xfac = (dnkm1 - sigma) * dnkm1inv
         
         @static if (cppdefs.fixed_bottom_thickness)
-          zc[i+1, j+1, k+1] = (exp(pfac*xfac) - 1e0) * epm1inv * (D[i,j] + dzbot + dztop) - dztop
+          zc[i, j, k] = (exp(pfac*xfac) - 1e0) * epm1inv * (D[i,j] + dzbot + dztop) - dztop
         else
-          zc[i+1, j+1, k+1] = (exp(pfac*xfac) - 1e0) * epm1inv * (D[i,j] + dztop) - dztop
+          zc[i, j, k] = (exp(pfac*xfac) - 1e0) * epm1inv * (D[i,j] + dztop) - dztop
         end
 
       end
@@ -60,20 +60,20 @@ function findzall()
         end
         local xfac = (dnkm1 - sigma) * dnkm1inv
         @static if (cppdefs.fixed_bottom_thickness)
-          zf[i+1, j+1, k+2] = (exp(pfac*xfac) - 1e0) * epm1inv * (D[i,j] + dzbot + dztop) - dztop
+          zf[i, j, k] = (exp(pfac*xfac) - 1e0) * epm1inv * (D[i,j] + dzbot + dztop) - dztop
         else
-          zf[i+1, j+1, k+2] = (exp(pfac*xfac) - 1e0) * epm1inv * (D[i,j] + dztop) - dztop
+          zf[i, j, k] = (exp(pfac*xfac) - 1e0) * epm1inv * (D[i,j] + dztop) - dztop
         end
       end
       
       @static if (cppdefs.fixed_bottom_thickness)
         for k in 0:1
           local sigma = rc_kind(k) - 0.5e0
-          zc[i+1, j+1, k+1] = ((sigma - 0e0) / 1e0) * dzbot + D[i, j]
+          zc[i, j, k] = ((sigma - 0e0) / 1e0) * dzbot + D[i, j]
         end
         for k in -1:1
           local sigma = rc_kind(k)
-          zf[i+1, j+1, k+2] = ((sigma - 0e0) / 1e0) * dzbot + D[i, j]
+          zf[i, j, k] = ((sigma - 0e0) / 1e0) * dzbot + D[i, j]
         end
       end
       

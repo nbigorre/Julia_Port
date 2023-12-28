@@ -4,10 +4,10 @@ function conadjust(stepl, n)
       for k in NK-1:-1:1
         conv[i+1, j+1, k+1] = 0e0
         local rhtop = rho[i, j, k+1]
-        local dzupper = zf[i+1, j+1, k+3] - zf[i+1, j+1, k+2]
+        local dzupper = zf[i, j, k+1] - zf[i, j, k]
 
         local rh = rho[i, j, k]
-        local dz = zf[i + 1, j + 1, k + 2] - zf[i + 1, j + 1, k + 1]
+        local dz = zf[i, j, k] - zf[i, j, k-1]
 
         if (rh < rhtop)
           conv[i+1, j+1, k+1] = 1e0
@@ -27,7 +27,7 @@ function conadjust(stepl, n)
     end
   end
 
-  if (mod(stepl-1, 100) == 0)
+  if (mod(stepl - 1, 100) == 0)
     con100 .= 0
   else
     con100 .+= conv

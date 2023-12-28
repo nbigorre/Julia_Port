@@ -108,7 +108,7 @@ const global get_parti_vel_uf_ex = zeros(rc_kind, (NI + 1, NJ + 2, NK + 2))
 const global get_parti_vel_vf_ex = zeros(rc_kind, (NI + 2, NJ + 1, NK + 2))
 const global get_parti_vel_wf_ex = zeros(rc_kind, (NI + 2, NJ + 2, NK + 1))
 function get_parti_vel(time)
-    @inbounds @views @. wzf = 0.5d0 * (wz[:, :, 1:NK+1] + wz[:, :, 2:NK+1])
+    @inbounds @views @. wzf = 0.5d0 * (wz[:, :, 0:NK] + wz[:, :, 1:NK+1])
 
     k = 0
     wfp[:, :, 1] = wf[:, :, 1] / J2d[1:NI, 1:NJ] * wzf[2:NI+1, 2:NJ+1, 1]

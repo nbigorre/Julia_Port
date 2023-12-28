@@ -9,27 +9,27 @@ function mixing_vertical_worker(area, fac, var, vardif)
         local j = div(counter - 1, NI) + 1
         local i = mod(counter - 1, NI) + 1
         for k in 1:NK-1
-            dvardzfc[k+1] = wz[i+1, j+1, k+1] * (var[i+1, j+1, k+2] - var[i+1, j+1, k+1])
+            dvardzfc[k+1] = wz[i, j, k] * (var[i+1, j+1, k+2] - var[i+1, j+1, k+1])
         end
 
         dvardzfc[1] = 0e0
         dvardzfc[NK+1] = 0e0
 
-        local dfactor = fac * Jac[i, j, 1] * wz[i+1, j+1, 2]
+        local dfactor = fac * Jac[i, j, 1] * wz[i, j, 1]
         @static if (cppdefs.implicit)
             #########################################################################################################
         else
             vardif[i, j, 1] = dfactor * (dvardzfc[2] * Kz[i, j, 1] - dvardzfc[1] * Kz[i, j, 0])
         end
         for k in 2:NK-1
-            local dfactor = fac * Jac[i, j, k] * wz[i+1, j+1, k+1]
+            local dfactor = fac * Jac[i, j, k] * wz[i, j, k]
             @static if (cppdefs.implicit)
                 #########################################################################################################
             else
                 vardif[i, j, k] = dfactor * (dvardzfc[k+1] * Kz[i, j, k] - dvardzfc[k] * Kz[i, j, k-1])
             end
         end
-        local dfactor = fac * Jac[i, j, NK] * wz[i+1, j+1, NK+1]
+        local dfactor = fac * Jac[i, j, NK] * wz[i, j, NK]
         @static if (cppdefs.implicit)
             #########################################################################################################
         else
@@ -58,7 +58,7 @@ function mixing_vertical(var, vardif, m, step, iv_compute_kzl)
                     local ztransit = -Ekdepth
                     for k in NK:-1:0
                         Kz[i, j, k] = 1e0
-                        local zdep = zf[i+1, j+1, k+2] * DL
+                        local zdep = zf[i, j, k] * DL
                         local thy = (1e0 + tanh(((zdep - ztransit) / zextent) * PI)) * 0.5e0
                         Kz[i, j, k] = max(0.01e0, thy) * KzmaxTr
                     end

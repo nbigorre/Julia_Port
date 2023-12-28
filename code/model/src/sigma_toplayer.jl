@@ -50,16 +50,16 @@ function sigma()
       # Computation of wx, wy, g13, g23:
 
       for k in NK:NK+1
-        wz[i+1,j+1,k+1] = hpdinv
-        Jac[i, j, k] = J2d[i, j] / wz[i+1, j+1, k+1]
+        wz[i,j,k] = hpdinv
+        Jac[i, j, k] = J2d[i, j] / wz[i, j, k]
         #     All these variables are functions of time and depth               
         #     now hdt computed in vhydro already contains HDL  
         local sig = rc_kind(k) - 0.5e0
         local z = (sig - dnkm1) * hpd - @fortGet("dztop", rc_kind)
-        wx[i+1, j+1, k+1] = (dnkm1 - sig) * hx * hpdinv
-        wy[i+1, j+1, k+1] = (dnkm1 - sig) * hy * hpdinv
-        g13[i+1, j+1, k+1] = ux[i, j] * wx[i+1, j+1, k+1] + uy[i, j] * wy[i+1, j+1, k+1]
-        g23[i+1, j+1, k+1] = vx[i, j] * wx[i+1, j+1, k+1] + vy[i, j] * wy[i+1, j+1, k+1]
+        wx[i, j, k] = (dnkm1 - sig) * hx * hpdinv
+        wy[i, j, k] = (dnkm1 - sig) * hy * hpdinv
+        g13[i+1, j+1, k+1] = ux[i, j] * wx[i, j, k] + uy[i, j] * wy[i, j, k]
+        g23[i+1, j+1, k+1] = vx[i, j] * wx[i, j, k] + vy[i, j] * wy[i, j, k]
       end
 
       for k in NK-1:NK
@@ -68,7 +68,7 @@ function sigma()
       end
 
       wzk[i, j, NK] = hpdinv
-      wzk[i, j, NK-1] = 0.5e0 * (wz[i+1, j+1, NK+1] + wz[i+1, j+1, NK])
+      wzk[i, j, NK-1] = 0.5e0 * (wz[i, j, NK] + wz[i, j, NK-1])
 
       for k in NK-1:NK
         local sig = rc_kind(k)
@@ -76,7 +76,7 @@ function sigma()
         local wyk = (dnkm1 - sig) * hy * hpdinv
         gqk[i+1, j+1, k+1, 1] = qpr * Jac[i, j, k] * (ux[i, j] * wxk +  uy[i, j] * wyk)
         gqk[i+1, j+1, k+1, 2] = qpr * Jac[i, j, k] * (vx[i, j] * wxk +  vy[i, j] * wyk)
-        gqk[i+1, j+1, k+1, 3] = Jac[i, j, k] * (qpr * (wxk*wxk + wyk*wyk) + be2 * wz[i+1, j+1, k+1] * wz[i+1, j+1, k+1])
+        gqk[i+1, j+1, k+1, 3] = Jac[i, j, k] * (qpr * (wxk*wxk + wyk*wyk) + be2 * wz[i, j, k] * wz[i, j, k])
 
       end
 

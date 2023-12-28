@@ -110,7 +110,7 @@ function advection_and_mixing(m, n, dtimel, step)
 
             if (!cppdefs.implicit)
                 if (selvar == 3 || selvar == 4)
-                    @inbounds @views @. uvarx[2:NI+1, 2:NJ+1, 2] .+= @fortGet("rr", rc_kind) * (1e0 / (@fortGet("ul", rc_kind) * @fortGet("delta", rc_kind))) * (Jac[1:NI, 1:NJ, 1] * wz[2:NI+1, 2:NJ+1, 2]) * var[2:NI+1, 2:NJ+1, 2]
+                    @inbounds @views @. uvarx[2:NI+1, 2:NJ+1, 2] .+= @fortGet("rr", rc_kind) * (1e0 / (@fortGet("ul", rc_kind) * @fortGet("delta", rc_kind))) * (Jac[1:NI, 1:NJ, 1] * wz[1:NI, 1:NJ, 1]) * var[2:NI+1, 2:NJ+1, 2]
                 end
             end
             if (cppdefs.implicit)

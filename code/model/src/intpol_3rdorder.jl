@@ -107,9 +107,9 @@ function intpol()
       for j in 1:NJ
          for i in 1:NI
             local Jack::rc_kind = 0.5e0 * (Jac[i, j, k] + Jac[i, j, k+1]) 
-            czf[i, j, k] = 0.5 * Jack * ( wx[i+1, j+1, k+1] * cx[i, j, k] + wx[i+1, j+1, k+2] * cx[i, j, k+1]
-                                          + wy[i+1, j+1, k+1] * cy[i, j, k] + wy[i+1, j+1, k+2] * cy[i, j, k+1]
-                                    + EPS *(wz[i+1, j+1, k+1] * cz[i, j, k] + wz[i+1, j+1, k+2] * cz[i, j, k+1]))
+            czf[i, j, k] = 0.5 * Jack * ( wx[i, j, k] * cx[i, j, k] + wx[i, j, k+1] * cx[i, j, k+1]
+                                          + wy[i, j, k] * cy[i, j, k] + wy[i, j, k+1] * cy[i, j, k+1]
+                                    + EPS *(wz[i, j, k] * cz[i, j, k] + wz[i, j, k+1] * cz[i, j, k+1]))
          end
       end
    end
@@ -117,7 +117,7 @@ function intpol()
    for j in 1:NJ
       for i in 1:NI
          czf[i, j, 0] = wfbcb[i,j]
-         czf[i, j, NK] = Jac[i, j, NK] * (wx[i+1, j+1, NK+1] * cx[i, j, NK] + wy[i+1, j+1, NK+1] * cy[i, j, NK] + EPS * wz[i+1, j+1, NK+1] * cz[i, j, NK])
+         czf[i, j, NK] = Jac[i, j, NK] * (wx[i, j, NK] * cx[i, j, NK] + wy[i, j, NK] * cy[i, j, NK] + EPS * wz[i, j, NK] * cz[i, j, NK])
       end
    end
 
