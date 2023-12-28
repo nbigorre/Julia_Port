@@ -111,11 +111,11 @@ function get_parti_vel(time)
     @inbounds @views @. wzf = 0.5d0 * (wz[:, :, 1:NK+1] + wz[:, :, 2:NK+1])
 
     k = 0
-    wfp[:, :, 1] = wf[:, :, 1] / J2d[2:NI+1, 2:NJ+1] * wzf[2:NI+1, 2:NJ+1, 1]
+    wfp[:, :, 1] = wf[:, :, 1] / J2d[1:NI, 1:NJ] * wzf[2:NI+1, 2:NJ+1, 1]
     for k in 1:NK
         @inbounds @views @. ufp[:, :, k] = uf[:, :, k] / Jifc[:, :, k]
         @inbounds @views @. vfp[:, :, k] = vf[:, :, k] / Jjfc[:, :, k]
-        @inbounds @views @. wfp[:, :, k+1] = wf[:, :, k+1] / J2d[2:NI+1, 2:NJ+1] * wzf[2:NI+1, 2:NJ+1, k+1]
+        @inbounds @views @. wfp[:, :, k+1] = wf[:, :, k+1] / J2d[1:NI, 1:NJ] * wzf[2:NI+1, 2:NJ+1, k+1]
     end
     uf_ex .= 0e0
     @inbounds @views @. uf_ex[:, 2:NJ+1, 2:NK+1] = ufp
@@ -187,10 +187,10 @@ function get_parti_vel(time)
             @ccall "PSOM_LIB.so".sigma2z_(Ref(parti[ip].i + 0.5e0)::Ref{rc_kind}, Ref(parti[ip].j + 0.5e0)::Ref{rc_kind}, Ref(kc)::Ref{rc_kind}, swap2::Ref{rc_kind})::Cvoid
             @ccall "PSOM_LIB.so".sigma2z_(Ref(parti[ip].i + 0.5e0)::Ref{rc_kind}, Ref(parti[ip].j + 0.5e0)::Ref{rc_kind}, Ref(kc + 1e0)::Ref{rc_kind}, swap3::Ref{rc_kind})::Cvoid
             dz = (swap1[] - swap2[]) / (swap3[] - swap2[])
-            parti[ip].vor = interp_trilinear(dic, djc, dz, vor[ic+1:ic+2, jc+1:jc+2, kc+1:kc+2])
-            parti[ip].rho = interp_trilinear(dic, djc, dz, rho[ic+1:ic+2, jc+1:jc+2, kc+1:kc+2])
-            parti[ip].shear = interp_trilinear(dic, djc, dz, shear[ic+1:ic+2, jc+1:jc+2, kc+1:kc+2])
-            parti[ip].strain = interp_trilinear(dic, djc, dz, strain[ic+1:ic+2, jc+1:jc+2, kc+1:kc+2])
+            parti[ip].vor = interp_trilinear(dic, djc, dz, vor[ic:ic+1, jc:jc+1, kc:kc+1])
+            parti[ip].rho = interp_trilinear(dic, djc, dz, rho[ic:ic+1, jc:jc+1, kc:kc+1])
+            parti[ip].shear = interp_trilinear(dic, djc, dz, shear[ic:ic+1, jc:jc+1, kc:kc+1])
+            parti[ip].strain = interp_trilinear(dic, djc, dz, strain[ic:ic+1, jc:jc+1, kc:kc+1])
         else
             parti[ip].u = 0e0
             parti[ip].v = 0e0

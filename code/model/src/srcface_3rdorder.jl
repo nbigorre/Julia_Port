@@ -14,11 +14,11 @@ function srcface(n, step)
 
   for j in 1:NJ
     for i in 1:NI-1
-      uxi[i+1, j] = 0.5e0 * (ux[i+2, j+1] + ux[i+1, j+1])
-      uyi[i+1, j] = 0.5e0 * (uy[i+2, j+1] + uy[i+1, j+1])
+      uxi[i+1, j] = 0.5e0 * (ux[i+1, j] + ux[i, j])
+      uyi[i+1, j] = 0.5e0 * (uy[i+1, j] + uy[i, j])
     end
-    uxi[NI+1, j] = 0.5e0 * (ux[2, j+1] + ux[NI+1, j+1])
-    uyi[NI+1, j] = 0.5e0 * (uy[2, j+1] + uy[NI+1, j+1])
+    uxi[NI+1, j] = 0.5e0 * (ux[1, j] + ux[NI, j])
+    uyi[NI+1, j] = 0.5e0 * (uy[1, j] + uy[NI, j])
     uxi[1, j] = (uxi[NI+1, j])
     uyi[1, j] = (uyi[NI+1, j])
   end
@@ -59,11 +59,11 @@ function srcface(n, step)
         local vcjf = EPS * (xa * (vvis[i0, j, k] + vvis[ip1, j, k]) + xb * (vvis[im1, j, k] + vvis[ip2, j, k])) 
         
         
-        local px = ((p[ip1+1, j+1, k+1] - p[i+1, j+1, k+1]) * gqi[i+1, j, k, 1] 
-        + 0.25e0 * (p[ip1+1, j+2, k+1] + p[i+1, j+2, k+1] - p[ip1+1, j, k+1] - p[i+1, j, k+1]) * gqi[i+1, j, k, 2]
-        + 0.25e0 * (p[ip1+1, j+1, k+2] + p[i+1, j+1, k+2] - p[ip1+1, j+1, k] - p[i+1, j+1, k]) * gqi3[i+1, j, k])
-        sifc[i+1, j, k] = ((uxi[i+1, j] * (-ffi[i+1, j] * vint + fac * bbi[i+1, j] * wint - vcif) 
-        + uyi[i+1, j] * ( ffi[i+1, j] * uint - vcjf)) * Jifc[i+1, j, k] + grpifc[i+1, j, k]) + px
+        local px = ((p[ip1, j, k] - p[i, j, k]) * gqi[i+1, j, k, 1] 
+        + 0.25e0 * (p[ip1, j+1, k] + p[i, j+1, k] - p[ip1, j-1, k] - p[i, j-1, k]) * gqi[i+1, j, k, 2]
+        + 0.25e0 * (p[ip1, j, k+1] + p[i, j, k+1] - p[ip1, j, k-1] - p[i, j, k-1]) * gqi3[i, j, k])
+        sifc[i, j, k] = ((uxi[i+1, j] * (-ffi[i, j] * vint + fac * bbi[i, j] * wint - vcif) 
+        + uyi[i+1, j] * ( ffi[i, j] * uint - vcjf)) * Jifc[i, j, k] + grpifc[i+1, j, k]) + px
         
       end
     end
@@ -71,14 +71,14 @@ function srcface(n, step)
   
   for k in 1:NK
     for j in 1:NJ
-      sifc[1,j,k] = sifc[NI+1, j ,k]
+      sifc[0,j,k] = sifc[NI, j ,k]
     end
   end
   
   for j in 0:NJ
     for i in 1:NI
-      vxj[i, j+1] = 0.5e0 * (vx[i+1, j+2] + vx[i+1, j+1])
-      vyj[i, j+1] = 0.5e0 * (vy[i+1, j+2] + vy[i+1, j+1])
+      vxj[i, j+1] = 0.5e0 * (vx[i, j+1] + vx[i, j])
+      vyj[i, j+1] = 0.5e0 * (vy[i, j+1] + vy[i, j])
     end
   end
   
@@ -115,12 +115,12 @@ function srcface(n, step)
         local vcif = EPS * (xa * (uvis[i, j0, k] + uvis[i, jp1, k]) + xb * (uvis[i, jm1, k] + uvis[i, jp2, k]))
         local vcjf = EPS * (xa * (vvis[i, j0, k] + vvis[i, jp1, k]) + xb * (vvis[i, jm1, k] + vvis[i, jp2, k]))
         
-        local py = ((p[i+1, j+2, k+1] - p[i+1, j+1, k+1]) * gqj[i, j+1, k, 2]
-        + 0.25e0 * (p[i+2, j+2, k+1] + p[i+2, j+1, k+1] - p[i, j+2, k+1] - p[i, j+1, k+1]) * gqj[i, j+1, k, 1]
-        + 0.25e0 * (p[i+1, j+2, k+2] + p[i+1, j+1, k+2] - p[i+1, j+2, k] - p[i+1, j+1, k]) * gqj3[i, j+1, k])
+        local py = ((p[i, j+1, k] - p[i, j, k]) * gqj[i, j+1, k, 2]
+        + 0.25e0 * (p[i+1, j+1, k] + p[i+1, j, k] - p[i-1, j+1, k] - p[i-1, j, k]) * gqj[i, j+1, k, 1]
+        + 0.25e0 * (p[i, j+1, k+1] + p[i, j, k+1] - p[i, j+1, k-1] - p[i, j, k-1]) * gqj3[i, j, k])
         
-        sjfc[i, j+1, k] = ((vxj[i, j+1] * (-ffj[i, j+1] * vint + fac * bbj[i, j+1] * wint - vcif)
-        + vyj[i, j+1] * ( ffc[i+1, j+1] * uint - vcjf)) * Jjfc[i, j+1, k] + grpjfc[i, j+1, k]) + py
+        sjfc[i, j, k] = ((vxj[i, j+1] * (-ffj[i, j] * vint + fac * bbj[i, j+1] * wint - vcif)
+        + vyj[i, j+1] * ( ffc[i, j] * uint - vcjf)) * Jjfc[i, j, k] + grpjfc[i, j+1, k]) + py
       end
     end
   end
@@ -142,12 +142,12 @@ function srcface(n, step)
         local vcif= EPS*uvis[i,in,k] 
         local vcjf= EPS*vvis[i,in,k]
         
-        local py = ((p[i+1, j+2, k+1] - p[i+1, j+1, k+1]) * gqj[i, j+1, k, 2]
-          + 0.25e0 * (p[i+2, j+2, k+1] + p[i+2, j+1, k+1] - p[i, j+2, k+1] - p[i, j+1, k+1]) * gqj[i, j+1, k, 1]
-          + 0.25e0 * (p[i+1, j+2, k+2] + p[i+1, j+1, k+2] - p[i+1, j+2, k] - p[i+1, j+1, k]) * gqj3[i, j+1, k])
+        local py = ((p[i, j+1, k] - p[i, j, k]) * gqj[i, j+1, k, 2]
+          + 0.25e0 * (p[i+1, j+1, k] + p[i+1, j, k] - p[i-1, j+1, k] - p[i-1, j, k]) * gqj[i, j+1, k, 1]
+          + 0.25e0 * (p[i, j+1, k+1] + p[i, j, k+1] - p[i, j+1, k-1] - p[i, j, k-1]) * gqj3[i, j, k])
 
-        sjfc[i, j+1, k] = ((vxj[i, j+1] * (-ffj[i, j+1] * vint + fac * bbj[i, j+1] * wint - vcif)
-        + vyj[i, j+1] * ( ffc[i+1, j+1] * uint - vcjf)) * Jjfc[i, j+1, k] + grpjfc[i, j+1, k]) + py
+        sjfc[i, j, k] = ((vxj[i, j+1] * (-ffj[i, j] * vint + fac * bbj[i, j] * wint - vcif)
+        + vyj[i, j+1] * ( ffc[i, j] * uint - vcjf)) * Jjfc[i, j, k] + grpjfc[i, j+1, k]) + py
       end
     end
   end

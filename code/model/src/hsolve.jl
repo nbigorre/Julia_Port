@@ -3,14 +3,14 @@
 function hsolve_getSum()
     return (
       sumvf = [sum(@view vfbcs[i, 1:NK]) for i in 1:NI],
-      sumcyfj = [sum(@view cyf[i, 1, 1:NK]) for i in 1:NI],
-      sumsjfj = [sum(@view sjfc[i, 1, 1:NK]) for i in 1:NI],
-      sumhynj = [sum(@view hyn[i, 1, 1:NK]) for i in 1:NI],
+      sumcyfj = [sum(@view cyf[i, 0, 1:NK]) for i in 1:NI],
+      sumsjfj = [sum(@view sjfc[i, 0, 1:NK]) for i in 1:NI],
+      sumhynj = [sum(@view hyn[i, 0, 1:NK]) for i in 1:NI],
       sumgjj = [(sum(@view gj[i, 1, 1:NK, 1]), sum(@view gj[i, 1, 1:NK, 2])) for i in 1:NI],
 
-      sumcyfnj = [sum(@view cyf[i, NJ+1, 1:NK]) for i in 1:NI],
-      sumsjfnj = [sum(@view sjfc[i, NJ+1, 1:NK]) for i in 1:NI],
-      sumhynnj = [sum(@view hyn[i, NJ+1, 1:NK]) for i in 1:NI],
+      sumcyfnj = [sum(@view cyf[i, NJ, 1:NK]) for i in 1:NI],
+      sumsjfnj = [sum(@view sjfc[i, NJ, 1:NK]) for i in 1:NI],
+      sumhynnj = [sum(@view hyn[i, NJ, 1:NK]) for i in 1:NI],
       sumgjnj = [(sum(@view gj[i, NJ+1, 1:NK, 1]), sum(@view gj[i, NJ+1, 1:NK, 2])) for i in 1:NI],
     )
 end

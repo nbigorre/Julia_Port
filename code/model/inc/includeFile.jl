@@ -5,6 +5,9 @@ if (!@isdefined(INCLUDE_All))
     if (Base.find_package("ExportAll") === nothing)
         Pkg.add("ExportAll")
     end
+    if (Base.find_package("OffsetArrays") === nothing)
+        Pkg.add("OffsetArrays")
+    end
 
     include("../inc/fortVar.jl")
     

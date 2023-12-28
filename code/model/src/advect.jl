@@ -40,19 +40,19 @@ function advect_x(area, var, uf, varflx)
         var[1, j+1, k+1] = var[NI+1, j+1, k+1]
 
         for i in 1:NI
-            if (uf[i+1, j, k] > 0)
+            if (uf[i, j, k] > 0)
                 local left = Eighth * (dvarx[i+1] - dvarx[i])
                 local ctr = Half * (var[i+2, j+1, k+1] + var[i+1, j+1, k+1])
                 local fc = ctr - left
                 fc = ultim(var[i, j+1, k+1], var[i+1, j+1, k+1], var[i+2, j+1, k+1], dvarx[i+1], dvarx[i], courinv, fc)
-                varflx[i+1, j+1, k+1] = uf[i+1, j, k] * fc
+                varflx[i+1, j+1, k+1] = uf[i, j, k] * fc
             else
                 local i2 = i == NI ? 0 : i
                 local right = Eighth * (dvarx[i2+2] - dvarx[i2+1])
                 local ctr = Half * (var[i2+2, j+1, k+1] + var[i+1, j+1, k+1])
                 local fc = ctr - right
                 fc = ultim(var[i2+3, j+1, k+1], var[i2+2, j+1, k+1], var[i+1, j+1, k+1], dvarx[i+1], dvarx[i2+2], courinv, fc)
-                varflx[i+1, j+1, k+1] = uf[i+1, j, k] * fc
+                varflx[i+1, j+1, k+1] = uf[i, j, k] * fc
             end
         end
         varflx[1, j+1, k+1] = varflx[NI+1, j+1, k+1]
@@ -75,18 +75,18 @@ function advect_y(area, var, vf, varflx)
         var[i+1, NJ+2, k+1] = var[i+1, NJ+1, k+1]
 
         for j in 1:NJ-1
-            if (vf[i, j+1, k] >= 0)
+            if (vf[i, j, k] >= 0)
                 local left = Eighth * (dvary[j+1] - dvary[j])
                 local ctr = Half * (var[i+1, j+2, k+1] + var[i+1, j+1, k+1])
                 local fc = ctr - left
                 fc = ultim(var[i+1, j, k+1], var[i+1, j+1, k+1], var[i+1, j+2, k+1], dvary[j+1], dvary[j], courinv, fc)
-                varflx[i+1, j+1, k+1] = vf[i, j+1, k] * fc
+                varflx[i+1, j+1, k+1] = vf[i, j, k] * fc
             else
                 local right = Eighth * (dvary[j+2] - dvary[j+1])
                 local ctr = Half * (var[i+1, j+2, k+1] + var[i+1, j+1, k+1])
                 local fc = ctr - right
                 fc = ultim(var[i+1, j+3, k+1], var[i+1, j+2, k+1], var[i+1, j+1, k+1], dvary[j+1], dvary[j+2], courinv, fc)
-                varflx[i+1, j+1, k+1] = vf[i, j+1, k] * fc
+                varflx[i+1, j+1, k+1] = vf[i, j, k] * fc
             end
         end
         varflx[i+1, 1, k+1] = 0e0
@@ -113,21 +113,21 @@ function advect_z(area, var, wf, varflx)
         var[i+1, j+1, NK+2] = var[i+1, j+1, NK+1]
 
         for k in 1:NK
-            if (wf[i, j, k+1] >= 0)
+            if (wf[i, j, k] >= 0)
                 local left = Eighth * (dvarz[k+1] - dvarz[k])
                 local ctr = Half * (var[i+1, j+1, k+2] + var[i+1, j+1, k+1])
                 local fc = ctr - left
                 fc = ultim(var[i+1, j+1, k], var[i+1, j+1, k+1], var[i+1, j+1, k+2], dvarz[k+1], dvarz[k], courinv, fc)
-                varflx[i+1, j+1, k+1] = wf[i, j, k+1] * fc
+                varflx[i+1, j+1, k+1] = wf[i, j, k] * fc
             else
                 if (k == NK)
-                    varflx[i+1, j+1, k+1] = wf[i, j, k+1] * Half * (var[i+1, j+1, k+2] + var[i+1, j+1, k+1])
+                    varflx[i+1, j+1, k+1] = wf[i, j, k] * Half * (var[i+1, j+1, k+2] + var[i+1, j+1, k+1])
                 else
                     local right = Eighth * (dvarz[k+2] - dvarz[k+1])
                     local ctr = Half * (var[i+1, j+1, k+2] + var[i+1, j+1, k+1])
                     local fc = ctr - right
                     fc = ultim(var[i+1, j+1, k+3], var[i+1, j+1, k+2], var[i+1, j+1, k+1], dvarz[k+1], dvarz[k+2], courinv, fc)
-                    varflx[i+1, j+1, k+1] = wf[i, j, k+1] * fc
+                    varflx[i+1, j+1, k+1] = wf[i, j, k] * fc
                 end
             end
         end

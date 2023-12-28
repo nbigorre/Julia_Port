@@ -7,33 +7,33 @@ function uvchy(dtimel)
     for i in 1:NI
       local hxi = 0.5e0 * (h[i+2, j+1] - h[i, j+1])
       local heta = 0.5e0 * (h[i+1, j+2] - h[i+1, j])
-      local hx = ux[i+1, j+1] * hxi + vx[i+1, j+1] * heta
-      local hy = uy[i+1, j+1] * hxi + vy[i+1, j+1] * heta
+      local hx = ux[i, j] * hxi + vx[i, j] * heta
+      local hy = uy[i, j] * hxi + vy[i, j] * heta
       for k in 1:NK
-        local pxi = 0.5e0 * (p[i+2, j+1, k+1] - p[i, j+1, k+1])
-        local peta = 0.5e0 * (p[i+1, j+2, k+1] - p[i+1, j, k+1])
+        local pxi = 0.5e0 * (p[i+1, j, k] - p[i-1, j, k])
+        local peta = 0.5e0 * (p[i, j+1, k] - p[i, j-1, k])
         if (j == 1)
-          peta = p[i+1, j+2, k+1] - p[i+1, j+1, k+1]
+          peta = p[i, j+1, k] - p[i, j, k]
         elseif (j == NJ)
-          peta = p[i+1, j+1, k+1] - p[i+1, j, k+1]
+          peta = p[i, j, k] - p[i, j-1, k]
         end
-        local psig = 0.5e0 * (p[i+1, j+1, k+2] - p[i+1, j+1, k])
-        local px = ux[i+1, j+1] * pxi + vx[i+1, j+1] * peta + wx[i+1, j+1, k+1] * psig
-        local py = uy[i+1, j+1] * pxi + vy[i+1, j+1] * peta + wy[i+1, j+1, k+1] * psig
+        local psig = 0.5e0 * (p[i, j, k+1] - p[i, j, k-1])
+        local px = ux[i, j] * pxi + vx[i, j] * peta + wx[i+1, j+1, k+1] * psig
+        local py = uy[i, j] * pxi + vy[i, j] * peta + wy[i+1, j+1, k+1] * psig
 
-        cx[i+1, j+1, k+1] = cx[i+1, j+1, k+1] - dte * (gpr * (@fortGet("kappah", rc_kind) * hx + kaph1 * gradhn[i+1, j+1, 1]) + si[i+1, j+1, k+1] + @fortGet("qpr", rc_kind) * px)
-        cy[i+1, j+1, k+1] = cy[i+1, j+1, k+1] - dte * (gpr * (@fortGet("kappah", rc_kind) * hy + kaph1 * gradhn[i+1, j+1, 2]) + sj[i+1, j+1, k+1] + @fortGet("qpr", rc_kind) * py)
+        cx[i, j, k] = cx[i, j, k] - dte * (gpr * (@fortGet("kappah", rc_kind) * hx + kaph1 * gradhn[i, j, 1]) + si[i, j, k] + @fortGet("qpr", rc_kind) * px)
+        cy[i, j, k] = cy[i, j, k] - dte * (gpr * (@fortGet("kappah", rc_kind) * hy + kaph1 * gradhn[i, j, 2]) + sj[i, j, k] + @fortGet("qpr", rc_kind) * py)
       end
-      gradhn[i+1, j+1, 1] = hx
-      gradhn[i+1, j+1, 2] = hy
+      gradhn[i, j, 1] = hx
+      gradhn[i, j, 2] = hy
     end
   end
 
   for j in 1:NJ
     for i in 1:NI
       for k in 1:NK
-        local wfk = 0.5e0 * (czf[i, j, k+1] + czf[i, j, k])
-        cz[i+1, j+1, k+1] = (wfk / Jac[i+1, j+1, k+1] - cx[i+1, j+1, k+1] * wx[i+1, j+1, k+1] - cy[i+1, j+1, k+1] * wy[i+1, j+1, k+1]) / (EPS * wz[i+1, j+1, k+1])
+        local wfk = 0.5e0 * (czf[i, j, k] + czf[i, j, k-1])
+        cz[i, j, k] = (wfk / Jac[i, j, k] - cx[i, j, k] * wx[i+1, j+1, k+1] - cy[i, j, k] * wy[i+1, j+1, k+1]) / (EPS * wz[i+1, j+1, k+1])
       end
     end
   end

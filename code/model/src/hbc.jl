@@ -9,13 +9,13 @@ function hbc(chf,fn,dtimel)
   for i in 1:NI
     for j in 1:NJ
       if (j == 1 || j == NJ)
-        fn[i, j] = eg * (@fortGet("kaphinv", rc_kind) * wfbcb[i, j] - J2d[i+1, j+1] * oldh[i+1, j+1] * dtinv)
-        chf[1, i, j] = -eg * J2d[i+1, j+1] * dtinv
+        fn[i, j] = eg * (@fortGet("kaphinv", rc_kind) * wfbcb[i, j] - J2d[i, j] * oldh[i+1, j+1] * dtinv)
+        chf[1, i, j] = -eg * J2d[i, j] * dtinv
         chf[2:9, i, j] .= 0e0
-        local sumsif = sum(sifc[i+1, j, 1:NK])
-        local sumcxf = sum(cxf[i+1, j, 1:NK])
-        local sumuf = sum(uf[i+1, j, 1:NK])
-        local sumhxn = sum(hxn[i+1, j, 1:NK])
+        local sumsif = sum(sifc[i, j, 1:NK])
+        local sumcxf = sum(cxf[i, j, 1:NK])
+        local sumuf = sum(uf[i, j, 1:NK])
+        local sumhxn = sum(hxn[i, j, 1:NK])
         local sumgi = (sum(gi[i+1, j, 1:NK, 1]), sum(gi[i+1, j, 1:NK, 2]))
         
         fn[i, j] = fn[i, j] + eg * (sumcxf + constv * sumuf) - gprinv * sumsif - constv * sumhxn
@@ -28,10 +28,10 @@ function hbc(chf,fn,dtimel)
         
         local im1 = (i == 1 ? NI : i - 1)
         
-        local sumsif = sum(sifc[im1+1, j, 1:NK])
-        local sumcxf = sum(cxf[im1+1, j, 1:NK])
-        local sumuf = sum(uf[im1+1, j, 1:NK])
-        local sumhxn = sum(hxn[im1+1, j, 1:NK])
+        local sumsif = sum(sifc[im1, j, 1:NK])
+        local sumcxf = sum(cxf[im1, j, 1:NK])
+        local sumuf = sum(uf[im1, j, 1:NK])
+        local sumhxn = sum(hxn[im1, j, 1:NK])
         local sumgi = (sum(gi[im1+1, j, 1:NK, 1]), sum(gi[im1+1, j, 1:NK, 2]))
         
         fn[i, j] = fn[i, j] - eg * (sumcxf + constv * sumuf) + gprinv * sumsif + constv * sumhxn
@@ -46,10 +46,10 @@ function hbc(chf,fn,dtimel)
           local sumvf = sum(vfbcn[i, 1:NK])
           fn[i, j] = fn[i, j] + eg * sumvf * @fortGet("kaphinv", rc_kind)
         else
-          local sumsjf = sum(sjfc[i, j+1, 1:NK])
-          local sumcyf = sum(cyf[i, j+1, 1:NK])
-          local sumvf = sum(vf[i, j+1, 1:NK])
-          local sumhyn = sum(hyn[i, j+1, 1:NK])
+          local sumsjf = sum(sjfc[i, j, 1:NK])
+          local sumcyf = sum(cyf[i, j, 1:NK])
+          local sumvf = sum(vf[i, j, 1:NK])
+          local sumhyn = sum(hyn[i, j, 1:NK])
           local sumgj = (sum(gj[i, j+1, 1:NK, 1]), sum(gj[i, j+1, 1:NK, 2]))
           fn[i, j] = fn[i, j] + eg * (sumcyf + constv *sumvf) - gprinv * sumsjf - constv * sumhyn
           chf[1, i, j] -=          sumgj[2]
@@ -64,10 +64,10 @@ function hbc(chf,fn,dtimel)
           local sumvf = sum(vfbcs[i, 1:NK])
           fn[i, j] = fn[i, j] - eg * sumvf * @fortGet("kaphinv", rc_kind)
         else
-          local sumsjf = sum(sjfc[i, j, 1:NK])
-          local sumcyf = sum(cyf[i, j, 1:NK])
-          local sumvf = sum(vf[i, j, 1:NK])
-          local sumhyn = sum(hyn[i, j, 1:NK])
+          local sumsjf = sum(sjfc[i, j-1, 1:NK])
+          local sumcyf = sum(cyf[i, j-1, 1:NK])
+          local sumvf = sum(vf[i, j-1, 1:NK])
+          local sumhyn = sum(hyn[i, j-1, 1:NK])
           local sumgj = (sum(gj[i, j, 1:NK, 1]), sum(gj[i, j, 1:NK, 2]))
           fn[i, j] = fn[i, j] - eg * (sumcyf + constv *sumvf) + gprinv * sumsjf + constv * sumhyn
           chf[1, i, j] -=          sumgj[2]

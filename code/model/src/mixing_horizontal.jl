@@ -6,12 +6,12 @@ function mixing_horizontal_l1(area, vy, var, Ky_l, vardif)
     for cindex in area
         local i,k = Tuple(cindex)
         for j in 1:NJ-1
-            dvardyfc[j+1] = 0.5 * (vy[i+1, j+1] + vy[i+1, j+2]) * (var[i+1, j+2, k+1] - var[i+1, j+1, k+1])
+            dvardyfc[j+1] = 0.5 * (vy[i, j] + vy[i, j+1]) * (var[i+1, j+2, k+1] - var[i+1, j+1, k+1])
         end
         dvardyfc[1] = 0e0
         dvardyfc[NJ+1] = 0e0
         for j in 1:NJ
-            vardif[i, j, k] = Ky_l[j] * vy[i+1, j+1] * (dvardyfc[j+1] - dvardyfc[j])
+            vardif[i, j, k] = Ky_l[j] * vy[i, j] * (dvardyfc[j+1] - dvardyfc[j])
         end
 
     end
@@ -23,12 +23,12 @@ function mixing_horizontal_l2(area, ux, var, Kx_l, vardif)
         local j,k = Tuple(cindex)
 
         for i in 1:NI-1
-            dvardxfc[i+1] = 0.5 * (ux[i+1, j+1] + ux[i+2, j+1]) * (var[i+2, j+1, k+1] - var[i+1, j+1, k+1])
+            dvardxfc[i+1] = 0.5 * (ux[i, j] + ux[i+1, j]) * (var[i+2, j+1, k+1] - var[i+1, j+1, k+1])
         end
-        dvardxfc[1] = 0.5 * (ux[NI+1, j+1] + ux[2, j+1]) * (var[2, j+1, k+1] - var[NI+1, j+1, k+1])
+        dvardxfc[1] = 0.5 * (ux[NI, j] + ux[1, j]) * (var[2, j+1, k+1] - var[NI+1, j+1, k+1])
         dvardxfc[NI+1] = dvardxfc[1]
         for i in 1:NI
-            vardif[i, j, k] += Kx_l * ux[i+1, j+1] * (dvardxfc[i+1] - dvardxfc[i])
+            vardif[i, j, k] += Kx_l * ux[i, j] * (dvardxfc[i+1] - dvardxfc[i])
         end
 
     end
@@ -51,6 +51,6 @@ function mixing_horizontal(var, vardif)
     wait.(tasks)
 
     local fac = 1e0 / (@fortGet("ul", rc_kind) * LEN)
-    @inbounds @views @. vardif[1:NI, 1:NJ, 1:NK] .*= fac * Jac[2:NI+1, 2:NJ+1, 2:NK+1]
+    @inbounds @views @. vardif[1:NI, 1:NJ, 1:NK] .*= fac * Jac[1:NI, 1:NJ, 1:NK]
 
 end

@@ -42,9 +42,9 @@ function intpol()
 
       for k in 1:NK
          for j in 1:NJ
-            cxf[i+1,j,k] = ( xa * (ux[i0+1, j+1] * cx[i0+1, j+1, k+1] + ux[ip1+1, j+1] * cx[ip1+1, j+1, k+1])
-                           + xb * (ux[im1+1, j+1] * cx[im1+1, j+1, k+1] + ux[ip2+1, j+1] * cx[ip2+1, j+1, k+1])
-                           + 0.5e0 * (uy[i0+1, j+1] * cy[i0+1, j+1, k+1] + uy[ip1+1, j+1] * cy[ip1+1, j+1, k+1])) * Jifc[i+1, j, k]
+            cxf[i,j,k] = ( xa * (ux[i0, j] * cx[i0, j, k] + ux[ip1, j] * cx[ip1, j, k])
+                           + xb * (ux[im1, j] * cx[im1, j, k] + ux[ip2, j] * cx[ip2, j, k])
+                           + 0.5e0 * (uy[i0, j] * cy[i0+1, j+1, k+1] + uy[ip1, j] * cy[ip1+1, j+1, k+1])) * Jifc[i, j, k]
          end
       end
    end
@@ -52,8 +52,8 @@ function intpol()
    if (!periodicew)
       for k in 1:NK
          for j in 1:NJ
-            cxf[1, j, k] = ufbcw[j, k]
-            cxf[NI+1, j, k] = ufbce[j, k]
+            cxf[0, j, k] = ufbcw[j, k]
+            cxf[NI, j, k] = ufbce[j, k]
          end
       end
    end
@@ -87,10 +87,10 @@ function intpol()
       end
       for k in 1:NK
          for i in 1:NI
-            cyf[i, j+1, k] = Jjfc[i, j+1, k] * (
-               0.5e0 * (vx[i+1, j0+1] * cx[i+1, j0+1, k+1] + vx[i+1, jp1+1] * cx[i+1, jp1+1, k+1])
-                + xa * (vy[i+1, j0+1] * cy[i+1, j0+1, k+1] + vy[i+1, jp1+1] * cy[i+1, jp1+1, k+1])
-                + xb * (vy[i+1, jm1+1] * cy[i+1, jm1+1, k+1] + vy[i+1, jp2+1] * cy[i+1, jp2+1, k+1])
+            cyf[i, j, k] = Jjfc[i, j, k] * (
+               0.5e0 * (vx[i, j0] * cx[i, j0, k] + vx[i, jp1] * cx[i, jp1, k])
+                + xa * (vy[i, j0] * cy[i, j0, k] + vy[i, jp1] * cy[i, jp1, k])
+                + xb * (vy[i, jm1] * cy[i, jm1, k] + vy[i, jp2] * cy[i, jp2, k])
             )
          end
       end
@@ -98,26 +98,26 @@ function intpol()
 
    for k in 1:NK
       for i in 1:NI
-         cyf[i, NJ+1, k] = vfbcn[i,k]
-         cyf[i, 1, k] = vfbcs[i,k]
+         cyf[i, NJ, k] = vfbcn[i,k]
+         cyf[i, 0, k] = vfbcs[i,k]
       end
    end
 
    for k in 1:NK-1
       for j in 1:NJ
          for i in 1:NI
-            local Jack::rc_kind = 0.5e0 * (Jac[i+1, j+1, k+1] + Jac[i+1, j+1, k+2]) 
-            czf[i, j, k+1] = 0.5 * Jack * ( wx[i+1, j+1, k+1] * cx[i+1, j+1, k+1] + wx[i+1, j+1, k+2] * cx[i+1, j+1, k+2]
-                                          + wy[i+1, j+1, k+1] * cy[i+1, j+1, k+1] + wy[i+1, j+1, k+2] * cy[i+1, j+1, k+2]
-                                    + EPS *(wz[i+1, j+1, k+1] * cz[i+1, j+1, k+1] + wz[i+1, j+1, k+2] * cz[i+1, j+1, k+2]))
+            local Jack::rc_kind = 0.5e0 * (Jac[i, j, k] + Jac[i, j, k+1]) 
+            czf[i, j, k] = 0.5 * Jack * ( wx[i+1, j+1, k+1] * cx[i, j, k] + wx[i+1, j+1, k+2] * cx[i, j, k+1]
+                                          + wy[i+1, j+1, k+1] * cy[i, j, k] + wy[i+1, j+1, k+2] * cy[i, j, k+1]
+                                    + EPS *(wz[i+1, j+1, k+1] * cz[i, j, k] + wz[i+1, j+1, k+2] * cz[i, j, k+1]))
          end
       end
    end
 
    for j in 1:NJ
       for i in 1:NI
-         czf[i, j, 1] = wfbcb[i,j]
-         czf[i, j, NK+1] = Jac[i+1, j+1, NK+1] * (wx[i+1, j+1, NK+1] * cx[i+1, j+1, NK+1] + wy[i+1, j+1, NK+1] * cy[i+1, j+1, NK+1] + EPS * wz[i+1, j+1, NK+1] * cz[i+1, j+1, NK+1])
+         czf[i, j, 0] = wfbcb[i,j]
+         czf[i, j, NK] = Jac[i, j, NK] * (wx[i+1, j+1, NK+1] * cx[i, j, NK] + wy[i+1, j+1, NK+1] * cy[i, j, NK] + EPS * wz[i+1, j+1, NK+1] * cz[i, j, NK])
       end
    end
 

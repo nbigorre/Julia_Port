@@ -46,9 +46,9 @@ function findzall()
         local xfac = (dnkm1 - sigma) * dnkm1inv
         
         @static if (cppdefs.fixed_bottom_thickness)
-          zc[i+1, j+1, k+1] = (exp(pfac*xfac) - 1e0) * epm1inv * (D[i+1,j+1] + dzbot + dztop) - dztop
+          zc[i+1, j+1, k+1] = (exp(pfac*xfac) - 1e0) * epm1inv * (D[i,j] + dzbot + dztop) - dztop
         else
-          zc[i+1, j+1, k+1] = (exp(pfac*xfac) - 1e0) * epm1inv * (D[i+1,j+1] + dztop) - dztop
+          zc[i+1, j+1, k+1] = (exp(pfac*xfac) - 1e0) * epm1inv * (D[i,j] + dztop) - dztop
         end
 
       end
@@ -60,20 +60,20 @@ function findzall()
         end
         local xfac = (dnkm1 - sigma) * dnkm1inv
         @static if (cppdefs.fixed_bottom_thickness)
-          zf[i+1, j+1, k+2] = (exp(pfac*xfac) - 1e0) * epm1inv * (D[i+1,j+1] + dzbot + dztop) - dztop
+          zf[i+1, j+1, k+2] = (exp(pfac*xfac) - 1e0) * epm1inv * (D[i,j] + dzbot + dztop) - dztop
         else
-          zf[i+1, j+1, k+2] = (exp(pfac*xfac) - 1e0) * epm1inv * (D[i+1,j+1] + dztop) - dztop
+          zf[i+1, j+1, k+2] = (exp(pfac*xfac) - 1e0) * epm1inv * (D[i,j] + dztop) - dztop
         end
       end
       
       @static if (cppdefs.fixed_bottom_thickness)
         for k in 0:1
           local sigma = rc_kind(k) - 0.5e0
-          zc[i+1, j+1, k+1] = ((sigma - 0e0) / 1e0) * dzbot + D[i+1, j+1]
+          zc[i+1, j+1, k+1] = ((sigma - 0e0) / 1e0) * dzbot + D[i, j]
         end
         for k in -1:1
           local sigma = rc_kind(k)
-          zf[i+1, j+1, k+2] = ((sigma - 0e0) / 1e0) * dzbot + D[i+1, j+1]
+          zf[i+1, j+1, k+2] = ((sigma - 0e0) / 1e0) * dzbot + D[i, j]
         end
       end
       
