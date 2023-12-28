@@ -122,10 +122,10 @@ function rpevalgrad_Song(n)
       for j in 1:NJ-1
          local k = NK
          local Jsum = Jy[j+1, k+1] * 0.5e0
-         grpjfc[i, j+1, NK] = Jsum * vconst * gj[i, j+1, k, 2]
+         grpjfc[i, j+1, NK] = Jsum * vconst * gj[i, j, k, 2]
          for k in NK-1:-1:1
             Jsum += Jy[j+1, k+1]
-            grpjfc[i, j+1, k] = Jsum * vconst * gj[i, j+1, k, 2]
+            grpjfc[i, j+1, k] = Jsum * vconst * gj[i, j, k, 2]
          end
       end
       
@@ -214,10 +214,10 @@ function rpevalgrad_Song(n)
       for i in 1:NI
          local k = NK
          local Jsum = Jx[i+1, k+1] * 0.5e0
-         grpifc[i+1, j, NK] = Jsum * vconst * gi[i+1, j, k, 1]
+         grpifc[i+1, j, NK] = Jsum * vconst * gi[i, j, k, 1]
          for k in NK-1:-1:1
             Jsum += Jx[i+1, k+1]
-            grpifc[i+1, j, k] = Jsum * vconst * gi[i+1, j, k, 1]
+            grpifc[i+1, j, k] = Jsum * vconst * gi[i, j, k, 1]
          end
       end
       for k in 1:NK

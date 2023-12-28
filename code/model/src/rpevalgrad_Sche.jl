@@ -338,7 +338,7 @@ function rpevalgrad_Sche(nl::Int)
   for k in 1:NK
     for j in 1:NJ
       for i in 1:NI
-        ru3_Sche[i+1, j+1, k] = 0.5e0 * (ru2_Sche[i+1, j+1, k] / gi[i+1, j, k, 1] + ru2_Sche[i, j+1, k] / gi[i, j, k, 1])
+        ru3_Sche[i+1, j+1, k] = 0.5e0 * (ru2_Sche[i+1, j+1, k] / gi[i, j, k, 1] + ru2_Sche[i, j+1, k] / gi[i-1, j, k, 1])
       end
     end
   end
@@ -346,7 +346,7 @@ function rpevalgrad_Sche(nl::Int)
   for k in 1:NK
     for j in 1:NJ
       for i in 1:NI
-        rv3_Sche[i+1, j+1, k] = 0.5e0 * (rv2_Sche[i+1, j+1, k] / gj[i, j+1, k, 2] + rv2_Sche[i+1, j, k] / gj[i, j, k, 2])
+        rv3_Sche[i+1, j+1, k] = 0.5e0 * (rv2_Sche[i+1, j+1, k] / gj[i, j, k, 2] + rv2_Sche[i+1, j, k] / gj[i, j-1, k, 2])
       end
     end
   end

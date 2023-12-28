@@ -64,8 +64,8 @@ function chfine(dtimel,chf,fn)
             sumhxn[i, j] += hxn[i, j, k]
             sumhyn[i, j] += hyn[i, j, k]
             for l in 1:2
-               sumgi[i, j, l] += gi[i+1, j, k, l]
-               sumgj[i, j, l] += gj[i, j+1, k, l]
+               sumgi[i, j, l] += gi[i, j, k, l]
+               sumgj[i, j, l] += gj[i, j, k, l]
             end
          end
       end

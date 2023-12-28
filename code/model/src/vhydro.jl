@@ -7,7 +7,7 @@ function vhydro(dtimel)
       local hxi = h[i+2, j+1] - h[i+1, j+1]
       local heta = 0.25e0 * ( h[i+2, j+2] + h[i+1, j+2] - h[i+2, j] - h[i+1, j])
       for k in 1:NK
-        local hx = gi[i+1, j, k, 1] * hxi + gi[i+1, j, k, 2] * heta
+        local hx = gi[i, j, k, 1] * hxi + gi[i, j, k, 2] * heta
         local gradh = gpr * (@fortGet("kappah", rc_kind) * hx + kaph1 * hxn[i, j, k])
         cxf[i, j, k] -= dte * (gradh + sifc[i, j, k])
         hxn[i, j, k] = hx
@@ -25,7 +25,7 @@ function vhydro(dtimel)
       local hxi = 0.25e0 * (h[i+2, j+2] + h[i+2, j+1] - h[i, j+2] - h[i, j+1])
       local heta = h[i+1, j+2] - h[i+1, j+1]
       for k in 1:NK
-        local hy = gj[i, j+1, k, 1] * hxi + gj[i, j+1, k, 2] * heta
+        local hy = gj[i, j, k, 1] * hxi + gj[i, j, k, 2] * heta
         local gradh = gpr * (@fortGet("kappah", rc_kind) * hy + kaph1 * hyn[i, j, k])
         cyf[i, j, k] -= dte * (gradh + sjfc[i, j, k])
         hyn[i, j, k] = hy
@@ -43,7 +43,7 @@ function vhydro(dtimel)
   for k in 0:NK
     for j in 1:NJ
       for i in 1:NI
-        local pz = (p[i, j, k+1] - p[i, j, k]) * gqk[i+1, j+1, k+1, 3] + 0.25e0 * (p[i+1, j, k+1] + p[i+1, j, k] - p[i-1, j, k+1] - p[i-1, j, k]) * gqk[i+1, j+1, k+1, 1] + 0.25e0 * (p[i, j+1, k+1] + p[i, j+1, k] - p[i, j-1, k+1] - p[i, j-1, k]) * gqk[i+1, j+1, k+1, 2] 
+        local pz = (p[i, j, k+1] - p[i, j, k]) * gqk[i, j, k, 3] + 0.25e0 * (p[i+1, j, k+1] + p[i+1, j, k] - p[i-1, j, k+1] - p[i-1, j, k]) * gqk[i, j, k, 1] + 0.25e0 * (p[i, j+1, k+1] + p[i, j+1, k] - p[i, j-1, k+1] - p[i, j-1, k]) * gqk[i, j, k, 2] 
         czf[i, j, k] -= dte * (pz + skfc[i, j, k])
       end
     end

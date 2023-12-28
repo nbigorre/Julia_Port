@@ -57,13 +57,13 @@ global const w = @fortGetArr("w", rc_kind, (NI + 2, NJ + 2, NK + 2, 2))
 global const s = @fortGetArr("s", rc_kind, (NI + 2, NJ + 2, NK + 2, 2))
 global const T = @fortGetArr("t", rc_kind, (NI + 2, NJ + 2, NK + 2, 2))
 
-global const gqk = @fortGetArr("gqk", rc_kind, (NI+2, NJ+2, NK+1, 3))
+global const gqk = OffsetArray(@fortGetArr("gqk", rc_kind, (NI+2, NJ+2, NK+1, 3)), 0:NI+1, 0:NJ+1, 0:NK, 1:3)
 
-global const gi = @fortGetArr("gi", rc_kind, (NI + 1, NJ, NK, 2))
-global const gqi = @fortGetArr("gqi", rc_kind, (NI + 1, NJ, NK, 2))
+global const gi = OffsetArray(@fortGetArr("gi", rc_kind, (NI + 1, NJ, NK, 2)), 0:NI, 1:NJ, 1:NK, 1:2)
+global const gqi = OffsetArray(@fortGetArr("gqi", rc_kind, (NI + 1, NJ, NK, 2)), 0:NI, 1:NJ, 1:NK, 1:2)
 
-global const gj = @fortGetArr("gj", rc_kind, (NI, NJ + 1, NK, 2))
-global const gqj = @fortGetArr("gqj", rc_kind, (NI, NJ + 1, NK, 2))
+global const gj = OffsetArray(@fortGetArr("gj", rc_kind, (NI, NJ + 1, NK, 2)), 1:NI, 0:NJ, 1:NK, 1:2)
+global const gqj = OffsetArray(@fortGetArr("gqj", rc_kind, (NI, NJ + 1, NK, 2)), 1:NI, 0:NJ, 1:NK, 1:2)
 
 global const zf = OffsetArray(@fortGetArr("zf", rc_kind, (NI + 2, NJ + 2, NK + 3)), 0:NI+1, 0:NJ+1, -1:NK+1)
 

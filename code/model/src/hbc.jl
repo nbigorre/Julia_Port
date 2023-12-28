@@ -16,7 +16,7 @@ function hbc(chf,fn,dtimel)
         local sumcxf = sum(cxf[i, j, 1:NK])
         local sumuf = sum(uf[i, j, 1:NK])
         local sumhxn = sum(hxn[i, j, 1:NK])
-        local sumgi = (sum(gi[i+1, j, 1:NK, 1]), sum(gi[i+1, j, 1:NK, 2]))
+        local sumgi = (sum(gi[i, j, 1:NK, 1]), sum(gi[i, j, 1:NK, 2]))
         
         fn[i, j] = fn[i, j] + eg * (sumcxf + constv * sumuf) - gprinv * sumsif - constv * sumhxn
         chf[1, i, j] -= sumgi[1]
@@ -32,7 +32,7 @@ function hbc(chf,fn,dtimel)
         local sumcxf = sum(cxf[im1, j, 1:NK])
         local sumuf = sum(uf[im1, j, 1:NK])
         local sumhxn = sum(hxn[im1, j, 1:NK])
-        local sumgi = (sum(gi[im1+1, j, 1:NK, 1]), sum(gi[im1+1, j, 1:NK, 2]))
+        local sumgi = (sum(gi[im1, j, 1:NK, 1]), sum(gi[im1, j, 1:NK, 2]))
         
         fn[i, j] = fn[i, j] - eg * (sumcxf + constv * sumuf) + gprinv * sumsif + constv * sumhxn
         chf[1, i, j] -= sumgi[1]
@@ -50,7 +50,7 @@ function hbc(chf,fn,dtimel)
           local sumcyf = sum(cyf[i, j, 1:NK])
           local sumvf = sum(vf[i, j, 1:NK])
           local sumhyn = sum(hyn[i, j, 1:NK])
-          local sumgj = (sum(gj[i, j+1, 1:NK, 1]), sum(gj[i, j+1, 1:NK, 2]))
+          local sumgj = (sum(gj[i, j, 1:NK, 1]), sum(gj[i, j, 1:NK, 2]))
           fn[i, j] = fn[i, j] + eg * (sumcyf + constv *sumvf) - gprinv * sumsjf - constv * sumhyn
           chf[1, i, j] -=          sumgj[2]
           chf[2, i, j] += 0.25e0 * sumgj[1]
@@ -68,7 +68,7 @@ function hbc(chf,fn,dtimel)
           local sumcyf = sum(cyf[i, j-1, 1:NK])
           local sumvf = sum(vf[i, j-1, 1:NK])
           local sumhyn = sum(hyn[i, j-1, 1:NK])
-          local sumgj = (sum(gj[i, j, 1:NK, 1]), sum(gj[i, j, 1:NK, 2]))
+          local sumgj = (sum(gj[i, j-1, 1:NK, 1]), sum(gj[i, j-1, 1:NK, 2]))
           fn[i, j] = fn[i, j] - eg * (sumcyf + constv *sumvf) + gprinv * sumsjf + constv * sumhyn
           chf[1, i, j] -=          sumgj[2]
           chf[2, i, j] -= 0.25e0 * sumgj[1]

@@ -5,8 +5,8 @@ function vface(pf, dtimel::rc_kind)
   for j in 1:NJ
     for i in 1:NI
       for k in 1:NK
-          local px = ((pf[i+2, j+1, k+1] - pf[i+1, j+1, k+1]) * gqi[i+1, j, k, 1]
-          + 0.25e0 * (pf[i+2, j+2, k+1] + pf[i+1, j+2, k+1] - pf[i+2, j, k+1] - pf[i+1, j, k+1]) * gqi[i+1, j, k, 2]
+          local px = ((pf[i+2, j+1, k+1] - pf[i+1, j+1, k+1]) * gqi[i, j, k, 1]
+          + 0.25e0 * (pf[i+2, j+2, k+1] + pf[i+1, j+2, k+1] - pf[i+2, j, k+1] - pf[i+1, j, k+1]) * gqi[i, j, k, 2]
            + 0.25e0 * (pf[i+2, j+1, k+2] + pf[i+1, j+1, k+2] - pf[i+2, j+1, k] - pf[i+1, j+1, k]) * gqi3[i, j, k])
            uf[i, j, k] = cxf[i, j, k] - dte * (px + sifc[i, j, k])
       end
@@ -23,8 +23,8 @@ function vface(pf, dtimel::rc_kind)
         elseif (j == NJ)
           vf[i, j, k] = vfbcn[i, k]
         else 
-          local py = ((pf[i+1, j+2, k+1] - pf[i+1, j+1, k+1]) * gqj[i, j+1, k, 2]
-            + 0.25e0 * (pf[i+2, j+2, k+1] + pf[i+2, j+1, k+1] - pf[i, j+2, k+1] - pf[i, j+1, k+1]) * gqj[i, j+1, k, 1]
+          local py = ((pf[i+1, j+2, k+1] - pf[i+1, j+1, k+1]) * gqj[i, j, k, 2]
+            + 0.25e0 * (pf[i+2, j+2, k+1] + pf[i+2, j+1, k+1] - pf[i, j+2, k+1] - pf[i, j+1, k+1]) * gqj[i, j, k, 1]
             + 0.25e0 * (pf[i+1, j+2, k+2] + pf[i+1, j+1, k+2] - pf[i+1, j+2, k] - pf[i+1, j+1, k]) * gqj3[i, j, k])
           vf[i, j, k] = cyf[i, j, k] - dte * (py + sjfc[i, j, k])
         end
@@ -36,9 +36,9 @@ function vface(pf, dtimel::rc_kind)
     for i in 1:NI
       wf[i, j, 0] = wfbcb[i, j]
       for k in 1:NK
-        local pz = ((pf[i+1, j+1, k+2] - pf[i+1, j+1, k+1]) * gqk[i+1, j+1, k+1, 3]
-          + 0.25e0 * (pf[i+2, j+1, k+2] + pf[i+2, j+1, k+1] - pf[i, j+1, k+2] - pf[i, j+1, k+1]) * gqk[i+1, j+1, k+1, 1]
-          + 0.25e0 * (pf[i+1, j+2, k+2] + pf[i+1, j+2, k+1] - pf[i+1, j, k+2] - pf[i+1, j, k+1]) * gqk[i+1, j+1, k+1, 2])
+        local pz = ((pf[i+1, j+1, k+2] - pf[i+1, j+1, k+1]) * gqk[i, j, k, 3]
+          + 0.25e0 * (pf[i+2, j+1, k+2] + pf[i+2, j+1, k+1] - pf[i, j+1, k+2] - pf[i, j+1, k+1]) * gqk[i, j, k, 1]
+          + 0.25e0 * (pf[i+1, j+2, k+2] + pf[i+1, j+2, k+1] - pf[i+1, j, k+2] - pf[i+1, j, k+1]) * gqk[i, j, k, 2])
         wf[i, j, k] = czf[i, j, k] - dte * (pz + skfc[i, j, k])
       end
     end

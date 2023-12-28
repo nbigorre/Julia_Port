@@ -74,9 +74,9 @@ function sigma()
         local sig = rc_kind(k)
         local wxk = (dnkm1 - sig) * hx * hpdinv
         local wyk = (dnkm1 - sig) * hy * hpdinv
-        gqk[i+1, j+1, k+1, 1] = qpr * Jac[i, j, k] * (ux[i, j] * wxk +  uy[i, j] * wyk)
-        gqk[i+1, j+1, k+1, 2] = qpr * Jac[i, j, k] * (vx[i, j] * wxk +  vy[i, j] * wyk)
-        gqk[i+1, j+1, k+1, 3] = Jac[i, j, k] * (qpr * (wxk*wxk + wyk*wyk) + be2 * wz[i, j, k] * wz[i, j, k])
+        gqk[i, j, k, 1] = qpr * Jac[i, j, k] * (ux[i, j] * wxk +  uy[i, j] * wyk)
+        gqk[i, j, k, 2] = qpr * Jac[i, j, k] * (vx[i, j] * wxk +  vy[i, j] * wyk)
+        gqk[i, j, k, 3] = Jac[i, j, k] * (qpr * (wxk*wxk + wyk*wyk) + be2 * wz[i, j, k] * wz[i, j, k])
 
       end
 
@@ -88,20 +88,20 @@ function sigma()
   for i in 0:NI
     for j in 1:NJ
       Jifc[i, j, NK] = 0.5e0 * (Jac[i, j, NK] + Jac[i+1, j, NK])
-      gi[i+1, j, NK, 1] = 0.5e0 * (g11[i, j] + g11[i+1, j]) * Jifc[i, j, NK]
-      gi[i+1, j, NK, 2] = 0.5e0 * (g12[i, j] + g12[i+1, j]) * Jifc[i, j, NK]
-      gqi[i+1, j, NK, 1] = qpr * gi[i+1, j, NK, 1]
-      gqi[i+1, j, NK, 2] = qpr * gi[i+1, j, NK, 2]
+      gi[i, j, NK, 1] = 0.5e0 * (g11[i, j] + g11[i+1, j]) * Jifc[i, j, NK]
+      gi[i, j, NK, 2] = 0.5e0 * (g12[i, j] + g12[i+1, j]) * Jifc[i, j, NK]
+      gqi[i, j, NK, 1] = qpr * gi[i, j, NK, 1]
+      gqi[i, j, NK, 2] = qpr * gi[i, j, NK, 2]
     end
   end
   
   for i in 1:NI
     for j in 0:NJ
       Jjfc[i, j, NK] = 0.5e0 * (Jac[i, j, NK] + Jac[i, j+1, NK])
-      gj[i, j+1, NK, 1] = 0.5e0 * (g12[i, j] + g12[i, j+1]) * Jjfc[i, j, NK]
-      gj[i, j+1, NK, 2] = 0.5e0 * (g22[i, j] + g22[i, j+1]) * Jjfc[i, j, NK]
-      gqj[i, j+1, NK, 1] = qpr * gj[i, j+1, NK, 1]
-      gqj[i, j+1, NK, 2] = qpr * gj[i, j+1, NK, 2]
+      gj[i, j, NK, 1] = 0.5e0 * (g12[i, j] + g12[i, j+1]) * Jjfc[i, j, NK]
+      gj[i, j, NK, 2] = 0.5e0 * (g22[i, j] + g22[i, j+1]) * Jjfc[i, j, NK]
+      gqj[i, j, NK, 1] = qpr * gj[i, j, NK, 1]
+      gqj[i, j, NK, 2] = qpr * gj[i, j, NK, 2]
     end
   end
   
