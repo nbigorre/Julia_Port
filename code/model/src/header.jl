@@ -51,11 +51,11 @@ global const stress_top = @fortGetArr("stress_top", rc_kind, (NI, NJ))
 global const stress_top_x = @fortGetArr("stress_top_x", rc_kind, (NI, NJ))
 global const stress_top_y = @fortGetArr("stress_top_y", rc_kind, (NI, NJ))
 
-global const u = @fortGetArr("u", rc_kind, (NI + 2, NJ + 2, NK + 2, 2))
-global const v = @fortGetArr("v", rc_kind, (NI + 2, NJ + 2, NK + 2, 2))
-global const w = @fortGetArr("w", rc_kind, (NI + 2, NJ + 2, NK + 2, 2))
-global const s = @fortGetArr("s", rc_kind, (NI + 2, NJ + 2, NK + 2, 2))
-global const T = @fortGetArr("t", rc_kind, (NI + 2, NJ + 2, NK + 2, 2))
+global const u = OffsetArray(@fortGetArr("u", rc_kind, (NI + 2, NJ + 2, NK + 2, 2)), 0:NI+1, 0:NJ+1, 0:NK+1, 0:1)
+global const v = OffsetArray(@fortGetArr("v", rc_kind, (NI + 2, NJ + 2, NK + 2, 2)), 0:NI+1, 0:NJ+1, 0:NK+1, 0:1)
+global const w = OffsetArray(@fortGetArr("w", rc_kind, (NI + 2, NJ + 2, NK + 2, 2)), 0:NI+1, 0:NJ+1, 0:NK+1, 0:1)
+global const s = OffsetArray(@fortGetArr("s", rc_kind, (NI + 2, NJ + 2, NK + 2, 2)), 0:NI+1, 0:NJ+1, 0:NK+1, 0:1)
+global const T = OffsetArray(@fortGetArr("t", rc_kind, (NI + 2, NJ + 2, NK + 2, 2)), 0:NI+1, 0:NJ+1, 0:NK+1, 0:1)
 
 global const gqk = OffsetArray(@fortGetArr("gqk", rc_kind, (NI+2, NJ+2, NK+1, 3)), 0:NI+1, 0:NJ+1, 0:NK, 1:3)
 

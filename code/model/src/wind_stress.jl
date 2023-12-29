@@ -1,11 +1,11 @@
 
 function wind_stress(udif,vdif,step)
     
-    @inbounds @views @. udif = 0e0
-    @inbounds @views @. vdif = 0e0
+    @views @. udif = 0e0
+    @views @. vdif = 0e0
 
-    @inbounds @views @. stress_top_x = 0e0
-    @inbounds @views @. stress_top_y = 0e0
+    @views @. stress_top_x = 0e0
+    @views @. stress_top_y = 0e0
 
     local stressmax = 0.2e0
 

@@ -52,7 +52,7 @@ function linerelax_segment(chunk, nxm, nym, nzm, cp, p, fn)
         println("error in linerelax")
         exit(1)
       end
-      @inbounds p[i, j, 1:nzm] .= rh[1:nzm]
+      p[i, j, 1:nzm] .= rh[1:nzm]
     end
   end
 end

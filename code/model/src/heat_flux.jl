@@ -17,8 +17,8 @@ function heat_flux(Tdif, step)
     @fortSet("j_a", J_A, rc_kind)
 
     # This part deals with short wave radiation
-    @inbounds @views @. swr = 0e0
-    @inbounds @views @. qloss = 0e0
+    @views @. swr = 0e0
+    @views @. qloss = 0e0
 
     # Add sinusoidal heat flux
     local swrtemp::rc_kind = 0e0 * sin( (2e0*3.14159e0 / (24*3600)) * step * @fortGet("dtf", rc_kind) * 1e05 )
@@ -27,7 +27,7 @@ function heat_flux(Tdif, step)
     for j in 1:NJ
         swr[j] = 900e0 * sin( rc_kind(j-1) / rc_kind(NJ - 1) * PI / 2 )
     end
-    @inbounds @views @. qloss = 0e0/3.14159
+    @views @. qloss = 0e0/3.14159
 
 
     local fac = 1e0/(@fortGet("ul",rc_kind) * DL * @fortGet("delta",rc_kind))

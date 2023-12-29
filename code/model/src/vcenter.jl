@@ -11,8 +11,8 @@ function vcenter(pf, dtimel, n)
         local py = uy[i, j] * pxi + vy[i, j] * peta + wy[i, j, k] * psig
         local pz = wz[i, j, k] * psig
 
-        u[i+1, j+1, k+1, n+1] = cx[i, j, k] - dte * (@fortGet("qpr", rc_kind) * px + si[i, j, k])
-        v[i+1, j+1, k+1, n+1] = cy[i, j, k] - dte * (@fortGet("qpr", rc_kind) * py + sj[i, j, k])
+        u[i, j, k, n] = cx[i, j, k] - dte * (@fortGet("qpr", rc_kind) * px + si[i, j, k])
+        v[i, j, k, n] = cy[i, j, k] - dte * (@fortGet("qpr", rc_kind) * py + sj[i, j, k])
 
       end
     end
@@ -22,7 +22,7 @@ function vcenter(pf, dtimel, n)
     for i in 1:NI
       for k in 1:NK
         local wfk = 0.5e0 * (wf[i, j, k] + wf[i, j, k-1])
-        w[i+1, j+1, k+1, n+1] = (wfk / Jac[i, j, k] - u[i+1, j+1, k+1, n+1] * wx[i, j, k] - v[i+1, j+1, k+1, n+1] * wy[i, j, k]) / (EPS * wz[i, j, k])
+        w[i, j, k, n] = (wfk / Jac[i, j, k] - u[i, j, k, n] * wx[i, j, k] - v[i, j, k, n] * wy[i, j, k]) / (EPS * wz[i, j, k])
       end
     end
   end

@@ -12,11 +12,11 @@ function conadjust(stepl, n)
         if (rh < rhtop)
           conv[i+1, j+1, k+1] = 1e0
           local zinv = 1e0 / (dzupper + dz)
-          s[i+1, j+1, k+1, n+1] = (dzupper * s[i+1, j+1, k+2, n+1] + dz * s[i+1, j+1, k+1, n+1]) * zinv
-          s[i+1, j+1, k+2, n+1] = s[i+1, j+1, k+1, n+1]
-          T[i+1, j+1, k+1, n+1] = (dzupper * T[i+1, j+1, k+2, n+1] + dz * T[i+1, j+1, k+1, n+1]) * zinv
-          T[i+1, j+1, k+2, n+1] = T[i+1, j+1, k+1, n+1]
-          rho[i, j, k] = potdens(s[i+1, j+1, k+1, n+1], T[i+1, j+1, k+1, n+1])
+          s[i, j, k, n] = (dzupper * s[i, j, k+1, n] + dz * s[i, j, k, n]) * zinv
+          s[i, j, k+1, n] = s[i, j, k, n]
+          T[i, j, k, n] = (dzupper * T[i, j, k+1, n] + dz * T[i, j, k, n]) * zinv
+          T[i, j, k+1, n] = T[i, j, k, n]
+          rho[i, j, k] = potdens(s[i, j, k, n], T[i, j, k, n])
           rho[i, j, k+1] = rho[i, j, k]
           for it in 1:ntr
             Tr[it, i+1, j+1, k+1, n+1] = (dzupper * Tr[it, i+1, j+1, k+1, n+1] + dz * Tr[it, i+1, j+1, k+1, n+1]) * zinv

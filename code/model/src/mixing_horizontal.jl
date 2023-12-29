@@ -51,6 +51,6 @@ function mixing_horizontal(var, vardif)
     wait.(tasks)
 
     local fac = 1e0 / (@fortGet("ul", rc_kind) * LEN)
-    @inbounds @views @. vardif[1:NI, 1:NJ, 1:NK] .*= fac * Jac[1:NI, 1:NJ, 1:NK]
+    @views @. vardif[1:NI, 1:NJ, 1:NK] .*= fac * Jac[1:NI, 1:NJ, 1:NK]
 
 end

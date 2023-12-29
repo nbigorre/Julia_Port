@@ -51,9 +51,9 @@ function srcface(n, step)
     
     for k in 1:NK
       for j in 1:NJ
-        local uint = xa * (u[i0+1, j+1, k+1, n+1] + u[ip1+1, j+1, k+1, n+1]) + xb * (u[im1+1, j+1, k+1, n+1] + u[ip2+1, j+1, k+1, n+1])
-        local vint = xa * (v[i0+1, j+1, k+1, n+1] + v[ip1+1, j+1, k+1, n+1]) + xb * (v[im1+1, j+1, k+1, n+1] + v[ip2+1, j+1, k+1, n+1])
-        local wint = xa * (w[i0+1, j+1, k+1, n+1] + w[ip1+1, j+1, k+1, n+1]) + xb * (w[im1+1, j+1, k+1, n+1] + w[ip2+1, j+1, k+1, n+1])
+        local uint = xa * (u[i0, j, k, n] + u[ip1, j, k, n]) + xb * (u[im1, j, k, n] + u[ip2, j, k, n])
+        local vint = xa * (v[i0, j, k, n] + v[ip1, j, k, n]) + xb * (v[im1, j, k, n] + v[ip2, j, k, n])
+        local wint = xa * (w[i0, j, k, n] + w[ip1, j, k, n]) + xb * (w[im1, j, k, n] + w[ip2, j, k, n])
         
         local vcif = EPS * (xa * (uvis[i0, j, k] + uvis[ip1, j, k]) + xb * (uvis[im1, j, k] + uvis[ip2, j, k]))
         local vcjf = EPS * (xa * (vvis[i0, j, k] + vvis[ip1, j, k]) + xb * (vvis[im1, j, k] + vvis[ip2, j, k])) 
@@ -109,9 +109,9 @@ function srcface(n, step)
     
     for k in 1:NK
       for i in 1:NI
-        local vint = xa * (v[i+1, j0+1, k+1, n+1] + v[i+1, jp1+1, k+1, n+1]) + xb * (v[i+1, jm1+1, k+1, n+1] + v[i+1, jp2+1, k+1, n+1])
-        local uint = xa * (u[i+1, j0+1, k+1, n+1] + u[i+1, jp1+1, k+1, n+1]) + xb * (u[i+1, jm1+1, k+1, n+1] + u[i+1, jp2+1, k+1, n+1])
-        local wint = xa * (w[i+1, j0+1, k+1, n+1] + w[i+1, jp1+1, k+1, n+1]) + xb * (w[i+1, jm1+1, k+1, n+1] + w[i+1, jp2+1, k+1, n+1])
+        local vint = xa * (v[i, j0, k, n] + v[i, jp1, k, n]) + xb * (v[i, jm1, k, n] + v[i, jp2, k, n])
+        local uint = xa * (u[i, j0, k, n] + u[i, jp1, k, n]) + xb * (u[i, jm1, k, n] + u[i, jp2, k, n])
+        local wint = xa * (w[i, j0, k, n] + w[i, jp1, k, n]) + xb * (w[i, jm1, k, n] + w[i, jp2, k, n])
         local vcif = EPS * (xa * (uvis[i, j0, k] + uvis[i, jp1, k]) + xb * (uvis[i, jm1, k] + uvis[i, jp2, k]))
         local vcjf = EPS * (xa * (vvis[i, j0, k] + vvis[i, jp1, k]) + xb * (vvis[i, jm1, k] + vvis[i, jp2, k]))
         
@@ -135,9 +135,9 @@ function srcface(n, step)
           inm1 = NJ-1
         end
 
-        local vint = 0.5e0 * (3e0 * v[i+1, in+1, k+1, n+1] - v[i+1, inm1+1, k+1, n+1])
-        local uint = 0.5e0 * (3e0 * u[i+1, in+1, k+1, n+1] - u[i+1, inm1+1, k+1, n+1])
-        local wint = 0.5e0 * (3e0 * w[i+1, in+1, k+1, n+1] - w[i+1, inm1+1, k+1, n+1])
+        local vint = 0.5e0 * (3e0 * v[i, in, k, n] - v[i, inm1, k, n])
+        local uint = 0.5e0 * (3e0 * u[i, in, k, n] - u[i, inm1, k, n])
+        local wint = 0.5e0 * (3e0 * w[i, in, k, n] - w[i, inm1, k, n])
 
         local vcif= EPS*uvis[i,in,k] 
         local vcjf= EPS*vvis[i,in,k]

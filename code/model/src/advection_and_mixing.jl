@@ -45,20 +45,20 @@ function advection_and_mixing(m, n, dtimel, step)
 
         if (av_comp[selvar] == 1)
             if (selvar == 1)
-                @views @. var[0:NI+1, 0:NJ+1, 0:NK+1] = T[:, :, :, m+1]
-                @views @. var0[0:NI+1, 0:NJ+1, 0:NK+1] = T[:, :, :, 1]
+                @views @. var[0:NI+1, 0:NJ+1, 0:NK+1] = T[0:NI+1, 0:NJ+1, 0:NK+1, m]
+                @views @. var0[0:NI+1, 0:NJ+1, 0:NK+1] = T[0:NI+1, 0:NJ+1, 0:NK+1, 0]
             elseif (selvar == 2)
-                @views @. var[0:NI+1, 0:NJ+1, 0:NK+1] = s[:, :, :, m+1]
-                @views @. var0[0:NI+1, 0:NJ+1, 0:NK+1] = s[:, :, :, 1]
+                @views @. var[0:NI+1, 0:NJ+1, 0:NK+1] = s[0:NI+1, 0:NJ+1, 0:NK+1, m]
+                @views @. var0[0:NI+1, 0:NJ+1, 0:NK+1] = s[0:NI+1, 0:NJ+1, 0:NK+1, 0]
             elseif (selvar == 3)
-                @views @. var[0:NI+1, 0:NJ+1, 0:NK+1] = u[:, :, :, m+1]
-                @views @. var0[0:NI+1, 0:NJ+1, 0:NK+1] = u[:, :, :, 1]
+                @views @. var[0:NI+1, 0:NJ+1, 0:NK+1] = u[0:NI+1, 0:NJ+1, 0:NK+1, m]
+                @views @. var0[0:NI+1, 0:NJ+1, 0:NK+1] = u[0:NI+1, 0:NJ+1, 0:NK+1, 0]
             elseif (selvar == 4)
-                @views @. var[0:NI+1, 0:NJ+1, 0:NK+1] = v[:, :, :, m+1]
-                @views @. var0[0:NI+1, 0:NJ+1, 0:NK+1] = v[:, :, :, 1]
+                @views @. var[0:NI+1, 0:NJ+1, 0:NK+1] = v[0:NI+1, 0:NJ+1, 0:NK+1, m]
+                @views @. var0[0:NI+1, 0:NJ+1, 0:NK+1] = v[0:NI+1, 0:NJ+1, 0:NK+1, 0]
             elseif (selvar == 5)
-                @views @. var[0:NI+1, 0:NJ+1, 0:NK+1] = w[:, :, :, m+1]
-                @views @. var0[0:NI+1, 0:NJ+1, 0:NK+1] = w[:, :, :, 1]
+                @views @. var[0:NI+1, 0:NJ+1, 0:NK+1] = w[0:NI+1, 0:NJ+1, 0:NK+1, m]
+                @views @. var0[0:NI+1, 0:NJ+1, 0:NK+1] = w[0:NI+1, 0:NJ+1, 0:NK+1, 0]
             end
             for it in 1:ntr
                 if (selvar == 5 + it)
@@ -126,10 +126,10 @@ function advection_and_mixing(m, n, dtimel, step)
                         end
                     end
                     if (selvar == 1)
-                        T[2:NI+1, 2:NJ+1, 2:NK+1, n+1] = mat_test[:,:,:,selvar]
+                        T[1:NI, 1:NJ, 1:NK, n] = mat_test[:,:,:,selvar]
                     end
                     if (selvar == 2)
-                        s[2:NI+1, 2:NJ+1, 2:NK+1, n+1] = mat_test[:,:,:,selvar]
+                        s[1:NI, 1:NJ, 1:NK, n] = mat_test[:,:,:,selvar]
                     end
                     if (selvar == 3)
                         cx[1:NI, 1:NJ, 1:NK] = mat_test[:,:,:,selvar]
@@ -142,22 +142,22 @@ function advection_and_mixing(m, n, dtimel, step)
             else
                 local lc_diff = @views @. dtimel * JacInv[1:NI, 1:NJ, 1:NK] .* uvarx[1:NI, 1:NJ, 1:NK]
                 if (selvar == 1)
-                    @views @. T[2:NI+1, 2:NJ+1, 2:NK+1, n+1] = T[2:NI+1, 2:NJ+1, 2:NK+1, 1] - lc_diff
+                    @views @. T[1:NI, 1:NJ, 1:NK, n] = T[1:NI, 1:NJ, 1:NK, 0] - lc_diff
                 end
                 if (selvar == 2)
-                    @views @. s[2:NI+1, 2:NJ+1, 2:NK+1, n+1] = s[2:NI+1, 2:NJ+1, 2:NK+1, 1] - lc_diff
+                    @views @. s[1:NI, 1:NJ, 1:NK, n] = s[1:NI, 1:NJ, 1:NK, 0] - lc_diff
                 end
                 if (selvar == 3)
-                    @views @. cx[1:NI, 1:NJ, 1:NK] = u[2:NI+1, 2:NJ+1, 2:NK+1, 1] - lc_diff
+                    @views @. cx[1:NI, 1:NJ, 1:NK] = u[1:NI, 1:NJ, 1:NK, 0] - lc_diff
                 end
                 if (selvar == 4)
-                    @views @. cy[1:NI, 1:NJ, 1:NK] = v[2:NI+1, 2:NJ+1, 2:NK+1, 1] - lc_diff
+                    @views @. cy[1:NI, 1:NJ, 1:NK] = v[1:NI, 1:NJ, 1:NK, 0] - lc_diff
                 end
             end
             if (selvar == 5)
                 local lc_diff = @views @. dtimel * JacInv[1:NI, 1:NJ, 1:NK] .* uvarx[1:NI, 1:NJ, 1:NK]
                 
-                @views @. cz[1:NI, 1:NJ, 1:NK] = w[2:NI+1, 2:NJ+1, 2:NK+1, 1] - lc_diff
+                @views @. cz[1:NI, 1:NJ, 1:NK] = w[1:NI, 1:NJ, 1:NK, 0] - lc_diff
                 for it in 1:ntr
                     if (selvar == 5 + it)
                              @views @. Tr[it, 2:NI+1, 2:NJ+1, 2:NK+1, n+1] = Tr[it, 2:NI+1, 2:NJ+1, 2:NK+1, 1] - lc_diff

@@ -31,7 +31,7 @@ function advect_x(area, var, uf, varflx)
         local k,j = Tuple(cindex)
         dvarx[0] = var[1, j, k] - var[NI, j, k]
 
-        @inbounds @. @views dvarx[1:NI-1] = var[2:NI,j,k] - var[1:NI-1, j, k]
+        @. @views dvarx[1:NI-1] = var[2:NI,j,k] - var[1:NI-1, j, k]
 
         dvarx[NI] = dvarx[0]
         dvarx[NI+1] = dvarx[1]
@@ -69,7 +69,7 @@ function advect_y(area, var, vf, varflx)
         dvary[0] = 0e0
         dvary[NJ] = 0e0
 
-        @inbounds @. @views dvary[1:NJ-1] = var[i, 2:NJ, k] - var[i, 1:NJ-1, k]
+        @. @views dvary[1:NJ-1] = var[i, 2:NJ, k] - var[i, 1:NJ-1, k]
         
         var[i, 0, k] = var[i, 1, k]
         var[i, NJ+1, k] = var[i, NJ, k]
@@ -106,7 +106,7 @@ function advect_z(area, var, wf, varflx)
 
         dvarz[0] = 0e0
 
-        @inbounds @. @views dvarz[1:NK-1] = var[i, j, 2:NK] - var[i, j, 1:NK-1]
+        @. @views dvarz[1:NK-1] = var[i, j, 2:NK] - var[i, j, 1:NK-1]
         
         dvarz[NK:NK+1] .= 0e0
 
@@ -148,7 +148,7 @@ function advect(var, uvarx)
     wait.(tasks)
 
     
-    @inbounds @. @views uvarx[1:NI, 1:NJ, 1:NK] = varflx[1:NI, 1:NJ, 1:NK] - varflx[0:NI-1, 1:NJ, 1:NK]
+    @. @views uvarx[1:NI, 1:NJ, 1:NK] = varflx[1:NI, 1:NJ, 1:NK] - varflx[0:NI-1, 1:NJ, 1:NK]
     
 
     local chunks = Iterators.partition(CartesianIndices((1:NK, 1:NI)), div(NI * NK, Threads.nthreads()))
@@ -157,7 +157,7 @@ function advect(var, uvarx)
     end
     wait.(tasks)
 
-    @inbounds @. @views uvarx[1:NI, 1:NJ, 1:NK] += (varflx[1:NI, 1:NJ, 1:NK] - varflx[1:NI, 0:NJ-1, 1:NK])
+    @. @views uvarx[1:NI, 1:NJ, 1:NK] += (varflx[1:NI, 1:NJ, 1:NK] - varflx[1:NI, 0:NJ-1, 1:NK])
 
 
 
@@ -168,7 +168,7 @@ function advect(var, uvarx)
     end
     wait.(tasks)
 
-    @inbounds @. @views uvarx[1:NI, 1:NJ, 1:NK] += (varflx[1:NI, 1:NJ, 1:NK] - varflx[1:NI, 1:NJ, 0:NK-1])
+    @. @views uvarx[1:NI, 1:NJ, 1:NK] += (varflx[1:NI, 1:NJ, 1:NK] - varflx[1:NI, 1:NJ, 0:NK-1])
 
 
 

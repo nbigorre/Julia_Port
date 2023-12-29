@@ -108,25 +108,25 @@ const global get_parti_vel_uf_ex = zeros(rc_kind, (NI + 1, NJ + 2, NK + 2))
 const global get_parti_vel_vf_ex = zeros(rc_kind, (NI + 2, NJ + 1, NK + 2))
 const global get_parti_vel_wf_ex = zeros(rc_kind, (NI + 2, NJ + 2, NK + 1))
 function get_parti_vel(time)
-    @inbounds @views @. wzf = 0.5d0 * (wz[:, :, 0:NK] + wz[:, :, 1:NK+1])
+    @views @. wzf = 0.5d0 * (wz[:, :, 0:NK] + wz[:, :, 1:NK+1])
 
     k = 0
     wfp[:, :, 1] = wf[:, :, 1] / J2d[1:NI, 1:NJ] * wzf[2:NI+1, 2:NJ+1, 1]
     for k in 1:NK
-        @inbounds @views @. ufp[:, :, k] = uf[:, :, k] / Jifc[:, :, k]
-        @inbounds @views @. vfp[:, :, k] = vf[:, :, k] / Jjfc[:, :, k]
-        @inbounds @views @. wfp[:, :, k+1] = wf[:, :, k+1] / J2d[1:NI, 1:NJ] * wzf[2:NI+1, 2:NJ+1, k+1]
+        @views @. ufp[:, :, k] = uf[:, :, k] / Jifc[:, :, k]
+        @views @. vfp[:, :, k] = vf[:, :, k] / Jjfc[:, :, k]
+        @views @. wfp[:, :, k+1] = wf[:, :, k+1] / J2d[1:NI, 1:NJ] * wzf[2:NI+1, 2:NJ+1, k+1]
     end
     uf_ex .= 0e0
-    @inbounds @views @. uf_ex[:, 2:NJ+1, 2:NK+1] = ufp
+    @views @. uf_ex[:, 2:NJ+1, 2:NK+1] = ufp
     # === vertical extrapolation
-    @inbounds @views @. uf_ex[:, :, NK+2] = 2 * uf_ex[:, :, NK+1] - uf_ex[:, :, NK]
+    @views @. uf_ex[:, :, NK+2] = 2 * uf_ex[:, :, NK+1] - uf_ex[:, :, NK]
 
     vf_ex .= 0e0
-    @inbounds @views @. vf_ex[2:NI+1, :, 2:NK+1] = vfp
+    @views @. vf_ex[2:NI+1, :, 2:NK+1] = vfp
     # === zonally periodic
-    @inbounds @views @. vf_ex[1, :, :] = vf_ex[NI+1, :, :]
-    @inbounds @views @. vf_ex[NI+2, :, :] = vf_ex[2, :, :]
+    @views @. vf_ex[1, :, :] = vf_ex[NI+1, :, :]
+    @views @. vf_ex[NI+2, :, :] = vf_ex[2, :, :]
     # === vertical extrapolation
     vf_ex[:, :, NK+2] = 2 * vf_ex[:, :, NK+1] - vf_ex[:, :, NK]
 
