@@ -134,7 +134,7 @@ function hsolve(h,oldh,hdt,dtime)
   end
 
   for l in 1:1
-    mprove(h, ch, rhs, dtime)
+    mprove(OffsetArray(h, 0:NI+1, 0:NJ+1), ch, rhs, dtime)
     #@ccall "./PSOM_LIB.so".mprove_(pointer(h)::Ptr{rc_kind}, pointer(ch)::Ptr{rc_kind}, pointer(rhs)::Ptr{rc_kind}, Ref(dtime)::Ref{rc_kind})::Cvoid
   end
 

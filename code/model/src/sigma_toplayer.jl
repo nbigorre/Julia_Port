@@ -1,7 +1,5 @@
-
-
-global const sigma_g13 = zeros(rc_kind, (NI+2, NJ+2, NK+2))
-global const sigma_g23 = zeros(rc_kind, (NI+2, NJ+2, NK+2))
+global const sigma_g13 = OffsetArray(zeros(rc_kind, (NI+2, NJ+2, NK+2)), 0:NI+1, 0:NJ+1, 0:NK+1)
+global const sigma_g23 = OffsetArray(zeros(rc_kind, (NI+2, NJ+2, NK+2)), 0:NI+1, 0:NJ+1, 0:NK+1)
 
 function sigma()
   local g13 = sigma_g13
@@ -58,8 +56,8 @@ function sigma()
         local z = (sig - dnkm1) * hpd - @fortGet("dztop", rc_kind)
         wx[i, j, k] = (dnkm1 - sig) * hx * hpdinv
         wy[i, j, k] = (dnkm1 - sig) * hy * hpdinv
-        g13[i+1, j+1, k+1] = ux[i, j] * wx[i, j, k] + uy[i, j] * wy[i, j, k]
-        g23[i+1, j+1, k+1] = vx[i, j] * wx[i, j, k] + vy[i, j] * wy[i, j, k]
+        g13[i, j, k] = ux[i, j] * wx[i, j, k] + uy[i, j] * wy[i, j, k]
+        g23[i, j, k] = vx[i, j] * wx[i, j, k] + vy[i, j] * wy[i, j, k]
       end
 
       for k in NK-1:NK
@@ -107,14 +105,14 @@ function sigma()
   
   for j in 1:NJ
     for i in 0:NI
-      gi3[i, j, NK] = 0.5e0 * (g13[i+1, j+1, NK+1] + g13[i+2, j+1, NK+1]) * Jifc[i, j, NK]
+      gi3[i, j, NK] = 0.5e0 * (g13[i, j, NK] + g13[i+1, j, NK]) * Jifc[i, j, NK]
       gqi3[i, j, NK] = qpr * gi3[i, j, NK]
     end
   end
 
   for j in 0:NJ
     for i in 1:NI
-      gj3[i, j, NK] = 0.5e0 * (g23[i+1, j+1, NK+1] + g23[i+1, j+2, NK+1]) * Jjfc[i, j, NK]
+      gj3[i, j, NK] = 0.5e0 * (g23[i, j, NK] + g23[i, j+1, NK]) * Jjfc[i, j, NK]
       gqj3[i, j, NK] = qpr * gj3[i, j, NK]
     end
   end

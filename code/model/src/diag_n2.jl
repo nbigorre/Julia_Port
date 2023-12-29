@@ -4,18 +4,18 @@ function diag_n2()
     for j in 1:NJ
       for i in 1:NI
 
-        @views @inbounds rdy = 0.5e0 * ((rho[i, j+1, k] - sum(rho[:, j+1, k]) / NI) - (rho[i, j-1, k] - sum(rho[:, j-1, k]) / NI)) * vy[i, j] / LEN
+        @views rdy = 0.5e0 * ((rho[i, j+1, k] - sum(rho[:, j+1, k]) / NI) - (rho[i, j-1, k] - sum(rho[:, j-1, k]) / NI)) * vy[i, j] / LEN
         local rdz = 0e0
         local rpdz = 0e0
         if (k == NK)
           rdz = (rho[i, j, k] - rho[i, j, k-1]) * wz[i, j, k] * DLinv
-          @views @inbounds rpdz = (rho[i, j, k] - sum(rho[:, j, k]) / NI - (rho[i, j, k-1] - sum(rho[:, j, k-1]) / NI)) * wz[i, j, k] * DLinv
+          @views rpdz = (rho[i, j, k] - sum(rho[:, j, k]) / NI - (rho[i, j, k-1] - sum(rho[:, j, k-1]) / NI)) * wz[i, j, k] * DLinv
         elseif (k == 1)
           rdz = (rho[i, j, k+1] - rho[i, j, k]) * wz[i, j, k] * DLinv
-          @views @inbounds rpdz = (rho[i, j, k+1] - sum(rho[:, j, k+1]) / NI - (rho[i, j, k] - sum(rho[:, j, k]) / NI)) * wz[i, j, k] * DLinv
+          @views rpdz = (rho[i, j, k+1] - sum(rho[:, j, k+1]) / NI - (rho[i, j, k] - sum(rho[:, j, k]) / NI)) * wz[i, j, k] * DLinv
         else
           rdz = 0.5e0 * (rho[i, j, k+1] - rho[i, j, k-1]) * wz[i, j, k] * DLinv
-          @views @inbounds rpdz = 0.5e0 * (rho[i, j, k+1] - sum(rho[:, j, k+1]) / NI - (rho[i, j, k-1] - sum(rho[:, j, k-1]) / NI)) * wz[i, j, k] * DLinv
+          @views rpdz = 0.5e0 * (rho[i, j, k+1] - sum(rho[:, j, k+1]) / NI - (rho[i, j, k-1] - sum(rho[:, j, k-1]) / NI)) * wz[i, j, k] * DLinv
         end
 
         freqby[i, j, k] = (-gpr * 10e0 / R0) * rdy

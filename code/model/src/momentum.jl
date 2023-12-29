@@ -41,13 +41,13 @@ function momentum(pcorr, step)
             
             rpevalgrad_Sche(ivf[])
             #@ccall "./PSOM_LIB.so".rpevalgrad_sche_(ivf::Ref{Int})::Cvoid
-            @inbounds @. @views drpx[1:NI, 1:NJ, 1:NK] = ru4_Sche[2:NI+1, 2:NJ+1, 1:NK]
+            @. @views drpx[1:NI, 1:NJ, 1:NK] = ru4_Sche[2:NI+1, 2:NJ+1, 1:NK]
 
-            @inbounds @. @views drpy[1:NI, 1:NJ, 1:NK] = rv4_Sche[2:NI+1, 2:NJ+1, 1:NK]
+            @. @views drpy[1:NI, 1:NJ, 1:NK] = rv4_Sche[2:NI+1, 2:NJ+1, 1:NK]
 
-            @inbounds @. @views grpifc[1:NI+1, 1:NJ, 1:NK] = ru2_Sche[1:NI+1, 2:NJ+1, 1:NK]
+            @. @views grpifc[1:NI+1, 1:NJ, 1:NK] = ru2_Sche[1:NI+1, 2:NJ+1, 1:NK]
 
-            @inbounds @. @views grpjfc[1:NI, 1:NJ+1, 1:NK] = rv2_Sche[2:NI+1, 1:NJ+1, 1:NK]
+            @. @views grpjfc[1:NI, 1:NJ+1, 1:NK] = rv2_Sche[2:NI+1, 1:NJ+1, 1:NK]
         end
         
         coriolis(ivs[])
@@ -80,11 +80,11 @@ function momentum(pcorr, step)
         vface(pcorr, dtim[])
         #@ccall "./PSOM_LIB.so".vface_(pointer(pcorr)::Ptr{rc_kind}, dtim::Ref{rc_kind})::Cvoid
         
-        vcenter(reshape(view(pcorr, 1:(NI+2)*(NJ+2)*(NK+2)), (NI+2), (NJ+2), (NK+2)), dtim[], ivf[])
+        vcenter(OffsetArrays.reshape(view(pcorr, 1:(NI+2)*(NJ+2)*(NK+2)), (0:NI+1), (0:NJ+1), (0:NK+1)), dtim[], ivf[])
         #@ccall "./PSOM_LIB.so".vcenter_(pointer(pcorr)::Ptr{rc_kind}, dtim::Ref{rc_kind}, ivf::Ref{Int})::Cvoid
         
         if (@fortGet("fnhhy", rc_kind) != 0e0)
-            pcorrect(reshape(view(pcorr, 1:(NI+2)*(NJ+2)*(NK+2)), (NI+2), (NJ+2), (NK+2)))
+            pcorrect(OffsetArrays.reshape(view(pcorr, 1:(NI+2)*(NJ+2)*(NK+2)), (0:NI+1), (0:NJ+1), (0:NK+1)))
             #@ccall "./PSOM_LIB.so".pcorrect_(pointer(pcorr)::Ptr{rc_kind})::Cvoid
         end
         fdiv[] = facediv(dtim[])

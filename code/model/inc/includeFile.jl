@@ -8,6 +8,7 @@ if (!@isdefined(INCLUDE_All))
     if (Base.find_package("OffsetArrays") === nothing)
         Pkg.add("OffsetArrays")
     end
+    using OffsetArrays
 
     include("../inc/fortVar.jl")
     

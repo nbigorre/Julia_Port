@@ -1,12 +1,12 @@
 function rpevalgrad_Song(n)
-   local Jy = zeros(rc_kind, (NJ + 1, NK + 1))
-   local dzeta = zeros(rc_kind, (NJ, NK + 1))
-   local Jy2 = zeros(rc_kind, (NJ, NK + 1))
-   local dzsig = zeros(rc_kind, (NJ, NK + 1))
-   local Jx = zeros(rc_kind, (NI + 1, NK + 1))
-   local dzxi = zeros(rc_kind, (NI + 1, NK + 1))
-   local Jx2 = zeros(rc_kind, (NI, NK + 1))
-   local dzsig_x = zeros(rc_kind, (NI + 1, NK + 1))
+   local Jy = OffsetArray(zeros(rc_kind, (NJ + 1, NK + 1)), 0:NJ, 0:NK)
+   local dzeta = OffsetArray(zeros(rc_kind, (NJ, NK + 1)), 1:NJ, 0:NK)
+   local Jy2 = OffsetArray(zeros(rc_kind, (NJ, NK + 1)), 1:NJ, 0:NK)
+   local dzsig = OffsetArray(zeros(rc_kind, (NJ, NK + 1)), 1:NJ, 0:NK)
+   local Jx = OffsetArray(zeros(rc_kind, (NI + 1, NK + 1)), 0:NI, 0:NK)
+   local dzxi = OffsetArray(zeros(rc_kind, (NI + 1, NK + 1)), 0:NI, 0:NK)
+   local Jx2 = OffsetArray(zeros(rc_kind, (NI, NK + 1)), 1:NI, 0:NK)
+   local dzsig_x = OffsetArray(zeros(rc_kind, (NI + 1, NK + 1)), 0:NI, 0:NK)
    if (!rect)
       println("modify grpifc,grpjfc")
       exit(1)
@@ -79,52 +79,52 @@ function rpevalgrad_Song(n)
       for j in 1:NJ-1
          local k = 0
          
-         Jy[j+1, k+1] = 0.5e0 * (rho[i, j+1, k+1] + rho[i, j+1, k+2] - (rho[i, j, k+1] + rho[i, j, k+2]))
-         dzeta[j, k+1] = 0.5e0 * (zc[i, j+1, k+1] + zc[i, j+1, k+2] - (zc[i, j, k+1] + zc[i, j, k+2])) * DL
+         Jy[j, k] = 0.5e0 * (rho[i, j+1, k+1] + rho[i, j+1, k+2] - (rho[i, j, k+1] + rho[i, j, k+2]))
+         dzeta[j, k] = 0.5e0 * (zc[i, j+1, k+1] + zc[i, j+1, k+2] - (zc[i, j, k+1] + zc[i, j, k+2])) * DL
          for k in 1:NK-1
-            Jy[j+1, k+1] = 0.5e0 * (rho[i, j+1, k] + rho[i, j+1, k+1] - (rho[i, j, k] + rho[i, j, k+1]))
-            dzeta[j, k+1] = 0.5e0 * (zc[i, j+1, k] + zc[i, j+1, k+1] - (zc[i, j, k] + zc[i, j, k+1])) * DL
+            Jy[j, k] = 0.5e0 * (rho[i, j+1, k] + rho[i, j+1, k+1] - (rho[i, j, k] + rho[i, j, k+1]))
+            dzeta[j, k] = 0.5e0 * (zc[i, j+1, k] + zc[i, j+1, k+1] - (zc[i, j, k] + zc[i, j, k+1])) * DL
          end
          local k = NK
-         Jy[j+1, k+1] = 0.5e0 * (rho[i,j+1, k] + rho[i, j+1, k-1] - (rho[i, j, k] + rho[i, j, k-1]))
-         dzeta[j, k+1] = 0.5e0 * (zc[i,j+1, k] + zc[i, j+1, k-1] - (zc[i, j, k] + zc[i, j, k-1])) * DL
+         Jy[j, k] = 0.5e0 * (rho[i,j+1, k] + rho[i, j+1, k-1] - (rho[i, j, k] + rho[i, j, k-1]))
+         dzeta[j, k] = 0.5e0 * (zc[i,j+1, k] + zc[i, j+1, k-1] - (zc[i, j, k] + zc[i, j, k-1])) * DL
       end
 
       
       for j in 1:NJ-1
          local k = 0
-         Jy2[j, 1] = 0.5e0 * (rho[i, j, k+2] + rho[i, j+1, k+2] - (rho[i, j, k+1] + rho[i, j+1, k+1]))
-         dzsig[j, 2] = 0.5e0 * (zc[i, j, 2] + zc[i, j+1, 2] - (zc[i, j, 1] + zc[i, j+1, 1])) * DL
+         Jy2[j, 0] = 0.5e0 * (rho[i, j, k+2] + rho[i, j+1, k+2] - (rho[i, j, k+1] + rho[i, j+1, k+1]))
+         dzsig[j, 0] = 0.5e0 * (zc[i, j, 2] + zc[i, j+1, 2] - (zc[i, j, 1] + zc[i, j+1, 1])) * DL
 
          for k in 1:NK-1
             Jy2[j, k+1] = 0.5e0 * (rho[i, j, k+1] + rho[i, j+1, k+1] - (rho[i, j, k] + rho[i, j+1, k]))
-            dzsig[j,k+1] = 0.5e0 * (zc[i, j, k+1] + zc[i, j+1, k+1] - (zc[i, j, k] + zc[i, j+1, k])) * DL
+            dzsig[j,k] = 0.5e0 * (zc[i, j, k+1] + zc[i, j+1, k+1] - (zc[i, j, k] + zc[i, j+1, k])) * DL
          end
-         Jy2[j, NK+1] = 0.5e0 * (rho[i, j, NK] + rho[i, j+1, NK] - (rho[i, j, NK-1] + rho[i, j+1, NK-1]))
-         dzsig[j, NK+1] = 0.5e0 * (zc[i, j, NK] + zc[i, j+1, NK] - (zc[i, j, NK-1] + zc[i, j+1, NK-1])) * DL
+         Jy2[j, NK] = 0.5e0 * (rho[i, j, NK] + rho[i, j+1, NK] - (rho[i, j, NK-1] + rho[i, j+1, NK-1]))
+         dzsig[j, NK] = 0.5e0 * (zc[i, j, NK] + zc[i, j+1, NK] - (zc[i, j, NK-1] + zc[i, j+1, NK-1])) * DL
       end
       
       
       
       for k in 0:NK
          for j in 1:NJ-1
-            Jy[j+1, k+1] *= dzsig[j, k+1]
-            Jy2[j, k+1] *= dzeta[j, k+1]
-            Jy[j+1, k+1] -= Jy2[j, k+1]
+            Jy[j, k] *= dzsig[j, k]
+            Jy2[j, k] *= dzeta[j, k]
+            Jy[j, k] -= Jy2[j, k]
          end
       end
       
       for k in 0:NK
-         Jy[1, k+1] = 0e0
-         Jy[NJ+1, k+1] = 0e0
+         Jy[0, k] = 0e0
+         Jy[NJ, k] = 0e0
       end
       
       for j in 1:NJ-1
          local k = NK
-         local Jsum = Jy[j+1, k+1] * 0.5e0
+         local Jsum = Jy[j, k] * 0.5e0
          grpjfc[i, j+1, NK] = Jsum * vconst * gj[i, j, k, 2]
          for k in NK-1:-1:1
-            Jsum += Jy[j+1, k+1]
+            Jsum += Jy[j, k]
             grpjfc[i, j+1, k] = Jsum * vconst * gj[i, j, k, 2]
          end
       end
@@ -135,9 +135,9 @@ function rpevalgrad_Song(n)
       end
       for j in 1:NJ
          local k = NK
-         drpy[i,j,k] = vconst * vy[i, j] * 0.5e0 * (Jy[j+1, NK+1] + Jy[j, NK+1]) * 0.5e0
+         drpy[i,j,k] = vconst * vy[i, j] * 0.5e0 * (Jy[j, NK] + Jy[j-1, NK]) * 0.5e0
          for k in NK-1:-1:1
-            drpy[i,j,k] = drpy[i,j,k+1] + vconst * vy[i, j] * 0.5e0 * (Jy[j+1, k+1] + Jy[j, k+1])
+            drpy[i,j,k] = drpy[i,j,k+1] + vconst * vy[i, j] * 0.5e0 * (Jy[j, k] + Jy[j-1, k])
          end
       end
   end
@@ -153,70 +153,70 @@ function rpevalgrad_Song(n)
 
       for i in 1:NI-1
          local k = 0
-         Jx[i+1, k+1] = rho[i+1, j, k+1] - rho[i, j, k+1]
-         dzxi[i+1, k+1] = (zc[i+1, j, k+1] - zc[i, j, k+1]) * DL
+         Jx[i, k] = rho[i+1, j, k+1] - rho[i, j, k+1]
+         dzxi[i, k] = (zc[i+1, j, k+1] - zc[i, j, k+1]) * DL
          for k in 1:NK-1
-            Jx[i+1, k+1] = 0.5e0 * (rho[i+1, j, k] + rho[i+1, j, k+1] - (rho[i, j, k] + rho[i, j, k+1]))
-            dzxi[i+1, k+1] = 0.5e0 * (zc[i+1, j, k] + zc[i+1, j, k+1] - (zc[i, j, k] + zc[i, j, k+1])) * DL
+            Jx[i, k] = 0.5e0 * (rho[i+1, j, k] + rho[i+1, j, k+1] - (rho[i, j, k] + rho[i, j, k+1]))
+            dzxi[i, k] = 0.5e0 * (zc[i+1, j, k] + zc[i+1, j, k+1] - (zc[i, j, k] + zc[i, j, k+1])) * DL
          end
          local k = NK
-         Jx[i+1, k+1] = rho[i+1, j, k] - rho[i, j, k]
-         dzxi[i+1, k+1] = (zc[i+1, j, k] - zc[i, j, k]) * DL
+         Jx[i, k] = rho[i+1, j, k] - rho[i, j, k]
+         dzxi[i, k] = (zc[i+1, j, k] - zc[i, j, k]) * DL
       end
       local i = NI
       local k = 0
-      Jx[i+1, k+1] = rho[1, j, k+1] - rho[i, j, k+1]
-      dzxi[i+1, k+1] = (zc[1, j, k+1] - zc[i, j, k+1]) * DL
+      Jx[i, k] = rho[1, j, k+1] - rho[i, j, k+1]
+      dzxi[i, k] = (zc[1, j, k+1] - zc[i, j, k+1]) * DL
       for k in 1:NK-1
-         Jx[i+1, k+1] = 0.5e0 * (rho[1, j, k] + rho[1, j, k+1] - (rho[i, j, k] + rho[i, j, k+1]))
-         dzxi[i+1, k+1] = 0.5e0 * (zc[1, j, k] + zc[1, j, k+1] - (zc[i, j, k] + zc[i, j, k+1])) * DL
+         Jx[i, k] = 0.5e0 * (rho[1, j, k] + rho[1, j, k+1] - (rho[i, j, k] + rho[i, j, k+1]))
+         dzxi[i, k] = 0.5e0 * (zc[1, j, k] + zc[1, j, k+1] - (zc[i, j, k] + zc[i, j, k+1])) * DL
       end
       local k = NK
-      Jx[i+1, k+1] = rho[1, j, k] - rho[i, j, k]
-      dzxi[i+1, k+1] = (zc[1, j, k] - zc[i, j, k]) * DL
+      Jx[i, k] = rho[1, j, k] - rho[i, j, k]
+      dzxi[i, k] = (zc[1, j, k] - zc[i, j, k]) * DL
       
       
       for i in 1:NI-1
          local k = 0
-         Jx2[j, 1] = 0.5e0 * (rho[i, j, k+2] + rho[i+1, j, k+2] - (rho[i, j, k+1] + rho[i+1, j+1, k+1]))            ##############################
-         dzsig_x[i+1, 2] = 0.5e0 * (zc[i, j, k+2] + zc[i+1, j, k+2] - (zc[i, j, k+1] + zc[i+1, j+1, k+1])) * DL
+         Jx2[j, 0] = 0.5e0 * (rho[i, j, k+2] + rho[i+1, j, k+2] - (rho[i, j, k+1] + rho[i+1, j+1, k+1]))            ##############################
+         dzsig_x[i, 1] = 0.5e0 * (zc[i, j, k+2] + zc[i+1, j, k+2] - (zc[i, j, k+1] + zc[i+1, j+1, k+1])) * DL
          for k in 1:NK-1
-            Jx2[i, k+1] = 0.5e0 * (rho[i, j, k+1] + rho[i+1, j, k+1] - (rho[i, j, k] + rho[i+1, j, k]))
-            dzsig_x[i+1, k+1] = 0.5e0 * (zc[i, j, k+1] + zc[i+1, j, k+1] - (zc[i, j, k] + zc[i+1, j, k])) * DL
+            Jx2[i, k] = 0.5e0 * (rho[i, j, k+1] + rho[i+1, j, k+1] - (rho[i, j, k] + rho[i+1, j, k]))
+            dzsig_x[i, k] = 0.5e0 * (zc[i, j, k+1] + zc[i+1, j, k+1] - (zc[i, j, k] + zc[i+1, j, k])) * DL
          end
-         Jx2[i, NK+1] = 0.5e0 * (rho[i, j, NK] + rho[i+1, j, NK] - (rho[i, j, NK-1] + rho[i+1, j, NK-1]))
-         dzsig_x[i+1, NK+1] = 0.5e0 * (zc[i, j, NK] + zc[i+1, j, NK] - (zc[i, j, NK-1] + zc[i+1, j, NK-1])) * DL
+         Jx2[i, NK] = 0.5e0 * (rho[i, j, NK] + rho[i+1, j, NK] - (rho[i, j, NK-1] + rho[i+1, j, NK-1]))
+         dzsig_x[i, NK] = 0.5e0 * (zc[i, j, NK] + zc[i+1, j, NK] - (zc[i, j, NK-1] + zc[i+1, j, NK-1])) * DL
       end
       local i = NI
       local k = 0
-      Jx2[j, 1] = 0.5e0 * (rho[i, j, k+2] + rho[1, j, k+2] - (rho[i, j, k+1] + rho[1, j, k+1]))                    ###############################
-      dzsig_x[i+1, 2] = 0.5e0 * (zc[i, j, k+2] + zc[1, j, k+2] - (zc[i, j, k+1] + zc[1, j, k+1])) * DL
+      Jx2[j, 0] = 0.5e0 * (rho[i, j, k+2] + rho[1, j, k+2] - (rho[i, j, k+1] + rho[1, j, k+1]))                    ###############################
+      dzsig_x[i, 1] = 0.5e0 * (zc[i, j, k+2] + zc[1, j, k+2] - (zc[i, j, k+1] + zc[1, j, k+1])) * DL
       for k in 1:NK-1
-         Jx2[i, k+1] = 0.5e0 * (rho[i, j, k+1] + rho[1, j, k+1] - (rho[i, j, k] + rho[1, j, k]))
-         dzsig_x[i+1, k+1] = 0.5e0 * (zc[i, j, k+1] + zc[1, j, k+1] - (zc[i, j, k] + zc[1, j, k])) * DL
+         Jx2[i, k] = 0.5e0 * (rho[i, j, k+1] + rho[1, j, k+1] - (rho[i, j, k] + rho[1, j, k]))
+         dzsig_x[i, k] = 0.5e0 * (zc[i, j, k+1] + zc[1, j, k+1] - (zc[i, j, k] + zc[1, j, k])) * DL
       end
-      Jx2[i, NK+1] = 0.5e0 * (rho[i, j, NK] + rho[1, j, NK] - (rho[i, j, NK-1] + rho[1, j, NK-1]))
-      dzsig_x[i+1, NK+1] = 0.5e0 * (zc[i, j, NK] + zc[1, j, NK] - (zc[i, j, NK-1] + zc[1, j, NK-1])) * DL
+      Jx2[i, NK] = 0.5e0 * (rho[i, j, NK] + rho[1, j, NK] - (rho[i, j, NK-1] + rho[1, j, NK-1]))
+      dzsig_x[i, NK] = 0.5e0 * (zc[i, j, NK] + zc[1, j, NK] - (zc[i, j, NK-1] + zc[1, j, NK-1])) * DL
       
       for k in 0:NK
          for i in 1:NI
-            Jx[i+1, k+1] *= dzsig_x[i+1, k+1]
-            Jx2[i, k+1] *= dzxi[i+1, k+1]
-            Jx[i+1, k+1] -= Jx2[i, k+1]
+            Jx[i, k] *= dzsig_x[i, k]
+            Jx2[i, k] *= dzxi[i, k]
+            Jx[i, k] -= Jx2[i, k]
          end
       end
 
       
       for k in 0:NK
-         Jx[1, k+1] = Jx[NI+1, k+1]
+         Jx[0, k] = Jx[NI, k]
       end
 
       for i in 1:NI
          local k = NK
-         local Jsum = Jx[i+1, k+1] * 0.5e0
+         local Jsum = Jx[i, k] * 0.5e0
          grpifc[i+1, j, NK] = Jsum * vconst * gi[i, j, k, 1]
          for k in NK-1:-1:1
-            Jsum += Jx[i+1, k+1]
+            Jsum += Jx[i, k]
             grpifc[i+1, j, k] = Jsum * vconst * gi[i, j, k, 1]
          end
       end
@@ -225,9 +225,9 @@ function rpevalgrad_Song(n)
       end
       for i in 1:NI
          local k = NK
-         drpx[i,j,k] = vconst * ux[i, j] * 0.5e0 * (Jx[i+1, NK+1] + Jx[i, NK+1]) * 0.5e0
+         drpx[i,j,k] = vconst * ux[i, j] * 0.5e0 * (Jx[i, NK] + Jx[i-1, NK]) * 0.5e0
          for k in NK-1:-1:1
-            drpx[i,j,k] = drpx[i,j,k+1] + vconst * ux[i, j] * 0.5e0 * (Jx[i+1, k+1] + Jx[i, k+1])
+            drpx[i,j,k] = drpx[i,j,k+1] + vconst * ux[i, j] * 0.5e0 * (Jx[i, k] + Jx[i-1, k])
          end
       end
 

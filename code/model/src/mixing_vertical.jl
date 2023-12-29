@@ -4,36 +4,36 @@ using .cppdefs
 
 
 function mixing_vertical_worker(area, fac, var, vardif)
-    local dvardzfc = zeros(rc_kind, NK + 1)
+    local dvardzfc = OffsetArray(zeros(rc_kind, NK + 1), 0:NK)
     for counter in area
         local j = div(counter - 1, NI) + 1
         local i = mod(counter - 1, NI) + 1
         for k in 1:NK-1
-            dvardzfc[k+1] = wz[i, j, k] * (var[i+1, j+1, k+2] - var[i+1, j+1, k+1])
+            dvardzfc[k] = wz[i, j, k] * (var[i, j, k+1] - var[i, j, k])
         end
 
-        dvardzfc[1] = 0e0
-        dvardzfc[NK+1] = 0e0
+        dvardzfc[0] = 0e0
+        dvardzfc[NK] = 0e0
 
         local dfactor = fac * Jac[i, j, 1] * wz[i, j, 1]
         @static if (cppdefs.implicit)
             #########################################################################################################
         else
-            vardif[i, j, 1] = dfactor * (dvardzfc[2] * Kz[i, j, 1] - dvardzfc[1] * Kz[i, j, 0])
+            vardif[i, j, 1] = dfactor * (dvardzfc[1] * Kz[i, j, 1] - dvardzfc[0] * Kz[i, j, 0])
         end
         for k in 2:NK-1
             local dfactor = fac * Jac[i, j, k] * wz[i, j, k]
             @static if (cppdefs.implicit)
                 #########################################################################################################
             else
-                vardif[i, j, k] = dfactor * (dvardzfc[k+1] * Kz[i, j, k] - dvardzfc[k] * Kz[i, j, k-1])
+                vardif[i, j, k] = dfactor * (dvardzfc[k] * Kz[i, j, k] - dvardzfc[k-1] * Kz[i, j, k-1])
             end
         end
         local dfactor = fac * Jac[i, j, NK] * wz[i, j, NK]
         @static if (cppdefs.implicit)
             #########################################################################################################
         else
-            vardif[i, j, NK] = dfactor * (dvardzfc[NK+1] * Kz[i, j, NK] - dvardzfc[NK] * Kz[i, j, NK-1])
+            vardif[i, j, NK] = dfactor * (dvardzfc[NK] * Kz[i, j, NK] - dvardzfc[NK-1] * Kz[i, j, NK-1])
         end
 
     end
@@ -85,8 +85,8 @@ function viscosity(dudz, dvdz, drdz, i, j)
     Kz[i, j, NK] = 0e0
 
     for k in 1:NK-1
-        local bvfreq = -grho * drdz[k+1] * DLinv
-        local vshear = ((dudz[k+1]^2) + (dvdz[k+1]^2)) * fac
+        local bvfreq = -grho * drdz[k] * DLinv
+        local vshear = ((dudz[k]^2) + (dvdz[k]^2)) * fac
         local Ri = vshear == 0 ? 100e0 : bvfreq / vshear
         if (Ri == 0)
             Kz[i, j, k] = 1e0

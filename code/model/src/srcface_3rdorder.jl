@@ -1,10 +1,10 @@
 
 
 function srcface(n, step)
-  local uxi = zeros(rc_kind, (NI+1, NJ))
-  local uyi = zeros(rc_kind, (NI+1, NJ))
-  local vxj = zeros(rc_kind, (NI, NJ+1))
-  local vyj = zeros(rc_kind, (NI, NJ+1))
+  local uxi = OffsetArray(zeros(rc_kind, (NI+1, NJ)), 0:NI, 1:NJ)
+  local uyi = OffsetArray(zeros(rc_kind, (NI+1, NJ)), 0:NI, 1:NJ)
+  local vxj = OffsetArray(zeros(rc_kind, (NI, NJ+1)), 1:NI, 0:NJ)
+  local vyj = OffsetArray(zeros(rc_kind, (NI, NJ+1)), 1:NI, 0:NJ)
 
 
   local fac = EPS * @fortGet("delta", rc_kind)
@@ -14,13 +14,13 @@ function srcface(n, step)
 
   for j in 1:NJ
     for i in 1:NI-1
-      uxi[i+1, j] = 0.5e0 * (ux[i+1, j] + ux[i, j])
-      uyi[i+1, j] = 0.5e0 * (uy[i+1, j] + uy[i, j])
+      uxi[i, j] = 0.5e0 * (ux[i+1, j] + ux[i, j])
+      uyi[i, j] = 0.5e0 * (uy[i+1, j] + uy[i, j])
     end
-    uxi[NI+1, j] = 0.5e0 * (ux[1, j] + ux[NI, j])
-    uyi[NI+1, j] = 0.5e0 * (uy[1, j] + uy[NI, j])
-    uxi[1, j] = (uxi[NI+1, j])
-    uyi[1, j] = (uyi[NI+1, j])
+    uxi[NI, j] = 0.5e0 * (ux[1, j] + ux[NI, j])
+    uyi[NI, j] = 0.5e0 * (uy[1, j] + uy[NI, j])
+    uxi[0, j] = (uxi[NI, j])
+    uyi[0, j] = (uyi[NI, j])
   end
   
   for i in 1:NI
@@ -62,8 +62,8 @@ function srcface(n, step)
         local px = ((p[ip1, j, k] - p[i, j, k]) * gqi[i, j, k, 1] 
         + 0.25e0 * (p[ip1, j+1, k] + p[i, j+1, k] - p[ip1, j-1, k] - p[i, j-1, k]) * gqi[i, j, k, 2]
         + 0.25e0 * (p[ip1, j, k+1] + p[i, j, k+1] - p[ip1, j, k-1] - p[i, j, k-1]) * gqi3[i, j, k])
-        sifc[i, j, k] = ((uxi[i+1, j] * (-ffi[i, j] * vint + fac * bbi[i, j] * wint - vcif) 
-        + uyi[i+1, j] * ( ffi[i, j] * uint - vcjf)) * Jifc[i, j, k] + grpifc[i+1, j, k]) + px
+        sifc[i, j, k] = ((uxi[i, j] * (-ffi[i, j] * vint + fac * bbi[i, j] * wint - vcif) 
+        + uyi[i, j] * ( ffi[i, j] * uint - vcjf)) * Jifc[i, j, k] + grpifc[i+1, j, k]) + px
         
       end
     end
@@ -77,8 +77,8 @@ function srcface(n, step)
   
   for j in 0:NJ
     for i in 1:NI
-      vxj[i, j+1] = 0.5e0 * (vx[i, j+1] + vx[i, j])
-      vyj[i, j+1] = 0.5e0 * (vy[i, j+1] + vy[i, j])
+      vxj[i, j] = 0.5e0 * (vx[i, j+1] + vx[i, j])
+      vyj[i, j] = 0.5e0 * (vy[i, j+1] + vy[i, j])
     end
   end
   
@@ -119,8 +119,8 @@ function srcface(n, step)
         + 0.25e0 * (p[i+1, j+1, k] + p[i+1, j, k] - p[i-1, j+1, k] - p[i-1, j, k]) * gqj[i, j, k, 1]
         + 0.25e0 * (p[i, j+1, k+1] + p[i, j, k+1] - p[i, j+1, k-1] - p[i, j, k-1]) * gqj3[i, j, k])
         
-        sjfc[i, j, k] = ((vxj[i, j+1] * (-ffj[i, j] * vint + fac * bbj[i, j+1] * wint - vcif)
-        + vyj[i, j+1] * ( ffc[i, j] * uint - vcjf)) * Jjfc[i, j, k] + grpjfc[i, j+1, k]) + py
+        sjfc[i, j, k] = ((vxj[i, j] * (-ffj[i, j] * vint + fac * bbj[i, j+1] * wint - vcif)
+        + vyj[i, j] * ( ffc[i, j] * uint - vcjf)) * Jjfc[i, j, k] + grpjfc[i, j+1, k]) + py
       end
     end
   end
@@ -146,8 +146,8 @@ function srcface(n, step)
           + 0.25e0 * (p[i+1, j+1, k] + p[i+1, j, k] - p[i-1, j+1, k] - p[i-1, j, k]) * gqj[i, j, k, 1]
           + 0.25e0 * (p[i, j+1, k+1] + p[i, j, k+1] - p[i, j+1, k-1] - p[i, j, k-1]) * gqj3[i, j, k])
 
-        sjfc[i, j, k] = ((vxj[i, j+1] * (-ffj[i, j] * vint + fac * bbj[i, j] * wint - vcif)
-        + vyj[i, j+1] * ( ffc[i, j] * uint - vcjf)) * Jjfc[i, j, k] + grpjfc[i, j+1, k]) + py
+        sjfc[i, j, k] = ((vxj[i, j] * (-ffj[i, j] * vint + fac * bbj[i, j] * wint - vcif)
+        + vyj[i, j] * ( ffc[i, j] * uint - vcjf)) * Jjfc[i, j, k] + grpjfc[i, j+1, k]) + py
       end
     end
   end

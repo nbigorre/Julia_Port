@@ -1,19 +1,19 @@
 using OffsetArrays
 
 
-global const rpevalgrad_Sche_dZ = zeros(rc_kind, (NI + 2, NK + 1))
-global const rpevalgrad_Sche_dR = zeros(rc_kind, (NI + 2, NK + 1))
+global const rpevalgrad_Sche_dZ = OffsetArray(zeros(rc_kind, (NI + 2, NK + 1)), 0:NI+1, 0:NK)
+global const rpevalgrad_Sche_dR = OffsetArray(zeros(rc_kind, (NI + 2, NK + 1)), 0:NI+1, 0:NK)
 global const rpevalgrad_Sche_FC = OffsetArray(zeros(rc_kind, (NI + 2, NJ + 2)), 0:NI+1, 0:NJ+1)
-global const rpevalgrad_Sche_dZx = zeros(rc_kind, (NI + 2, NJ + 2))
-global const rpevalgrad_Sche_dRx = zeros(rc_kind, (NI + 2, NJ + 2))
+global const rpevalgrad_Sche_dZx = OffsetArray(zeros(rc_kind, (NI + 2, NJ + 2)), 0:NI+1, 0:NJ+1)
+global const rpevalgrad_Sche_dRx = OffsetArray(zeros(rc_kind, (NI + 2, NJ + 2)), 0:NI+1, 0:NJ+1)
 global const rpevalgrad_Sche_rx = OffsetArray(zeros(rc_kind, (NI + 2, NJ + 2)), 0:NI+1, 0:NJ+1)
-global const rpevalgrad_Sche_dn_u = zeros(rc_kind, (NI + 2, NJ + 2))
-global const rpevalgrad_Sche_dm_v = zeros(rc_kind, (NI + 2, NJ + 2))
+global const rpevalgrad_Sche_dn_u = OffsetArray(zeros(rc_kind, (NI + 2, NJ + 2)), 0:NI+1, 0:NJ+1)
+global const rpevalgrad_Sche_dm_v = OffsetArray(zeros(rc_kind, (NI + 2, NJ + 2)), 0:NI+1, 0:NJ+1)
 global const rpevalgrad_Sche_rhol = OffsetArray(zeros(rc_kind, (NI + 2, NJ + 2, NK + 2)), 0:NI+1, 0:NJ+1, 0:NK+1)
 global const rpevalgrad_Sche_z_r = OffsetArray(zeros(rc_kind, (NI + 2, NJ + 2, NK + 2)), 0:NI+1, 0:NJ+1, 0:NK+1)
-global const rpevalgrad_Sche_Hz = zeros(rc_kind, (NI + 2, NJ + 2, NK + 2))
+global const rpevalgrad_Sche_Hz = OffsetArray(zeros(rc_kind, (NI + 2, NJ + 2, NK + 2)), 0:NI+1, 0:NJ+1, 0:NK+1)
 global const rpevalgrad_Sche_z_w = OffsetArray(zeros(rc_kind, (NI + 2, NJ + 2, NK + 3)), 0:NI+1, 0:NJ+1, -1:NK+1)
-global const rpevalgrad_Sche_P_Sche = zeros(rc_kind, (NI + 2, NJ + 2, NK))
+global const rpevalgrad_Sche_P_Sche = OffsetArray(zeros(rc_kind, (NI + 2, NJ + 2, NK)), 0:NI+1, 0:NJ+1, 1:NK)
 
 
 
@@ -67,11 +67,11 @@ function rpevalgrad_Sche(nl::Int)
   dn_u .= @fortGet("dx", rc_kind)
   dm_v .= @fortGet("dy", rc_kind)
 
-  @inbounds @views @. z_r = DL * zc
-  @inbounds @views @. z_w = DL * zf
+  @views @. z_r = DL * zc
+  @views @. z_w = DL * zf
 
   for k in 1:NK
-    Hz[:, :, k+1] = (z_w[:, :, k] .- z_w[:, :, k-1])
+    Hz[0:NI+1, 0:NJ+1, k] = (z_w[:, :, k] .- z_w[:, :, k-1])
   end
 
   # ----------
@@ -86,8 +86,8 @@ function rpevalgrad_Sche(nl::Int)
   # ------------------------
   # Boundary condition in x:
 
-  Hz[1, :, :] = Hz[NI+1, :, :]
-  Hz[NI+2, :, :] = Hz[2, :, :]
+  Hz[0, :, :] = Hz[NI, :, :]
+  Hz[NI+1, :, :] = Hz[1, :, :]
 
   rhol[0, :, :] = rhol[NI, :, :]
   rhol[NI+1, :, :] = rhol[1, :, :]
@@ -113,39 +113,39 @@ function rpevalgrad_Sche(nl::Int)
   for j in jstrV-1:jend
     for k in 1:N-1
       for i in istrU-1:iend
-        dZ[i+1, k+1] = z_r[i, j, k+1] - z_r[i, j, k]
-        dR[i+1, k+1] = rhol[i, j, k+1] - rhol[i, j, k]
+        dZ[i, k] = z_r[i, j, k+1] - z_r[i, j, k]
+        dR[i, k] = rhol[i, j, k+1] - rhol[i, j, k]
       end
     end
     for i in istrU-1:iend
-      dR[i+1, N+1] = dR[i+1, N]
-      dR[i+1, 1] = dR[i+1, 2]
-      dZ[i+1, N+1] = dZ[i+1, N]
-      dZ[i+1, 1] = dZ[i+1, 2]
+      dR[i, N] = dR[i, N-1]
+      dR[i, 0] = dR[i, 1]
+      dZ[i, N] = dZ[i, N-1]
+      dZ[i, 0] = dZ[i, 1]
     end
     for k in N:-1:1
       for i in istrU-1:iend
-        local cff = 2e0 * dZ[i+1, k+1] * dZ[i+1, k]
-        dZ[i+1, k+1] = cff / (dZ[i+1, k+1] + dZ[i+1, k])
+        local cff = 2e0 * dZ[i, k] * dZ[i, k-1]
+        dZ[i, k] = cff / (dZ[i, k] + dZ[i, k-1])
 
-        local cfr = 2e0 * dR[i+1, k+1] * dR[i+1, k]
+        local cfr = 2e0 * dR[i, k] * dR[i, k-1]
         if (cfr > epsil)
-          dR[i+1, k+1] = cfr / (dR[i+1, k+1] + dR[i+1, k])
+          dR[i, k] = cfr / (dR[i, k] + dR[i, k-1])
         else
-          dR[i+1, k+1] = 0e0
+          dR[i, k] = 0e0
         end
       end
     end
     for i in istrU-1:iend
-      P_Sche[i+1, j+1, N] = 0e0 * g * z_w[i, j, N] + GRho * (rhol[i, j, N] + 0.5 * (rhol[i, j, N] - rhol[i, j, N-1]) * (z_w[i, j, N] - z_r[i, j, N]) / (z_r[i, j, N] - z_r[i, j, N-1])) * (z_w[i, j, N] - z_r[i, j, N])
+      P_Sche[i, j, N] = 0e0 * g * z_w[i, j, N] + GRho * (rhol[i, j, N] + 0.5 * (rhol[i, j, N] - rhol[i, j, N-1]) * (z_w[i, j, N] - z_r[i, j, N]) / (z_r[i, j, N] - z_r[i, j, N-1])) * (z_w[i, j, N] - z_r[i, j, N])
     end
     for k in N-1:-1:1
       for i in istrU-1:iend
-        P_Sche[i+1, j+1, k] = P_Sche[i+1, j+1, k+1] + HalfGRho * ((rhol[i, j, k+1] + rhol[i, j, k]) * (z_r[i, j, k+1] - z_r[i, j, k])
+        P_Sche[i, j, k] = P_Sche[i, j, k+1] + HalfGRho * ((rhol[i, j, k+1] + rhol[i, j, k]) * (z_r[i, j, k+1] - z_r[i, j, k])
                                                                   -
-                                                                  0.2e0 * ((dR[i+1, k+2] - dR[i+1, k+1]) * (z_r[i, j, k+1] - z_r[i, j, k] - (1e0 / 12e0) * (dZ[i+1, k+2] + dZ[i+1, k+1]))
+                                                                  0.2e0 * ((dR[i, k+1] - dR[i, k]) * (z_r[i, j, k+1] - z_r[i, j, k] - (1e0 / 12e0) * (dZ[i, k+1] + dZ[i, k]))
                                                                            -
-                                                                           (dZ[i+1, k+2] - dZ[i+1, k+1]) * (rhol[i, j, k+1] - rhol[i, j, k] - (1e0 / 12e0) * (dR[i+1, k+2] + dR[i+1, k+1]))))
+                                                                           (dZ[i, k+1] - dZ[i, k]) * (rhol[i, j, k+1] - rhol[i, j, k] - (1e0 / 12e0) * (dR[i, k+1] + dR[i, k]))))
       end
     end
   end
@@ -183,31 +183,31 @@ function rpevalgrad_Sche(nl::Int)
       for i in istrU-1:iend
         local cff = 2e0 * FC[i, j] * FC[i+1, j]
         if (cff > epsil)
-          dZx[i+1, j+1] = cff / (FC[i, j] + FC[i+1, j])
+          dZx[i, j] = cff / (FC[i, j] + FC[i+1, j])
         else
-          dZx[i+1, j+1] = 0e0
+          dZx[i, j] = 0e0
         end
 
         local cfr = 2e0 * rx[i, j] * rx[i+1, j]
         if (cfr > epsil)
-          dRx[i+1, j+1] = cfr / (rx[i, j] + rx[i+1, j])
+          dRx[i, j] = cfr / (rx[i, j] + rx[i+1, j])
         else
-          dRx[i+1, j+1] = 0e0
+          dRx[i, j] = 0e0
         end
       end
 
       for i in istrU:iend
-        ru_Sche[i+1, j+1, k] = 0.5e0 * (Hz[i+1, j+1, k+1] + Hz[i, j+1, k+1]) * dn_u[i+1, j+1] * (
-                                 (P_Sche[i, j+1, k] - P_Sche[i+1, j+1, k]) - HalfGRho * (
+        ru_Sche[i+1, j+1, k] = 0.5e0 * (Hz[i, j, k] + Hz[i-1, j, k]) * dn_u[i, j] * (
+                                 (P_Sche[i-1, j, k] - P_Sche[i, j, k]) - HalfGRho * (
                                    (rhol[i, j, k] + rhol[i-1, j, k]) * (z_r[i, j, k] - z_r[i-1, j, k])
                                    -
-                                   0.2e0 * ((dRx[i+1, j+1] - dRx[i, j+1]) * (z_r[i, j, k] - z_r[i-1, j, k]
+                                   0.2e0 * ((dRx[i, j] - dRx[i-1, j]) * (z_r[i, j, k] - z_r[i-1, j, k]
                                                                              -
-                                                                             (1e0 / 12e0) * (dZx[i+1, j+1] + dZx[i, j+1]))
+                                                                             (1e0 / 12e0) * (dZx[i, j] + dZx[i-1, j]))
                                             -
-                                            (dZx[i+1, j+1] - dZx[i, j+1]) * (rhol[i, j, k] - rhol[i-1, j, k]
+                                            (dZx[i, j] - dZx[i-1, j]) * (rhol[i, j, k] - rhol[i-1, j, k]
                                                                              -
-                                                                             (1e0 / 12e0) * (dRx[i+1, j+1] + dRx[i, j+1]))
+                                                                             (1e0 / 12e0) * (dRx[i, j] + dRx[i-1, j]))
                                    )
                                  )
                                )
@@ -249,27 +249,27 @@ function rpevalgrad_Sche(nl::Int)
       for i in istr:iend
         local cff = 2e0 * FC[i, j] * FC[i, j+1]
         if (cff > epsil)
-          dZx[i+1, j+1] = cff / (FC[i, j] + FC[i, j+1])
+          dZx[i, j] = cff / (FC[i, j] + FC[i, j+1])
         else
-          dZx[i+1, j+1] = 0e0
+          dZx[i, j] = 0e0
         end
 
         local cfr = 2e0 * rx[i, j] * rx[i, j+1]
         if (cfr > epsil)
-          dRx[i+1, j+1] = cfr / (rx[i, j] + rx[i, j+1])
+          dRx[i, j] = cfr / (rx[i, j] + rx[i, j+1])
         else
-          dRx[i+1, j+1] = 0e0
+          dRx[i, j] = 0e0
         end
       end
 
       if (j >= jstrV)
         for i in istr:iend
-          rv_Sche[i+1, j+1, k] = 0.5e0 * (Hz[i+1, j+1, k+1] + Hz[i+1, j, k+1]) * dm_v[i+1, j+1] * (
-                                   (P_Sche[i+1, j, k] - P_Sche[i+1, j+1, k]) - HalfGRho * (
+          rv_Sche[i+1, j+1, k] = 0.5e0 * (Hz[i, j, k] + Hz[i, j-1, k]) * dm_v[i, j] * (
+                                   (P_Sche[i, j-1, k] - P_Sche[i, j, k]) - HalfGRho * (
                                      (rhol[i, j, k] + rhol[i, j-1, k]) * (z_r[i, j, k] - z_r[i, j-1, k]) - 0.2e0 * (
-                                       (dRx[i+1, j+1] - dRx[i+1, j]) * (z_r[i, j, k] - z_r[i, j-1, k] - (1e0 / 12e0) * (dZx[i+1, j+1] + dZx[i+1, j]))
+                                       (dRx[i, j] - dRx[i, j-1]) * (z_r[i, j, k] - z_r[i, j-1, k] - (1e0 / 12e0) * (dZx[i, j] + dZx[i, j-1]))
                                        -
-                                       (dZx[i+1, j+1] - dZx[i+1, j]) * (rhol[i, j, k] - rhol[i, j-1, k] - (1e0 / 12e0) * (dRx[i+1, j+1] + dRx[i+1, j]))
+                                       (dZx[i, j] - dZx[i, j-1]) * (rhol[i, j, k] - rhol[i, j-1, k] - (1e0 / 12e0) * (dRx[i, j] + dRx[i, j-1]))
                                      )
                                    )
                                  )
