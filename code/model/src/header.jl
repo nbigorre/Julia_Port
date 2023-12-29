@@ -29,24 +29,36 @@ global const rect=true
 
 ###############      ARRAYS       ###############
 
-global const conv = @fortGetArr("conv", Int, (NI + 2, NJ + 2, NK + 2))
-global const con100 = @fortGetArr("con100", Int, (NI + 2, NJ + 2, NK + 2))
+global const conv = OffsetArray(@fortGetArr("conv", Int, (NI + 2, NJ + 2, NK + 2)), 0:NI+1, 0:NJ+1, 0:NK+1)
+global const con100 = OffsetArray(@fortGetArr("con100", Int, (NI + 2, NJ + 2, NK + 2)), 0:NI+1, 0:NJ+1, 0:NK+1)
 
-global const ru_Sche = @fortGetArr("ru_sche", rc_kind, (NI+2,NJ+2,NK))
-global const rv_Sche = @fortGetArr("rv_sche", rc_kind, (NI+2,NJ+2,NK))
-global const ru2_Sche = @fortGetArr("ru2_sche", rc_kind, (NI+2,NJ+2,NK))
-global const rv2_Sche = @fortGetArr("rv2_sche", rc_kind, (NI+2,NJ+2,NK))
-global const ru3_Sche = @fortGetArr("ru3_sche", rc_kind, (NI+2,NJ+2,NK))
-global const rv3_Sche = @fortGetArr("rv3_sche", rc_kind, (NI+2,NJ+2,NK))
-global const ru4_Sche = @fortGetArr("ru4_sche", rc_kind, (NI+2,NJ+2,NK))
-global const rv4_Sche = @fortGetArr("rv4_sche", rc_kind, (NI+2,NJ+2,NK))
-global const grpifc = @fortGetArr("grpifc", rc_kind, (NI+1, NJ, NK))
-global const grpjfc = @fortGetArr("grpjfc", rc_kind, (NI, NJ+1, NK))
-global const T_ref = @fortGetArr("t_ref", rc_kind, (NI + 2, NJ + 2, NK + 2))
-global const Tr = @fortGetArr("tr", rc_kind, (ntr, NI + 2, NJ + 2, NK + 2, 2))
-global const h = @fortGetArr("h", rc_kind, (NI+2, NJ+2))
-global const oldh = @fortGetArr("oldh", rc_kind, (NI+2, NJ+2))
-global const r_sponge = @fortGetArr("r_sponge", rc_kind, (NJ+2))
+global const ru_Sche =  OffsetArray(@fortGetArr("ru_sche", rc_kind, (NI+2,NJ+2,NK)), 0:NI+1, 0:NJ+1, 1:NK)
+global const rv_Sche =  OffsetArray(@fortGetArr("rv_sche", rc_kind, (NI+2,NJ+2,NK)), 0:NI+1, 0:NJ+1, 1:NK)
+global const ru2_Sche = OffsetArray(@fortGetArr("ru2_sche", rc_kind, (NI+2,NJ+2,NK)), 0:NI+1, 0:NJ+1, 1:NK)
+global const rv2_Sche = OffsetArray(@fortGetArr("rv2_sche", rc_kind, (NI+2,NJ+2,NK)), 0:NI+1, 0:NJ+1, 1:NK)
+global const ru3_Sche = OffsetArray(@fortGetArr("ru3_sche", rc_kind, (NI+2,NJ+2,NK)), 0:NI+1, 0:NJ+1, 1:NK)
+global const rv3_Sche = OffsetArray(@fortGetArr("rv3_sche", rc_kind, (NI+2,NJ+2,NK)), 0:NI+1, 0:NJ+1, 1:NK)
+global const ru4_Sche = OffsetArray(@fortGetArr("ru4_sche", rc_kind, (NI+2,NJ+2,NK)), 0:NI+1, 0:NJ+1, 1:NK)
+global const rv4_Sche = OffsetArray(@fortGetArr("rv4_sche", rc_kind, (NI+2,NJ+2,NK)), 0:NI+1, 0:NJ+1, 1:NK)
+
+global const grpifc = OffsetArray(@fortGetArr("grpifc", rc_kind, (NI+1, NJ, NK)), 0:NI, 1:NJ, 1:NK)
+
+global const grpjfc = OffsetArray(@fortGetArr("grpjfc", rc_kind, (NI, NJ+1, NK)), 1:NI, 0:NJ, 1:NK)
+
+global const T_ref = OffsetArray(@fortGetArr("t_ref", rc_kind, (NI + 2, NJ + 2, NK + 2)), 0:NI+1, 0:NJ+1, 0:NK+1)
+
+
+global const Tr = OffsetArray(@fortGetArr("tr", rc_kind, (ntr, NI + 2, NJ + 2, NK + 2, 2)), 1:ntr, 0:NI+1, 0:NJ+1, 0:NK+1, 0:1)
+
+
+global const h = OffsetArray(@fortGetArr("h", rc_kind, (NI+2, NJ+2)), 0:NI+1, 0:NJ+1)
+global const oldh = OffsetArray(@fortGetArr("oldh", rc_kind, (NI+2, NJ+2)), 0:NI+1, 0:NJ+1)
+
+
+global const r_sponge = OffsetArray(@fortGetArr("r_sponge", rc_kind, (NJ+2)), 0:NJ+1)
+
+
+
 global const stress_top = @fortGetArr("stress_top", rc_kind, (NI, NJ))
 global const stress_top_x = @fortGetArr("stress_top_x", rc_kind, (NI, NJ))
 global const stress_top_y = @fortGetArr("stress_top_y", rc_kind, (NI, NJ))

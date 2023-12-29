@@ -197,7 +197,7 @@ function rpevalgrad_Sche(nl::Int)
       end
 
       for i in istrU:iend
-        ru_Sche[i+1, j+1, k] = 0.5e0 * (Hz[i, j, k] + Hz[i-1, j, k]) * dn_u[i, j] * (
+        ru_Sche[i, j, k] = 0.5e0 * (Hz[i, j, k] + Hz[i-1, j, k]) * dn_u[i, j] * (
                                  (P_Sche[i-1, j, k] - P_Sche[i, j, k]) - HalfGRho * (
                                    (rhol[i, j, k] + rhol[i-1, j, k]) * (z_r[i, j, k] - z_r[i-1, j, k])
                                    -
@@ -264,7 +264,7 @@ function rpevalgrad_Sche(nl::Int)
 
       if (j >= jstrV)
         for i in istr:iend
-          rv_Sche[i+1, j+1, k] = 0.5e0 * (Hz[i, j, k] + Hz[i, j-1, k]) * dm_v[i, j] * (
+          rv_Sche[i, j, k] = 0.5e0 * (Hz[i, j, k] + Hz[i, j-1, k]) * dm_v[i, j] * (
                                    (P_Sche[i, j-1, k] - P_Sche[i, j, k]) - HalfGRho * (
                                      (rhol[i, j, k] + rhol[i, j-1, k]) * (z_r[i, j, k] - z_r[i, j-1, k]) - 0.2e0 * (
                                        (dRx[i, j] - dRx[i, j-1]) * (z_r[i, j, k] - z_r[i, j-1, k] - (1e0 / 12e0) * (dZx[i, j] + dZx[i, j-1]))
@@ -307,14 +307,14 @@ function rpevalgrad_Sche(nl::Int)
   for k in 1:NK
     for j in 1:NJ
       for i in 1:NI-1
-        ru2_Sche[i+1, j+1, k] = ru_Sche[i+2, j+1, k]
+        ru2_Sche[i, j, k] = ru_Sche[i+1, j, k]
       end
     end
   end
   for k in 1:NK
     for j in 1:NJ-1
       for i in 1:NI
-        rv2_Sche[i+1, j+1, k] = rv_Sche[i+1, j+2, k]
+        rv2_Sche[i, j, k] = rv_Sche[i, j+1, k]
       end
     end
   end
@@ -322,11 +322,11 @@ function rpevalgrad_Sche(nl::Int)
   #-----------------------
   #- boundary conditions
 
-  ru2_Sche[1, :, :] = ru_Sche[2, :, :]
-  ru2_Sche[NI+1, :, :] = ru_Sche[2, :, :]
+  ru2_Sche[0, :, :] = ru_Sche[1, :, :]
+  ru2_Sche[NI, :, :] = ru_Sche[1, :, :]
 
-  rv2_Sche[:, 1, :] .= 0e0
-  rv2_Sche[:, NJ+1, :] .= 0e0
+  rv2_Sche[:, 0, :] .= 0e0
+  rv2_Sche[:, NJ, :] .= 0e0
 
   #--------------------------------
   # ru2_Sche and rv2_Sche are now totally equivalent to grpifc and grpjfc.
@@ -338,7 +338,7 @@ function rpevalgrad_Sche(nl::Int)
   for k in 1:NK
     for j in 1:NJ
       for i in 1:NI
-        ru3_Sche[i+1, j+1, k] = 0.5e0 * (ru2_Sche[i+1, j+1, k] / gi[i, j, k, 1] + ru2_Sche[i, j+1, k] / gi[i-1, j, k, 1])
+        ru3_Sche[i, j, k] = 0.5e0 * (ru2_Sche[i, j, k] / gi[i, j, k, 1] + ru2_Sche[i-1, j, k] / gi[i-1, j, k, 1])
       end
     end
   end
@@ -346,7 +346,7 @@ function rpevalgrad_Sche(nl::Int)
   for k in 1:NK
     for j in 1:NJ
       for i in 1:NI
-        rv3_Sche[i+1, j+1, k] = 0.5e0 * (rv2_Sche[i+1, j+1, k] / gj[i, j, k, 2] + rv2_Sche[i+1, j, k] / gj[i, j-1, k, 2])
+        rv3_Sche[i, j, k] = 0.5e0 * (rv2_Sche[i, j, k] / gj[i, j, k, 2] + rv2_Sche[i, j-1, k] / gj[i, j-1, k, 2])
       end
     end
   end
@@ -354,7 +354,7 @@ function rpevalgrad_Sche(nl::Int)
   for k in 1:NK
     for j in 1:NJ
       for i in 1:NI
-        ru4_Sche[i+1, j+1, k] = (ru3_Sche[i+1, j+1, k] * ux[i, j] + rv3_Sche[i+1, j+1, k] * vx[i, j])
+        ru4_Sche[i, j, k] = (ru3_Sche[i, j, k] * ux[i, j] + rv3_Sche[i, j, k] * vx[i, j])
       end
     end
   end
@@ -362,7 +362,7 @@ function rpevalgrad_Sche(nl::Int)
   for k in 1:NK
     for j in 1:NJ
       for i in 1:NI
-        rv4_Sche[i+1, j+1, k] = (ru3_Sche[i+1, j+1, k] * uy[i, j] + rv3_Sche[i+1, j+1, k] * vy[i, j])
+        rv4_Sche[i, j, k] = (ru3_Sche[i, j, k] * uy[i, j] + rv3_Sche[i, j, k] * vy[i, j])
       end
     end
   end

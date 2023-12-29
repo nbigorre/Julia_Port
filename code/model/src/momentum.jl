@@ -41,13 +41,13 @@ function momentum(pcorr, step)
             
             rpevalgrad_Sche(ivf[])
             #@ccall "./PSOM_LIB.so".rpevalgrad_sche_(ivf::Ref{Int})::Cvoid
-            @. @views drpx[1:NI, 1:NJ, 1:NK] = ru4_Sche[2:NI+1, 2:NJ+1, 1:NK]
+            @. @views drpx[1:NI, 1:NJ, 1:NK] = ru4_Sche[1:NI, 1:NJ, 1:NK]
 
-            @. @views drpy[1:NI, 1:NJ, 1:NK] = rv4_Sche[2:NI+1, 2:NJ+1, 1:NK]
+            @. @views drpy[1:NI, 1:NJ, 1:NK] = rv4_Sche[1:NI, 1:NJ, 1:NK]
 
-            @. @views grpifc[1:NI+1, 1:NJ, 1:NK] = ru2_Sche[1:NI+1, 2:NJ+1, 1:NK]
+            @. @views grpifc[0:NI, 1:NJ, 1:NK] = ru2_Sche[0:NI, 1:NJ, 1:NK]
 
-            @. @views grpjfc[1:NI, 1:NJ+1, 1:NK] = rv2_Sche[2:NI+1, 1:NJ+1, 1:NK]
+            @. @views grpjfc[1:NI, 0:NJ, 1:NK] = rv2_Sche[1:NI, 0:NJ, 1:NK]
         end
         
         coriolis(ivs[])

@@ -14,27 +14,27 @@ function sigma()
   for j in 0:NJ+1
     for i in 0:NI+1
       # All these variables are functions of time
-      local hpd = h[i+1, j+1] * @fortGet("hdl", rc_kind) + @fortGet("dztop", rc_kind)
+      local hpd = h[i, j] * @fortGet("hdl", rc_kind) + @fortGet("dztop", rc_kind)
       local hpdinv = 1e0 / hpd
 
       # Computation of hu:
       local hu = 0e0
       if (i == 0)
-        hu = @fortGet("hdl", rc_kind) * (h[i+2, j+1] - h[NI, j+1])
+        hu = @fortGet("hdl", rc_kind) * (h[i+1, j] - h[NI-1, j])
       elseif (i == NI +1)
-        hu = @fortGet("hdl", rc_kind) * (h[3, j+1] - h[i, j+1])
+        hu = @fortGet("hdl", rc_kind) * (h[2, j] - h[i-1, j])
       else
-        hu = 0.5e0 * @fortGet("hdl", rc_kind) * (h[i+2, j+1] - h[i, j+1])
+        hu = 0.5e0 * @fortGet("hdl", rc_kind) * (h[i+1, j] - h[i-1, j])
       end
 
       # Computation of hv:
       local hv = 0e0
       if (j == 0)
-        hv = @fortGet("hdl", rc_kind) * (h[i+1, j+2] - h[i+1, j+1])
+        hv = @fortGet("hdl", rc_kind) * (h[i, j+1] - h[i, j])
       elseif (j == NJ +1)
-        hv = @fortGet("hdl", rc_kind) * (h[i+1, j+1] - h[i+1, j])
+        hv = @fortGet("hdl", rc_kind) * (h[i, j] - h[i, j-1])
       else
-        hv = 0.5e0 * @fortGet("hdl", rc_kind) * (h[i+1, j+2] - h[i+1, j])
+        hv = 0.5e0 * @fortGet("hdl", rc_kind) * (h[i, j+1] - h[i, j-1])
       end
 
       # Computation of hx and hy:

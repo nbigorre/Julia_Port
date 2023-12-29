@@ -22,7 +22,7 @@ module relaxation
         for i in 0:NI+1
             for j in 0:NJ+1
                 for k in 0:NK+1
-                    T[i, j, k, n] -= dtime * r_T[j+1, k+1] * (T[i, j, k, n] - T_ref[i+1, j+1, k+1])
+                    T[i, j, k, n] -= dtime * r_T[j+1, k+1] * (T[i, j, k, n] - T_ref[i, j, k])
                 end
             end
         end

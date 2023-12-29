@@ -8,8 +8,8 @@ function calcfkfc()
 
     for i in 1:NI
         for j in 1:NJ
-            local hxi = 0.5e0 * (h[i+2, j+1] - h[i, j+1])
-            local heta = 0.5e0 * (h[i+1, j+2] - h[i+1, j])
+            local hxi = 0.5e0 * (h[i+1, j] - h[i-1, j])
+            local heta = 0.5e0 * (h[i, j+1] - h[i, j-1])
             
             local hx = ux[i+1, j+1] * hxi + vx[i, j] * heta
             local hy = uy[i, j] * hxi + vy[i, j] * heta

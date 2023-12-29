@@ -17,7 +17,7 @@ function findzall()
   
   for j in 0:NJ+1
     for i in 0:NI+1
-      local hpd = h[i+1, j+1] * @fortGet("hdl",rc_kind) + @fortGet("dztop", rc_kind)
+      local hpd = h[i, j] * @fortGet("hdl",rc_kind) + @fortGet("dztop", rc_kind)
       for k in NK:NK+1
         local sigma = rc_kind(k) - 0.5e0
         zc[i, j, k] = (sigma - dnkm1) * hpd - @fortGet("dztop", rc_kind)

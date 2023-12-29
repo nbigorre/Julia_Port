@@ -26,9 +26,9 @@ function rpevalgrad_Song(n)
 
    for i in 0:NI+1
       for j in 0:NJ+1
-         local hpd = h[i+1, j+1] * @fortGet("hdl", rc_kind) + D[i, j]
+         local hpd = h[i, j] * @fortGet("hdl", rc_kind) + D[i, j]
          local dep = D[i, j]
-         local ht = h[i+1, j+1] * @fortGet("hdl", rc_kind)
+         local ht = h[i, j] * @fortGet("hdl", rc_kind)
          #     for k=NK (firt for the toppmost layer of cells)                   
          #     z is the dimensional z and is therefore multiplied by DL 
          local k = NK
@@ -122,16 +122,16 @@ function rpevalgrad_Song(n)
       for j in 1:NJ-1
          local k = NK
          local Jsum = Jy[j, k] * 0.5e0
-         grpjfc[i, j+1, NK] = Jsum * vconst * gj[i, j, k, 2]
+         grpjfc[i, j, NK] = Jsum * vconst * gj[i, j, k, 2]
          for k in NK-1:-1:1
             Jsum += Jy[j, k]
-            grpjfc[i, j+1, k] = Jsum * vconst * gj[i, j, k, 2]
+            grpjfc[i, j, k] = Jsum * vconst * gj[i, j, k, 2]
          end
       end
       
       for k in 1:NK
-         grpjfc[i,1,k] = 0e0
-         grpjfc[i, NJ+1, k] = 0e0
+         grpjfc[i,0,k] = 0e0
+         grpjfc[i, NJ, k] = 0e0
       end
       for j in 1:NJ
          local k = NK
@@ -214,14 +214,14 @@ function rpevalgrad_Song(n)
       for i in 1:NI
          local k = NK
          local Jsum = Jx[i, k] * 0.5e0
-         grpifc[i+1, j, NK] = Jsum * vconst * gi[i, j, k, 1]
+         grpifc[i, j, NK] = Jsum * vconst * gi[i, j, k, 1]
          for k in NK-1:-1:1
             Jsum += Jx[i, k]
-            grpifc[i+1, j, k] = Jsum * vconst * gi[i, j, k, 1]
+            grpifc[i, j, k] = Jsum * vconst * gi[i, j, k, 1]
          end
       end
       for k in 1:NK
-         grpifc[1, j, k] = grpifc[NI+1, j, k]
+         grpifc[0, j, k] = grpifc[NI, j, k]
       end
       for i in 1:NI
          local k = NK

@@ -62,7 +62,7 @@ function advection_and_mixing(m, n, dtimel, step)
             end
             for it in 1:ntr
                 if (selvar == 5 + it)
-                    @views @. var[0:NI+1, 0:NJ+1, 0:NK+1] = Tr[it, :, :, :, m+1]
+                    @views @. var[0:NI+1, 0:NJ+1, 0:NK+1] = Tr[it, 0:NI+1, 0:NJ+1, 0:NK+1, m]
                 end
             end
 
@@ -160,7 +160,7 @@ function advection_and_mixing(m, n, dtimel, step)
                 @views @. cz[1:NI, 1:NJ, 1:NK] = w[1:NI, 1:NJ, 1:NK, 0] - lc_diff
                 for it in 1:ntr
                     if (selvar == 5 + it)
-                             @views @. Tr[it, 2:NI+1, 2:NJ+1, 2:NK+1, n+1] = Tr[it, 2:NI+1, 2:NJ+1, 2:NK+1, 1] - lc_diff
+                             @views @. Tr[it, 1:NI, 1:NJ, 1:NK, n] = Tr[it, 1:NI, 1:NJ, 1:NK, 0] - lc_diff
                     end
                 end
             end

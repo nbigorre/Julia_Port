@@ -34,40 +34,40 @@ function hsolve(h,oldh,hdt,dtime)
   for iter in 1:100
     for j in 1:NJ
       local i = 1
-      local hstar = ( ch[2, i, j] * h[i+2, j+1]
-                    + ch[3, i, j] * h[NI+1, j+1] 
-                    + ch[4, i, j] * h[i+1, j+2] 
-                    + ch[5, i, j] * h[i+1, j] 
-                    + ch[6, i, j] * h[i+2, j+2] 
-                    + ch[7, i, j] * h[NI+1, j+2] 
-                    + ch[8, i, j] * h[i+2, j] 
-                    + ch[9, i, j] * h[NI+1, j] 
+      local hstar = ( ch[2, i, j] * h[i+1, j]
+                    + ch[3, i, j] * h[NI, j] 
+                    + ch[4, i, j] * h[i, j+1] 
+                    + ch[5, i, j] * h[i, j-1] 
+                    + ch[6, i, j] * h[i+1, j+1] 
+                    + ch[7, i, j] * h[NI, j+1] 
+                    + ch[8, i, j] * h[i+1, j-1] 
+                    + ch[9, i, j] * h[NI, j-1] 
                     - rhs[i, j]) / (-ch[1, i, j])
-      h[i+1, j+1] = (1e0 - rlx) * h[i+1, j+1] + rlx * hstar
+      h[i, j] = (1e0 - rlx) * h[i, j] + rlx * hstar
 
       for i in 2:NI-1
-        local hstar = ( ch[2, i, j] * h[i+2, j+1]
-                      + ch[3, i, j] * h[i, j+1] 
-                      + ch[4, i, j] * h[i+1, j+2] 
-                      + ch[5, i, j] * h[i+1, j] 
-                      + ch[6, i, j] * h[i+2, j+2] 
-                      + ch[7, i, j] * h[i, j+2] 
-                      + ch[8, i, j] * h[i+2, j] 
-                      + ch[9, i, j] * h[i, j] 
+        local hstar = ( ch[2, i, j] * h[i+1, j]
+                      + ch[3, i, j] * h[i-1, j] 
+                      + ch[4, i, j] * h[i, j+1] 
+                      + ch[5, i, j] * h[i, j-1] 
+                      + ch[6, i, j] * h[i+1, j+1] 
+                      + ch[7, i, j] * h[i-1, j+1] 
+                      + ch[8, i, j] * h[i+1, j-1] 
+                      + ch[9, i, j] * h[i-1, j-1] 
                       - rhs[i, j]) / (-ch[1, i, j])
-        h[i+1, j+1] = (1e0 - rlx) * h[i+1, j+1] + rlx * hstar
+        h[i, j] = (1e0 - rlx) * h[i, j] + rlx * hstar
       end
       local i = NI
-      local hstar = ( ch[2, i, j] * h[2, j+1]
-                    + ch[3, i, j] * h[i, j+1] 
-                    + ch[4, i, j] * h[i+1, j+2] 
-                    + ch[5, i, j] * h[i+1, j] 
-                    + ch[6, i, j] * h[2, j+2] 
-                    + ch[7, i, j] * h[i, j+2] 
-                    + ch[8, i, j] * h[2, j] 
-                    + ch[9, i, j] * h[i, j] 
+      local hstar = ( ch[2, i, j] * h[1, j]
+                    + ch[3, i, j] * h[i-1, j] 
+                    + ch[4, i, j] * h[i, j+1] 
+                    + ch[5, i, j] * h[i, j-1] 
+                    + ch[6, i, j] * h[1, j+1] 
+                    + ch[7, i, j] * h[i-1, j+1] 
+                    + ch[8, i, j] * h[1, j-1] 
+                    + ch[9, i, j] * h[i-1, j-1] 
                     - rhs[i, j]) / (-ch[1, i, j])
-      h[i+1, j+1] = (1e0 - rlx) * h[i+1, j+1] + rlx * hstar
+      h[i, j] = (1e0 - rlx) * h[i, j] + rlx * hstar
     end
 
     for l in 1:3
@@ -80,44 +80,44 @@ function hsolve(h,oldh,hdt,dtime)
     for j in 1:NJ
       local i = 1
       local res = rhs[i,j] - ( 
-        ch[1, i, j] * h[i+1, j+1]
-      + ch[2, i, j] * h[i+2, j+1]
-      + ch[3, i, j] * h[NI+1, j+1] 
-      + ch[4, i, j] * h[i+1, j+2] 
-      + ch[5, i, j] * h[i+1, j] 
-      + ch[6, i, j] * h[i+2, j+2] 
-      + ch[7, i, j] * h[NI+1, j+2] 
-      + ch[8, i, j] * h[i+2, j] 
-      + ch[9, i, j] * h[NI+1, j])
+        ch[1, i, j] * h[i, j]
+      + ch[2, i, j] * h[i+1, j]
+      + ch[3, i, j] * h[NI, j] 
+      + ch[4, i, j] * h[i, j+1] 
+      + ch[5, i, j] * h[i, j-1] 
+      + ch[6, i, j] * h[i+1, j+1] 
+      + ch[7, i, j] * h[NI, j+1] 
+      + ch[8, i, j] * h[i+1, j-1] 
+      + ch[9, i, j] * h[NI, j-1])
       if (abs(res) > maxres)
         maxres = abs(res)
       end
       for i in 2:NI-1
         local res = rhs[i,j] - ( 
-          ch[1, i, j] * h[i+1, j+1]
-        + ch[2, i, j] * h[i+2, j+1]
-        + ch[3, i, j] * h[i, j+1] 
-        + ch[4, i, j] * h[i+1, j+2] 
-        + ch[5, i, j] * h[i+1, j] 
-        + ch[6, i, j] * h[i+2, j+2] 
-        + ch[7, i, j] * h[i, j+2] 
-        + ch[8, i, j] * h[i+2, j] 
-        + ch[9, i, j] * h[i, j])
+          ch[1, i, j] * h[i, j]
+        + ch[2, i, j] * h[i+1, j]
+        + ch[3, i, j] * h[i-1, j] 
+        + ch[4, i, j] * h[i, j+1] 
+        + ch[5, i, j] * h[i, j-1] 
+        + ch[6, i, j] * h[i+1, j+1] 
+        + ch[7, i, j] * h[i-1, j+1] 
+        + ch[8, i, j] * h[i+1, j-1] 
+        + ch[9, i, j] * h[i-1, j-1])
         if (abs(res) > maxres)
           maxres = abs(res)
         end
       end
       local i = NI
       local res = rhs[i,j] - ( 
-        ch[1, i, j] * h[i+1, j+1]
-      + ch[2, i, j] * h[2, j+1]
-      + ch[3, i, j] * h[i, j+1] 
-      + ch[4, i, j] * h[i+1, j+2] 
-      + ch[5, i, j] * h[i+1, j] 
-      + ch[6, i, j] * h[2, j+2] 
-      + ch[7, i, j] * h[i, j+2] 
-      + ch[8, i, j] * h[2, j] 
-      + ch[9, i, j] * h[i, j])
+        ch[1, i, j] * h[i, j]
+      + ch[2, i, j] * h[1, j]
+      + ch[3, i, j] * h[i-1, j] 
+      + ch[4, i, j] * h[i, j+1] 
+      + ch[5, i, j] * h[i, j-1] 
+      + ch[6, i, j] * h[1, j+1] 
+      + ch[7, i, j] * h[i-1, j+1] 
+      + ch[8, i, j] * h[1, j-1] 
+      + ch[9, i, j] * h[i-1, j-1])
       if (abs(res) > maxres)
         maxres = abs(res)
       end
@@ -134,7 +134,7 @@ function hsolve(h,oldh,hdt,dtime)
   end
 
   for l in 1:1
-    mprove(OffsetArray(h, 0:NI+1, 0:NJ+1), ch, rhs, dtime)
+    mprove(h, ch, rhs, dtime)
     #@ccall "./PSOM_LIB.so".mprove_(pointer(h)::Ptr{rc_kind}, pointer(ch)::Ptr{rc_kind}, pointer(rhs)::Ptr{rc_kind}, Ref(dtime)::Ref{rc_kind})::Cvoid
   end
 
