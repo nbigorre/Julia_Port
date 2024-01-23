@@ -99,8 +99,7 @@ function ini_h()
       hsum = hsum + h[i, j]
     end
   end
-  local hmean = hsum / rc_kind(NI * NJ)
-  @fortSet("hmean", hmean, rc_kind)
+  global hmean = hsum / rc_kind(NI * NJ)
   @views @. h -= hmean
   @views @. h /= HL
   

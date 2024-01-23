@@ -64,8 +64,8 @@ function rpevalgrad_Sche(nl::Int)
   # --------
   # Geometry
 
-  dn_u .= @fortGet("dx", rc_kind)
-  dm_v .= @fortGet("dy", rc_kind)
+  dn_u .= dx
+  dm_v .= dy
 
   @views @. z_r = DL * zc
   @views @. z_w = DL * zf
@@ -297,7 +297,7 @@ function rpevalgrad_Sche(nl::Int)
   #-----------------------
   #- nondimensionalization
 
-  local adim_Sche = 1e0 / (@fortGet("p1", rc_kind) / R0 * @fortGet("dx", rc_kind) * @fortGet("dy", rc_kind))
+  local adim_Sche = 1e0 / (P1 / R0 * dx * dy)
   ru_Sche .*= -adim_Sche
   rv_Sche .*= -adim_Sche
 

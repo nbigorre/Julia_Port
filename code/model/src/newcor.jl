@@ -1,5 +1,5 @@
 function newcor(dtimel,n) 
-  local fac2 = EPS * @fortGet("lambda", rc_kind)
+  local fac2 = EPS * lambda
   local ainv = 1e0 / apr
 
   si[1:NI, 1:NJ, 1:NK] .= 0e0

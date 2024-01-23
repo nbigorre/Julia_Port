@@ -79,11 +79,10 @@ function checks()
 
       end
 
-      if (@fortGet("use_shchepetkin", Bool))
+      if (use_shchepetkin != 0)
          println("# Shchepetkin scheme ENABLED")
       else
-         if (lv_flat_bottom)
-            then
+         if (lv_flat_bottom != 0)
             println("# Shchepetkin scheme DISABLED")
             println("# Song scheme ENABLED")
          else
@@ -166,7 +165,7 @@ function checks()
          println("# bottom cell height       : variable")
       end
 
-      println("# vertical grid stretching factor   : ", @fortGet("pfac",rc_kind))
+      println("# vertical grid stretching factor   : ", pfac)
 
       if (lv_flat_bottom != 0)
          println("# flat topography, depth: ", total_depth, " m")
@@ -252,9 +251,9 @@ function checks()
       println("#                                           ")
       println("#----------------  INITIAL SETTING     ")
       println("#                                           ")
-      println("#   u lies between: ", minimum(u[:, :, :, 0]), " and", maximum(u[:, :, :, 0]))
-      println("#   v lies between: ", minimum(v[:, :, :, 0]), " and", maximum(v[:, :, :, 0]))
-      println("#   w lies between: ", minimum(w[:, :, :, 0]), " and", maximum(w[:, :, :, 0]))
+      println("#   u lies between: ", minimum(u[:, :, :, 0]), " and ", maximum(u[:, :, :, 0]))
+      println("#   v lies between: ", minimum(v[:, :, :, 0]), " and ", maximum(v[:, :, :, 0]))
+      println("#   w lies between: ", minimum(w[:, :, :, 0]), " and ", maximum(w[:, :, :, 0]))
 
       @static if (cppdefs.rhoonly)
          println("# rho lies between: ", minimum(rho[:, :, :]), " and ", maximum(rho[:, :, :]), " (only rho)")

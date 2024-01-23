@@ -33,10 +33,10 @@ function chfine(dtimel,chf,fn)
 
    
    local edt = EPS / dtimel
-   local edtg = edt / (gpr * @fortGet("kappah", rc_kind))
-   local gpkinv = 1e0 / (gpr * @fortGet("kappah", rc_kind))
-   local dtinv = @fortGet("hdl", rc_kind) / (dtimel * @fortGet("kappah", rc_kind))
-   local constv = @fortGet("kaphinv", rc_kind) - 1e0
+   local edtg = edt / (gpr * kappah)
+   local gpkinv = 1e0 / (gpr * kappah)
+   local dtinv = HDL / (dtimel * kappah)
+   local constv = kaphinv - 1e0
    
    hbc(chf, fn, dtimel)
    #@ccall "./PSOM_LIB.so".hbc_(pointer(chf)::Ptr{rc_kind}, pointer(fn)::Ptr{rc_kind}, Ref(dtimel)::Ref{rc_kind})::Cvoid
@@ -77,7 +77,7 @@ function chfine(dtimel,chf,fn)
    local im1 = NI
    for j in 2:NJ-1
 
-      fn[i, j] = (edtg * (@fortGet("kaphinv", rc_kind) * wfbcb[i, j] - J2d[i, j] * oldh[i, j] * dtinv
+      fn[i, j] = (edtg * (kaphinv * wfbcb[i, j] - J2d[i, j] * oldh[i, j] * dtinv
       + sumcxf[i, j] - sumcxf[im1, j] + sumcyf[i, j] - sumcyf[i, j - 1]
       + constv * (sumuf[i, j] - sumuf[im1, j] + sumvf[i, j] - sumvf[i, j-1]))
       - gpkinv * (sumsif[i, j] - sumsif[im1, j] + sumsjf[i, j] - sumsjf[i, j-1])
@@ -96,7 +96,7 @@ function chfine(dtimel,chf,fn)
    
    for i in 2:NI
       for j in 2:NJ-1
-         fn[i, j] = (edtg * (@fortGet("kaphinv", rc_kind) * wfbcb[i, j] - J2d[i, j] * oldh[i, j] * dtinv
+         fn[i, j] = (edtg * (kaphinv * wfbcb[i, j] - J2d[i, j] * oldh[i, j] * dtinv
          + sumcxf[i, j] - sumcxf[i-1, j] + sumcyf[i, j] - sumcyf[i, j - 1]
          + constv * (sumuf[i, j] - sumuf[i-1, j] + sumvf[i, j] - sumvf[i, j-1]))
          - gpkinv * (sumsif[i, j] - sumsif[i-1, j] + sumsjf[i, j] - sumsjf[i, j-1])

@@ -4,37 +4,36 @@ global const sigma_g23 = OffsetArray(zeros(rc_kind, (NI+2, NJ+2, NK+2)), 0:NI+1,
 function sigma()
   local g13 = sigma_g13
   local g23 = sigma_g23
-  local qpr = @fortGet("qpr", rc_kind)
 
   local dnkm1 = rc_kind(NK-1)
   local dnk = rc_kind(NK)
 
-  local be2 = @fortGet("beta", rc_kind) * EPS * EPS
+  local be2 = beta * EPS * EPS
 
   for j in 0:NJ+1
     for i in 0:NI+1
       # All these variables are functions of time
-      local hpd = h[i, j] * @fortGet("hdl", rc_kind) + @fortGet("dztop", rc_kind)
+      local hpd = h[i, j] * HDL + dztop
       local hpdinv = 1e0 / hpd
 
       # Computation of hu:
       local hu = 0e0
       if (i == 0)
-        hu = @fortGet("hdl", rc_kind) * (h[i+1, j] - h[NI-1, j])
+        hu = HDL * (h[i+1, j] - h[NI-1, j])
       elseif (i == NI +1)
-        hu = @fortGet("hdl", rc_kind) * (h[2, j] - h[i-1, j])
+        hu = HDL * (h[2, j] - h[i-1, j])
       else
-        hu = 0.5e0 * @fortGet("hdl", rc_kind) * (h[i+1, j] - h[i-1, j])
+        hu = 0.5e0 * HDL * (h[i+1, j] - h[i-1, j])
       end
 
       # Computation of hv:
       local hv = 0e0
       if (j == 0)
-        hv = @fortGet("hdl", rc_kind) * (h[i, j+1] - h[i, j])
+        hv = HDL * (h[i, j+1] - h[i, j])
       elseif (j == NJ +1)
-        hv = @fortGet("hdl", rc_kind) * (h[i, j] - h[i, j-1])
+        hv = HDL * (h[i, j] - h[i, j-1])
       else
-        hv = 0.5e0 * @fortGet("hdl", rc_kind) * (h[i, j+1] - h[i, j-1])
+        hv = 0.5e0 * HDL * (h[i, j+1] - h[i, j-1])
       end
 
       # Computation of hx and hy:
@@ -53,7 +52,7 @@ function sigma()
         #     All these variables are functions of time and depth               
         #     now hdt computed in vhydro already contains HDL  
         local sig = rc_kind(k) - 0.5e0
-        local z = (sig - dnkm1) * hpd - @fortGet("dztop", rc_kind)
+        local z = (sig - dnkm1) * hpd - dztop
         wx[i, j, k] = (dnkm1 - sig) * hx * hpdinv
         wy[i, j, k] = (dnkm1 - sig) * hy * hpdinv
         g13[i, j, k] = ux[i, j] * wx[i, j, k] + uy[i, j] * wy[i, j, k]

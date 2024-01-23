@@ -98,6 +98,7 @@ if (!@isdefined(INCLUDE_All))
     include("../src/write_bin.jl")
     include("../src/diag_energy.jl")
     include("../src/diag_n2budget.jl")
+    include("../src/diag_vort.jl")
     
     
     

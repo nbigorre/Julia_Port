@@ -36,8 +36,10 @@ function diag_streamfunction(rhobar, n2bar, psiv, psiw, by, bybar, bzbar, vbbar,
    local cbar = zeros(rc_kind, ntr, NJ, NK)
    local n = 0
 
-   @ccall "./PSOM_LIB.so".evalrho_(pointer(rho)::Ptr{rc_kind}, Ref(0)::Ref{Int})::Cvoid
-   @ccall "./PSOM_LIB.so".diag_pv_(Ref(n)::Ref{Int})::Cvoid
+   evalrho(rho, 0)
+   #@ccall "./PSOM_LIB.so".evalrho_(pointer(rho)::Ptr{rc_kind}, Ref(0)::Ref{Int})::Cvoid
+   diag_pv(n)
+   #@ccall "./PSOM_LIB.so".diag_pv_(Ref(n)::Ref{Int})::Cvoid
 
    local rhomean = 0e0
    for k in 1:NK

@@ -26,10 +26,10 @@ else
   dnkm1= rc_kind(NK-1) 
 end
 
-  local dnkm1p= dnkm1/@fortGet("pfac", rc_kind) 
+  local dnkm1p= dnkm1/pfac 
   local be2= beta*EPS*EPS 
-  local epm1= exp(@fortGet("pfac", rc_kind)) -1e0 
-  local ep = @fortGet("pfac", rc_kind)*exp(1e0)                                                                      
+  local epm1= exp(pfac) -1e0 
+  local ep = pfac*exp(1e0)                                                                      
   for j in 0:NJ+1 
      for i in 0:NI+1 
         #     All these variables are functions of time                         

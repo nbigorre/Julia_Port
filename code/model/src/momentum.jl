@@ -15,9 +15,8 @@ function momentum(pcorr, step)
     for ivb in 1:3
         local ivs = ivb == 1 ? 0 : 1
         local ivf = ivb == 3 ? 0 : 1
-        dtim[] = @fortGet("dtf", rc_kind) / (ivb == 1 ? 3e0 : (ivb == 2 ? 2 : 1))
+        dtim[] = dtf / (ivb == 1 ? 3e0 : (ivb == 2 ? 2 : 1))
 
-        @fortSet("tsp", dtim[]*1e05,rc_kind)
         
         findzall()
         #@ccall "./PSOM_LIB.so".findzall_()::Cvoid
@@ -31,7 +30,7 @@ function momentum(pcorr, step)
         intpol()
         #@ccall "./PSOM_LIB.so".intpol_()::Cvoid
 
-        if (! @fortGet("use_shchepetkin", Bool))
+        if (use_shchepetkin == 0)
             rpevalgrad_Song(ivf[])
             #@ccall "./PSOM_LIB.so".rpevalgrad_song_(ivf::Ref{Int})::Cvoid
         else
@@ -82,7 +81,7 @@ function momentum(pcorr, step)
         vcenter(OffsetArrays.reshape(view(pcorr, 1:(NI+2)*(NJ+2)*(NK+2)), (0:NI+1), (0:NJ+1), (0:NK+1)), dtim[], ivf[])
         #@ccall "./PSOM_LIB.so".vcenter_(pointer(pcorr)::Ptr{rc_kind}, dtim::Ref{rc_kind}, ivf::Ref{Int})::Cvoid
         
-        if (@fortGet("fnhhy", rc_kind) != 0e0)
+        if (fnhhy != 0e0)
             pcorrect(OffsetArrays.reshape(view(pcorr, 1:(NI+2)*(NJ+2)*(NK+2)), (0:NI+1), (0:NJ+1), (0:NK+1)))
             #@ccall "./PSOM_LIB.so".pcorrect_(pointer(pcorr)::Ptr{rc_kind})::Cvoid
         end

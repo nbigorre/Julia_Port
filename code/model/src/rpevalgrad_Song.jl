@@ -13,7 +13,7 @@ function rpevalgrad_Song(n)
    end
    #      Evaluate Jacobian at the edge-centers
    #      multiply press and press gradient by const
-   local vconst = 10e0 * gpr / @fortGet("p1", rc_kind)
+   local vconst = 10e0 * gpr / P1
 
    #@ccall "./PSOM_LIB.so".findzall_()::Cvoid
    findzall()
@@ -26,9 +26,9 @@ function rpevalgrad_Song(n)
 
    for i in 0:NI+1
       for j in 0:NJ+1
-         local hpd = h[i, j] * @fortGet("hdl", rc_kind) + D[i, j]
+         local hpd = h[i, j] * HDL + D[i, j]
          local dep = D[i, j]
-         local ht = h[i, j] * @fortGet("hdl", rc_kind)
+         local ht = h[i, j] * HDL
          #     for k=NK (firt for the toppmost layer of cells)                   
          #     z is the dimensional z and is therefore multiplied by DL 
          local k = NK

@@ -7,7 +7,7 @@ module relaxation
     local varbar = zeros(rc_kind, (NJ+2, NK+2))
 
     function set_coef()
-        local gamma_T = 1e0 / (5e0 * 86400e0 * @fortGet("ul", rc_kind) / LEN)
+        local gamma_T = 1e0 / (5e0 * 86400e0 * UL / LEN)
         r_T .= gamma_T * r_sponge
     end
 

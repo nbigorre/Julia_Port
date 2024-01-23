@@ -60,6 +60,7 @@ global user7::rc_kind = 0e0
 global user8::rc_kind = 0e0
 
 global kappah::rc_kind = 0e0
+global kaphinv::rc_kind = 0e0
 global lambda::rc_kind = 0e0
 global delta::rc_kind = 0e0
 global delinv::rc_kind = 0e0
@@ -275,3 +276,16 @@ end
     global parti_file_num::Int = 0
     global NPR::Int = 0
 end
+
+
+
+
+
+
+
+
+global pfac::rc_kind = 0e0
+global hmean::rc_kind = 0e0
+global mldepth::rc_kind = 0e0
+global time_nondim::rc_kind = 0e0
+global time_seconds::rc_kind = 0e0

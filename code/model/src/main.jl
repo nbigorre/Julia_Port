@@ -39,7 +39,8 @@ function main()
     ini_setup(pcorr)
     #@ccall "./PSOM_LIB.so".ini_setup_(pointer(pcorr)::Ptr{rc_kind})::Cvoid
 
-    @fortSet("hmean", meanh(NI, NJ, h), rc_kind)
+    global hmean = meanh(NI, NJ, h)
+    @fortSet("hmean", hmean, rc_kind)
     #@ccall "./PSOM_LIB.so".meanh_(Ref(NI)::Ptr{Int}, Ref(NJ)::Ptr{Int}, @lkGet("h", rc_kind)::Ptr{rc_kind}, @lkGet("hmean", rc_kind)::Ptr{rc_kind})::Cvoid
 
     sigma()
@@ -63,11 +64,14 @@ function main()
     ctrdiv = cdiv(EPS, 0)
     #@ccall "./PSOM_LIB.so".cdiv_(Ref(EPS)::Ptr{rc_kind}, Ref(ctrdiv)::Ptr{rc_kind}, Ref(0)::Ptr{Int})::Cvoid
 
-    @ccall "./PSOM_LIB.so".vort_(Ref(0)::Ptr{Int})::Cvoid
+    vort(0)
+    #@ccall "./PSOM_LIB.so".vort_(Ref(0)::Ptr{Int})::Cvoid
 
     step = 0
-    @fortSet("time_nondim", @fortGet("dtf", rc_kind) * step, rc_kind)
-    @fortSet("time_seconds", @fortGet("time_nondim", rc_kind) * @fortGet("tl", rc_kind), rc_kind)
+    global time_nondim = dtf * step
+    @fortSet("time_nondim", time_nondim, rc_kind)
+    global time_seconds = time_nondim * TL
+    @fortSet("time_seconds", time_seconds, rc_kind)
 
     @static if (cppdefs.gotm_call)
         @ccall "./PSOM_LIB.so".initial_tke_()::Cvoid
@@ -81,7 +85,8 @@ function main()
     diag_n2()
     #@ccall "./PSOM_LIB.so".diag_n2_()::Cvoid
     
-    @ccall "./PSOM_LIB.so".diag_n2budget_(Ref(step)::Ptr{Int})::Cvoid
+    diag_n2budget(step)
+    #@ccall "./PSOM_LIB.so".diag_n2budget_(Ref(step)::Ptr{Int})::Cvoid
 
     #tim = dtime
 
@@ -94,20 +99,20 @@ function main()
     checks()
     #@ccall "./PSOM_LIB.so".checks_()::Cvoid
 
-    @fortSet("lv_test_output_bin", cppdefs.file_output && cppdefs.file_output_bin, Int)
+    local lv_test_output_bin = cppdefs.file_output && cppdefs.file_output_bin
 
-
-    if (@fortGet("pickup_step", Int) < -0.5)
-        @fortSet("initial_step", 0, Int)
+    local initial_step = 0
+    if (pickup_step < -0.5)
+        initial_step = 0
         println("No Pickup")
     else
-        if (! @fortGet("lv_test_output_bin", Bool))
+        if (! lv_test_output_bin)
             error("Error: A pickup is required but the binary I/O is not activated")
             exit(1)
         else
-            println("The simulation will start from step ", @fortGet("pickup_step", Int))
-            @fortSet("initial_step", @fortGet("pickup_step", Int), Int)
-            step = @fortGet("initial_step", Int)
+            println("The simulation will start from step ", pickup_step)
+            initial_step = pickup_step
+            step = initial_step
         end
 
     end
@@ -130,12 +135,14 @@ function main()
     ##               END OF INITIALISATION                 ##
     #########################################################
 
-    istep = @fortGet("initial_step", Int)
-    nstep = @fortGet("nsteps", Int)
+    istep = initial_step
+    nstep = nsteps
 
     for step in (istep+1:istep+nstep)
-        @fortSet("time_nondim", @fortGet("dtf", rc_kind) * step, rc_kind)
-        @fortSet("time_seconds", @fortGet("time_nondim", rc_kind) * @fortGet("tl", rc_kind), rc_kind)
+        global time_nondim = dtf * step
+        @fortSet("time_nondim", time_nondim, rc_kind)
+        global time_seconds = time_nondim * TL
+        @fortSet("time_seconds", time_seconds, rc_kind)
 
         #preproc allow_particle
         @static if (cppdefs.allow_particle)
@@ -155,7 +162,8 @@ function main()
         diag_energy(step)
         #@ccall "./PSOM_LIB.so".diag_energy_(Ref(step)::Ptr{Int})::Cvoid
 
-        @fortSet("hmean", meanh(NI, NJ, h), rc_kind)
+        global hmean = meanh(NI, NJ, h)
+        @fortSet("hmean", hmean, rc_kind)
         #@ccall "./PSOM_LIB.so".meanh_(Ref(NI)::Ptr{Int}, Ref(NJ)::Ptr{Int}, @lkGet("h", rc_kind)::Ptr{rc_kind}, @lkGet("hmean", rc_kind)::Ptr{rc_kind})::Cvoid
 
         @static if (cppdefs.allow_particle)

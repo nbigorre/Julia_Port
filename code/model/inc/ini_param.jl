@@ -87,6 +87,7 @@ user8 = rc_kind(data["USER"]["user8"])
 
 kappah = 0.65e0
 @fortSet("kappah", kappah, rc_kind)
+kaphinv = 1e0/kappah
 @fortSet("kaphinv", 1.e0/fortGet("kappah", rc_kind), rc_kind)
 
 lambda = rc_kind(LEN / AL)

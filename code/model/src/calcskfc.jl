@@ -3,8 +3,8 @@ using .fortVar
 
 function calcfkfc()
 
-    local be2 = @fortGet("beta",rc_kind) * EPS * EPS
-    local kaph1 = 1e0 - @fortGet("kappah", rc_kind)
+    local be2 = beta * EPS * EPS
+    local kaph1 = 1e0 - kappah
 
     for i in 1:NI
         for j in 1:NJ
@@ -14,8 +14,8 @@ function calcfkfc()
             local hx = ux[i+1, j+1] * hxi + vx[i, j] * heta
             local hy = uy[i, j] * hxi + vy[i, j] * heta
             
-            hx = gpr * (@fortGet("kappah", rc_kind) * hx + kaph1 * gradhn[i, j, 1])
-            hy = gpr * (@fortGet("kappah", rc_kind) * hy + kaph1 * gradhn[i, j, 2])
+            hx = gpr * (kappah * hx + kaph1 * gradhn[i, j, 1])
+            hy = gpr * (kappah * hy + kaph1 * gradhn[i, j, 2])
             
 
             for k in 1:NK-1

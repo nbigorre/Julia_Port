@@ -34,8 +34,8 @@ function mixing_horizontal_l2(area, ux, var, Kx_l, vardif)
 end
 
 function mixing_horizontal(var, vardif)
-    local Kx_l = @fortGet("kx", rc_kind)
-    local Ky_l = fill(@fortGet("ky", rc_kind), NJ)
+    local Kx_l = Kx
+    local Ky_l = fill(Ky, NJ)
     
     local chunks = Iterators.partition(CartesianIndices((1:NI, 1:NK)), div(NI*NK,Threads.nthreads()))
     local tasks = map(chunks) do area
@@ -49,7 +49,7 @@ function mixing_horizontal(var, vardif)
     end
     wait.(tasks)
 
-    local fac = 1e0 / (@fortGet("ul", rc_kind) * LEN)
+    local fac = 1e0 / (UL * LEN)
     @views @. vardif[1:NI, 1:NJ, 1:NK] .*= fac * Jac[1:NI, 1:NJ, 1:NK]
 
 end

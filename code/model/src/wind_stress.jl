@@ -12,8 +12,8 @@ function wind_stress(udif,vdif,step)
     local iyw = 120
     local iy0 = 40
     
-    local yw = rc_kind(iyw) * @fortGet("dy", rc_kind)
-    local y0 = rc_kind(iy0) * @fortGet("dy", rc_kind) - @fortGet("dy", rc_kind) / 2e0
+    local yw = rc_kind(iyw) * dy
+    local y0 = rc_kind(iy0) * dy - dy / 2e0
     local yset = y0 + yw / 2e0
     
     for j in 1:div(NJ,2)
@@ -31,8 +31,8 @@ function wind_stress(udif,vdif,step)
     end
 
     
-    local fac = 1e0/(@fortGet("ul",rc_kind) * DL * @fortGet("delta",rc_kind))
-    local fact = DL/@fortGet("ul",rc_kind)
+    local fac = 1e0/(UL * DL * delta)
+    local fact = DL/UL
     for j in 1:NJ
         for i in 1:NI
             stress_top[i,j] = sqrt(stress_top_x[i,j]*stress_top_x[i,j] + stress_top_y[i,j]*stress_top_y[i,j])

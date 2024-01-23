@@ -1,8 +1,8 @@
 function hfill(dtimel,hf, sums) 
       local edt = EPS / dtimel
       local dnk = rc_kind(NK)
-      local cons = (1e0 - @fortGet("kappah", rc_kind)) * gpr
-      local gkn = gpr * @fortGet("kappah", rc_kind)
+      local cons = (1e0 - kappah) * gpr
+      local gkn = gpr * kappah
 
       for i in 1:NI
             local hxi = 0.25e0 * (hf[i+1, 0] + hf[i+1, 1] - hf[i-1, 0] - hf[i-1, 1])

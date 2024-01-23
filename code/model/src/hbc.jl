@@ -1,15 +1,15 @@
 function hbc(chf,fn,dtimel) 
-  local kaph1 = 1e0 - @fortGet("kappah", rc_kind)
+  local kaph1 = 1e0 - kappah
   local edt = EPS / dtimel
-  local eg = edt / (gpr * @fortGet("kappah", rc_kind))
-  local gprinv = 1e0 / (gpr * @fortGet("kappah", rc_kind))
-  local constv = @fortGet("kaphinv", rc_kind) - 1e0
-  local dtinv = @fortGet("hdl", rc_kind) / (dtimel * @fortGet("kappah", rc_kind))
+  local eg = edt / (gpr * kappah)
+  local gprinv = 1e0 / (gpr * kappah)
+  local constv = kaphinv - 1e0
+  local dtinv = HDL / (dtimel * kappah)
 
   for i in 1:NI
     for j in 1:NJ
       if (j == 1 || j == NJ)
-        fn[i, j] = eg * (@fortGet("kaphinv", rc_kind) * wfbcb[i, j] - J2d[i, j] * oldh[i, j] * dtinv)
+        fn[i, j] = eg * (kaphinv * wfbcb[i, j] - J2d[i, j] * oldh[i, j] * dtinv)
         chf[1, i, j] = -eg * J2d[i, j] * dtinv
         chf[2:9, i, j] .= 0e0
         local sumsif = sum(sifc[i, j, 1:NK])
@@ -44,7 +44,7 @@ function hbc(chf,fn,dtimel)
         
         if (j == NJ)
           local sumvf = sum(vfbcn[i, 1:NK])
-          fn[i, j] = fn[i, j] + eg * sumvf * @fortGet("kaphinv", rc_kind)
+          fn[i, j] = fn[i, j] + eg * sumvf * kaphinv
         else
           local sumsjf = sum(sjfc[i, j, 1:NK])
           local sumcyf = sum(cyf[i, j, 1:NK])
@@ -62,7 +62,7 @@ function hbc(chf,fn,dtimel)
         
         if (j == 1)
           local sumvf = sum(vfbcs[i, 1:NK])
-          fn[i, j] = fn[i, j] - eg * sumvf * @fortGet("kaphinv", rc_kind)
+          fn[i, j] = fn[i, j] - eg * sumvf * kaphinv
         else
           local sumsjf = sum(sjfc[i, j-1, 1:NK])
           local sumcyf = sum(cyf[i, j-1, 1:NK])

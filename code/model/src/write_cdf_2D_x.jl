@@ -98,7 +98,7 @@ function write_cdf_2D_x(islice, counter_2d, n)
 
 
 
-   local timday = @fortGet("time_seconds", rc_kind) / 86400e0
+   local timday = time_seconds / 86400e0
    local rhobar = zeros(rc_kind, NJ, NK)
    local n2bar = zeros(rc_kind, NJ, NK)
    local psiv = zeros(rc_kind, NJ, NK)

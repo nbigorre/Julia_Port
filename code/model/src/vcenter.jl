@@ -11,8 +11,8 @@ function vcenter(pf, dtimel, n)
         local py = uy[i, j] * pxi + vy[i, j] * peta + wy[i, j, k] * psig
         local pz = wz[i, j, k] * psig
 
-        u[i, j, k, n] = cx[i, j, k] - dte * (@fortGet("qpr", rc_kind) * px + si[i, j, k])
-        v[i, j, k, n] = cy[i, j, k] - dte * (@fortGet("qpr", rc_kind) * py + sj[i, j, k])
+        u[i, j, k, n] = cx[i, j, k] - dte * (qpr * px + si[i, j, k])
+        v[i, j, k, n] = cy[i, j, k] - dte * (qpr * py + sj[i, j, k])
 
       end
     end

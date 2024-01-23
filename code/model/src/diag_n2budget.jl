@@ -49,9 +49,9 @@ function diag_n2budget(step)
 
    #     Integrate vertically, down to 0.9*MLD, 0.75*MLD , and 0.4*MLD     
    local testdepth = [
-      0.9e0 * @fortGet("mldepth", rc_kind),
-      0.75e0 * @fortGet("mldepth", rc_kind),
-      0.5e0 * @fortGet("mldepth", rc_kind)
+      0.9e0 * mldepth,
+      0.75e0 * mldepth,
+      0.5e0 * mldepth
    ]
 
    for m in 1:3
@@ -96,7 +96,8 @@ function diag_n2budget(step)
    #     =============================                                     
    #     Calculate zeta*b top and bot divided by fH in per s^2     
    evalrho(rho, 0)
-   @ccall "./PSOM_LIB.so".vort_(Ref(0)::Ref{Int})::Cvoid
+   vort(0)
+   #@ccall "./PSOM_LIB.so".vort_(Ref(0)::Ref{Int})::Cvoid
 
    #     Calculate b  in m/s^2                                             
    #     -----------------------                                           

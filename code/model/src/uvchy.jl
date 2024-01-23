@@ -1,7 +1,7 @@
 function uvchy(dtimel)
   local dte = dtimel / EPS
   local epsinv = 1e0 / EPS
-  local kaph1 = 1e0 - @fortGet("kappah", rc_kind)
+  local kaph1 = 1e0 - kappah
 
   for j in 1:NJ
     for i in 1:NI
@@ -21,8 +21,8 @@ function uvchy(dtimel)
         local px = ux[i, j] * pxi + vx[i, j] * peta + wx[i, j, k] * psig
         local py = uy[i, j] * pxi + vy[i, j] * peta + wy[i, j, k] * psig
 
-        cx[i, j, k] = cx[i, j, k] - dte * (gpr * (@fortGet("kappah", rc_kind) * hx + kaph1 * gradhn[i, j, 1]) + si[i, j, k] + @fortGet("qpr", rc_kind) * px)
-        cy[i, j, k] = cy[i, j, k] - dte * (gpr * (@fortGet("kappah", rc_kind) * hy + kaph1 * gradhn[i, j, 2]) + sj[i, j, k] + @fortGet("qpr", rc_kind) * py)
+        cx[i, j, k] = cx[i, j, k] - dte * (gpr * (kappah * hx + kaph1 * gradhn[i, j, 1]) + si[i, j, k] + qpr * px)
+        cy[i, j, k] = cy[i, j, k] - dte * (gpr * (kappah * hy + kaph1 * gradhn[i, j, 2]) + sj[i, j, k] + qpr * py)
       end
       gradhn[i, j, 1] = hx
       gradhn[i, j, 2] = hy

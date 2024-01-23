@@ -7,10 +7,10 @@ function srcface(n, step)
   local vyj = OffsetArray(zeros(rc_kind, (NI, NJ+1)), 1:NI, 0:NJ)
 
 
-  local fac = EPS * @fortGet("delta", rc_kind)
+  local fac = EPS * delta
   local ainv = 1e0 / apr
-  local fac2 = EPS * @fortGet("lambda", rc_kind)
-  local be2 = @fortGet("beta", rc_kind) * EPS * EPS
+  local fac2 = EPS * lambda
+  local be2 = beta * EPS * EPS
 
   for j in 1:NJ
     for i in 1:NI-1

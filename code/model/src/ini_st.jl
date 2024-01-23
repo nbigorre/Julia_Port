@@ -19,7 +19,7 @@ function ini_st()
     6.37, 6.96, 7.83, 8.75, 9.82, 10.42, 11.00, 11.71, 12.12,
     12.63, 13.28, 14.46, 16.01, 16.76, 17.04, 17.25]
 
-  local mldepth = 50e0
+  global mldepth = 50e0
   local dsdz = 0e0
 
   for k in 1:npl

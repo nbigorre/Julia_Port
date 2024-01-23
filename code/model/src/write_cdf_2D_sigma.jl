@@ -59,7 +59,7 @@ function write_cdf_2D_sigma(ksurf, counter_2d, n)
    local nsq100m = zeros(Float32, NI, NJ)
    local integcons = zeros(Float32, NI, NJ, nconsume)
    #local integconsBBL = zeros(Float32, NI, NJ, ntr)
-   local time_days = Float32(@fortGet("time_seconds", rc_kind) / 86400e0)
+   local time_days = Float32(time_seconds / 86400e0)
    local zeuphotic = -100e0 / DL
    local keuphotic = 1
    for k in 1:NK

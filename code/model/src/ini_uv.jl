@@ -20,7 +20,7 @@ function ini_uv(n)
    local jmax = 0
    local kmax = 0
 
-   if (!@fortGet("use_shchepetkin", Bool)) # calculates baroclinic press gradients
+   if (use_shchepetkin == 0) # calculates baroclinic press gradients
       rpevalgrad_Song(n)
       #@ccall "./PSOM_LIB.so".rpevalgrad_song_(Ref(n)::Ref{Int})::Cvoid
    else

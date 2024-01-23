@@ -1,7 +1,7 @@
 function vface(pf, dtimel::rc_kind)
   pf = OffsetArrays.reshape(view(pf, 1:((NI+2)*(NJ+2)*(NK+2))), 0:NI+1, 0:NJ+1, 0:NK+1)
   local dte = dtimel / EPS
-  local kaph1 = 1e0 - @fortGet("kappah", rc_kind)
+  local kaph1 = 1e0 - kappah
   for j in 1:NJ
     for i in 1:NI
       for k in 1:NK

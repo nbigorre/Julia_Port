@@ -210,19 +210,19 @@ function parti_forward()
         end
 
         if (parti[i].j > NJ - 1 && parti[i].v > 0e0)
-            parti[i].j = parti[i].j + parti[i].v * @fortGet("dtf", rc_kind) / (1e0 + (parti[i].v * @fortGet("dtf", rc_kind)) / (rc_kind(NJ) - parti[i].j))
+            parti[i].j = parti[i].j + parti[i].v * dtf / (1e0 + (parti[i].v * dtf) / (rc_kind(NJ) - parti[i].j))
         elseif (parti[i].j < 1 && parti[i].v < 0e0)
-            parti[i].j = parti[i].j + parti[i].v * @fortGet("dtf", rc_kind) / (1e0 - @fortGet("dtf", rc_kind) / parti[i].j)
+            parti[i].j = parti[i].j + parti[i].v * dtf / (1e0 - dtf / parti[i].j)
         else
-            parti[i].j = parti[i].j + 0.5e0 * @fortGet("dtf", rc_kind) * (3e0 * parti[i].v - parti[i].v0)
+            parti[i].j = parti[i].j + 0.5e0 * dtf * (3e0 * parti[i].v - parti[i].v0)
         end
 
         if (parti[i].k > NK - 1 && parti[i].w > 0)
-            parti[i].k = parti[i].k + parti[i].w * @fortGet("dtf", rc_kind) / (1e0 + (parti[i].w * @fortGet("dtf", rc_kind)) / (rc_kind(NK) - parti[i].k))
+            parti[i].k = parti[i].k + parti[i].w * dtf / (1e0 + (parti[i].w * dtf) / (rc_kind(NK) - parti[i].k))
         elseif (parti[i].k < 1 && parti[i].w < 0)
-            parti[i].k = parti[i].k + parti[i].w * @fortGet("dtf", rc_kind) / (1e0 - @fortGet("dtf", rc_kind) / parti[i].k)
+            parti[i].k = parti[i].k + parti[i].w * dtf / (1e0 - dtf / parti[i].k)
         else
-            parti[i].k = parti[i].k + 0.5e0 * @fortGet("dtf", rc_kind) * (3e0 * parti[i].w - parti[i].w0)
+            parti[i].k = parti[i].k + 0.5e0 * dtf * (3e0 * parti[i].w - parti[i].w0)
         end
 
         if (parti[i].j < 0e0 || parti[i].j > NJ || parti[i].k > NK || parti[i].k < 0e0)

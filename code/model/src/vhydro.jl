@@ -1,6 +1,6 @@
 function vhydro(dtimel)
   local dte = dtimel / EPS
-  local kaph1 = 1e0 - @fortGet("kappah", rc_kind)
+  local kaph1 = 1e0 - kappah
 
   for j in 1:NJ
     for i in 1:NI
@@ -8,7 +8,7 @@ function vhydro(dtimel)
       local heta = 0.25e0 * ( h[i+1, j+1] + h[i, j+1] - h[i+1, j-1] - h[i, j-1])
       for k in 1:NK
         local hx = gi[i, j, k, 1] * hxi + gi[i, j, k, 2] * heta
-        local gradh = gpr * (@fortGet("kappah", rc_kind) * hx + kaph1 * hxn[i, j, k])
+        local gradh = gpr * (kappah * hx + kaph1 * hxn[i, j, k])
         cxf[i, j, k] -= dte * (gradh + sifc[i, j, k])
         hxn[i, j, k] = hx
       end
@@ -26,7 +26,7 @@ function vhydro(dtimel)
       local heta = h[i, j+1] - h[i, j]
       for k in 1:NK
         local hy = gj[i, j, k, 1] * hxi + gj[i, j, k, 2] * heta
-        local gradh = gpr * (@fortGet("kappah", rc_kind) * hy + kaph1 * hyn[i, j, k])
+        local gradh = gpr * (kappah * hy + kaph1 * hyn[i, j, k])
         cyf[i, j, k] -= dte * (gradh + sjfc[i, j, k])
         hyn[i, j, k] = hy
       end

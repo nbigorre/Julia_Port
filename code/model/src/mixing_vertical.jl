@@ -42,12 +42,12 @@ function mixing_vertical_worker(area, fac, var, vardif)
     end
 end
 
-function mixing_vertical(var, vardif, m, step, iv_compute_kzl)
+function mixing_vertical(var, vardif, m, step, iv_compute_kzl, selvar)
     local Kzmax = 1e-3
     local KzmaxTr = 1e-3
-    local facb = @fortGet("rr", rc_kind) * DL
-    local fac = 1e0 / (@fortGet("ul", rc_kind) * DL * @fortGet("delta", rc_kind))
-    local fact = DL / @fortGet("ul", rc_kind)
+    local facb = RR * DL
+    local fac = 1e0 / (UL * DL * delta)
+    local fact = DL / UL
     @static if (cppdefs.gotm_call)
         for j in 1:NJ
             for i in 1:NI
@@ -93,8 +93,8 @@ end
 function viscosity(dudz, dvdz, drdz, i, j)
     local n1 = 3
     local grho = 9.81 / R0
-    local DLinv = @fortGet("dlinv", rc_kind)
-    local fac = (UL^2) / (@fortGet("dl", rc_kind)^2)
+    local DLinv = DLinv
+    local fac = (UL^2) / (DL^2)
     local RiCr = 0.7e0
     Kz[i, j, 0] = 0e0
     Kz[i, j, NK] = 0e0

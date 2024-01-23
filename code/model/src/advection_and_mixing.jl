@@ -79,7 +79,7 @@ function advection_and_mixing(m, n, dtimel, step)
 
             if (selvar < 4.5)
                 vardif .= 0.0
-                mixing_vertical(var, vardif, m, step, iv_compute_kz)
+                mixing_vertical(var, vardif, m, step, iv_compute_kz, selvar)
                 #@ccall "./PSOM_LIB.so".mixing_vertical_(pointer(var)::Ptr{rc_kind}, pointer(vardif)::Ptr{rc_kind}, Ref(m)::Ptr{Int}, Ref(step)::Ptr{Int}, Ref(iv_compute_kz)::Ptr{Int})::Cvoid
                 @views @. uvarx[1:NI, 1:NJ, 1:NK] -= vardif[1:NI, 1:NJ, 1:NK]
                 iv_compute_kz = 0
@@ -109,7 +109,7 @@ function advection_and_mixing(m, n, dtimel, step)
 
             @static if (!cppdefs.implicit)
                 if (selvar == 3 || selvar == 4)
-                    @views @. uvarx[1:NI, 1:NJ, 1] .+= @fortGet("rr", rc_kind) * (1e0 / (@fortGet("ul", rc_kind) * @fortGet("delta", rc_kind))) * (Jac[1:NI, 1:NJ, 1] * wz[1:NI, 1:NJ, 1]) * var[1:NI, 1:NJ, 1]
+                    @views @. uvarx[1:NI, 1:NJ, 1] .+= RR * (1e0 / (UL * delta)) * (Jac[1:NI, 1:NJ, 1] * wz[1:NI, 1:NJ, 1]) * var[1:NI, 1:NJ, 1]
                 end
             end
             if (cppdefs.implicit)

@@ -47,7 +47,7 @@ function write_cdf_3D_strain(step, n)
    local rdy = zeros(rc_kind, NI, NJ, NK)
    local rdz = zeros(rc_kind, NI, NJ, NK)
 
-   local time_days = @fortGet("time_seconds", rc_kind) / 86400e0
+   local time_days = time_seconds / 86400e0
 
    #!     name the output file
    #! First caculate ux,vx,wx

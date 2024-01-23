@@ -14,7 +14,7 @@ function findzall()
 
   # stretching of the vertical grid
   #    pfac is the stretching in z. higher pfac gives more points near surf.
-  local pfac = 2.0e0
+  global pfac = 2.0e0
   @fortSet("pfac", pfac, rc_kind)
   local epm1 = exp(pfac) - 1e0
   local epm1inv = 1e0 / (exp(pfac) - 1e0)
@@ -24,14 +24,14 @@ function findzall()
 
       #  In the surface layer                                              
 
-      local hpd = h[i, j] * HDL + @fortGet("dztop", rc_kind)
+      local hpd = h[i, j] * HDL + dztop
       for k in NK:NK+1
         local sigma = rc_kind(k) - 0.5
-        zc[i, j, k] = (sigma - dnkm1) * hpd - @fortGet("dztop", rc_kind)
+        zc[i, j, k] = (sigma - dnkm1) * hpd - dztop
       end
       for k in NK-1:NK+1
         local sigma = rc_kind(k)
-        zf[i, j, k] = (sigma - dnkm1) * hpd - @fortGet("dztop", rc_kind)
+        zf[i, j, k] = (sigma - dnkm1) * hpd - dztop
       end
     end
   end
@@ -57,9 +57,9 @@ function findzall()
         local xfac = (dnkm1 - sigma) * dnkm1inv
 
         @static if (cppdefs.fixed_bottom_thickness)
-          zc[i, j, k] = (exp(pfac * xfac) - 1e0) * epm1inv * (D[i, j] + @fortGet("dzbot", rc_kind) + @fortGet("dztop", rc_kind)) - @fortGet("dztop", rc_kind)
+          zc[i, j, k] = (exp(pfac * xfac) - 1e0) * epm1inv * (D[i, j] + dzbot + dztop) - dztop
         else
-          zc[i, j, k] = (exp(pfac * xfac) - 1e0) * epm1inv * (D[i, j] + @fortGet("dztop", rc_kind)) - @fortGet("dztop", rc_kind)
+          zc[i, j, k] = (exp(pfac * xfac) - 1e0) * epm1inv * (D[i, j] + dztop) - dztop
         end
 
       end
@@ -71,9 +71,9 @@ function findzall()
         local xfac = (dnkm1 - sigma) * dnkm1inv
 
         @static if (cppdefs.fixed_bottom_thickness)
-          zf[i, j, k] = (exp(pfac * xfac) - 1e0) * epm1inv * (D[i, j] + @fortGet("dzbot", rc_kind) + @fortGet("dztop", rc_kind)) - @fortGet("dztop", rc_kind)
+          zf[i, j, k] = (exp(pfac * xfac) - 1e0) * epm1inv * (D[i, j] + dzbot + dztop) - dztop
         else
-          zf[i, j, k] = (exp(pfac * xfac) - 1e0) * epm1inv * (D[i, j] + @fortGet("dztop", rc_kind)) - @fortGet("dztop", rc_kind)
+          zf[i, j, k] = (exp(pfac * xfac) - 1e0) * epm1inv * (D[i, j] + dztop) - dztop
 
         end
       end
@@ -84,11 +84,11 @@ function findzall()
         #     -------------------------------
         for k in 0:1
           local sigma = rc_kind(k) - 0.5
-          zc[i, j, k] = ((sigma - 0e0) / rc_kind(1)) * @fortGet("dzbot", rc_kind) + D[i, j]
+          zc[i, j, k] = ((sigma - 0e0) / rc_kind(1)) * dzbot + D[i, j]
         end
         for k in -1:1
           local sigma = rc_kind(k)
-          zf[i, j, k] = ((sigma - 0e0) / rc_kind(1)) * @fortGet("dzbot", rc_kind) + D[i, j]
+          zf[i, j, k] = ((sigma - 0e0) / rc_kind(1)) * dzbot + D[i, j]
         end
       end
     end

@@ -42,46 +42,46 @@ function prolong(nxm, nym, nzm, cor, fin)
                   local js = j * 2
                   for i in 0:nxm
                         local iw = i * 2
+                        fin[iw, js, kb] = fin[iw, js, kb] +
+                                                an[1] * cor[i, j, k] + an[2] * cor[i+1, j, k] +
+                                                an[3] * cor[i+1, j+1, k] + an[4] * cor[i, j+1, k] +
+                                                an[5] * cor[i, j, k+1] + an[6] * cor[i+1, j, k+1] +
+                                                an[7] * cor[i+1, j+1, k+1] + an[8] * cor[i, j+1, k+1]
+                        fin[iw+1, js, kb] = fin[iw+1, js, kb] +
+                                                bn[1] * cor[i, j, k] + bn[2] * cor[i+1, j, k] +
+                                                bn[3] * cor[i+1, j+1, k] + bn[4] * cor[i, j+1, k] +
+                                                bn[5] * cor[i, j, k+1] + bn[6] * cor[i+1, j, k+1] +
+                                                bn[7] * cor[i+1, j+1, k+1] + bn[8] * cor[i, j+1, k+1]
+                        fin[iw+1, js+1, kb] = fin[iw+1, js+1, kb] +
+                                                cn[1] * cor[i, j, k] + cn[2] * cor[i+1, j, k] +
+                                                cn[3] * cor[i+1, j+1, k] + cn[4] * cor[i, j+1, k] +
+                                                cn[5] * cor[i, j, k+1] + cn[6] * cor[i+1, j, k+1] +
+                                                cn[7] * cor[i+1, j+1, k+1] + cn[8] * cor[i, j+1, k+1]
+                        fin[iw, js+1, kb] = fin[iw, js+1, kb] +
+                                                dn[1] * cor[i, j, k] + dn[2] * cor[i+1, j, k] +
+                                                dn[3] * cor[i+1, j+1, k] + dn[4] * cor[i, j+1, k] +
+                                                dn[5] * cor[i, j, k+1] + dn[6] * cor[i+1, j, k+1] +
+                                                dn[7] * cor[i+1, j+1, k+1] + dn[8] * cor[i, j+1, k+1]
+                        fin[iw, js, kb+1] = fin[iw, js, kb+1] +
+                                                en[1] * cor[i, j, k] + en[2] * cor[i+1, j, k] +
+                                                en[3] * cor[i+1, j+1, k] + en[4] * cor[i, j+1, k] +
+                                                en[5] * cor[i, j, k+1] + en[6] * cor[i+1, j, k+1] +
+                                                en[7] * cor[i+1, j+1, k+1] + en[8] * cor[i, j+1, k+1]
+                        fin[iw+1, js, kb+1] = fin[iw+1, js, kb+1] +
+                                                fn[1] * cor[i, j, k] + fn[2] * cor[i+1, j, k] +
+                                                fn[3] * cor[i+1, j+1, k] + fn[4] * cor[i, j+1, k] +
+                                                fn[5] * cor[i, j, k+1] + fn[6] * cor[i+1, j, k+1] +
+                                                fn[7] * cor[i+1, j+1, k+1] + fn[8] * cor[i, j+1, k+1]
                         fin[iw+1, js+1, kb+1] = fin[iw+1, js+1, kb+1] +
-                                                an[1] * cor[i+1, j+1, k+1] + an[2] * cor[i+2, j+1, k+1] +
-                                                an[3] * cor[i+2, j+2, k+1] + an[4] * cor[i+1, j+2, k+1] +
-                                                an[5] * cor[i+1, j+1, k+2] + an[6] * cor[i+2, j+1, k+2] +
-                                                an[7] * cor[i+2, j+2, k+2] + an[8] * cor[i+1, j+2, k+2]
-                        fin[iw+2, js+1, kb+1] = fin[iw+2, js+1, kb+1] +
-                                                bn[1] * cor[i+1, j+1, k+1] + bn[2] * cor[i+2, j+1, k+1] +
-                                                bn[3] * cor[i+2, j+2, k+1] + bn[4] * cor[i+1, j+2, k+1] +
-                                                bn[5] * cor[i+1, j+1, k+2] + bn[6] * cor[i+2, j+1, k+2] +
-                                                bn[7] * cor[i+2, j+2, k+2] + bn[8] * cor[i+1, j+2, k+2]
-                        fin[iw+2, js+2, kb+1] = fin[iw+2, js+2, kb+1] +
-                                                cn[1] * cor[i+1, j+1, k+1] + cn[2] * cor[i+2, j+1, k+1] +
-                                                cn[3] * cor[i+2, j+2, k+1] + cn[4] * cor[i+1, j+2, k+1] +
-                                                cn[5] * cor[i+1, j+1, k+2] + cn[6] * cor[i+2, j+1, k+2] +
-                                                cn[7] * cor[i+2, j+2, k+2] + cn[8] * cor[i+1, j+2, k+2]
-                        fin[iw+1, js+2, kb+1] = fin[iw+1, js+2, kb+1] +
-                                                dn[1] * cor[i+1, j+1, k+1] + dn[2] * cor[i+2, j+1, k+1] +
-                                                dn[3] * cor[i+2, j+2, k+1] + dn[4] * cor[i+1, j+2, k+1] +
-                                                dn[5] * cor[i+1, j+1, k+2] + dn[6] * cor[i+2, j+1, k+2] +
-                                                dn[7] * cor[i+2, j+2, k+2] + dn[8] * cor[i+1, j+2, k+2]
-                        fin[iw+1, js+1, kb+2] = fin[iw+1, js+1, kb+2] +
-                                                en[1] * cor[i+1, j+1, k+1] + en[2] * cor[i+2, j+1, k+1] +
-                                                en[3] * cor[i+2, j+2, k+1] + en[4] * cor[i+1, j+2, k+1] +
-                                                en[5] * cor[i+1, j+1, k+2] + en[6] * cor[i+2, j+1, k+2] +
-                                                en[7] * cor[i+2, j+2, k+2] + en[8] * cor[i+1, j+2, k+2]
-                        fin[iw+2, js+1, kb+2] = fin[iw+2, js+1, kb+2] +
-                                                fn[1] * cor[i+1, j+1, k+1] + fn[2] * cor[i+2, j+1, k+1] +
-                                                fn[3] * cor[i+2, j+2, k+1] + fn[4] * cor[i+1, j+2, k+1] +
-                                                fn[5] * cor[i+1, j+1, k+2] + fn[6] * cor[i+2, j+1, k+2] +
-                                                fn[7] * cor[i+2, j+2, k+2] + fn[8] * cor[i+1, j+2, k+2]
-                        fin[iw+2, js+2, kb+2] = fin[iw+2, js+2, kb+2] +
-                                                gn[1] * cor[i+1, j+1, k+1] + gn[2] * cor[i+2, j+1, k+1] +
-                                                gn[3] * cor[i+2, j+2, k+1] + gn[4] * cor[i+1, j+2, k+1] +
-                                                gn[5] * cor[i+1, j+1, k+2] + gn[6] * cor[i+2, j+1, k+2] +
-                                                gn[7] * cor[i+2, j+2, k+2] + gn[8] * cor[i+1, j+2, k+2]
-                        fin[iw+1, js+2, kb+2] = fin[iw+1, js+2, kb+2] +
-                                                hn[1] * cor[i+1, j+1, k+1] + hn[2] * cor[i+2, j+1, k+1] +
-                                                hn[3] * cor[i+2, j+2, k+1] + hn[4] * cor[i+1, j+2, k+1] +
-                                                hn[5] * cor[i+1, j+1, k+2] + hn[6] * cor[i+2, j+1, k+2] +
-                                                hn[7] * cor[i+2, j+2, k+2] + hn[8] * cor[i+1, j+2, k+2]
+                                                gn[1] * cor[i, j, k] + gn[2] * cor[i+1, j, k] +
+                                                gn[3] * cor[i+1, j+1, k] + gn[4] * cor[i, j+1, k] +
+                                                gn[5] * cor[i, j, k+1] + gn[6] * cor[i+1, j, k+1] +
+                                                gn[7] * cor[i+1, j+1, k+1] + gn[8] * cor[i, j+1, k+1]
+                        fin[iw, js+1, kb+1] = fin[iw, js+1, kb+1] +
+                                                hn[1] * cor[i, j, k] + hn[2] * cor[i+1, j, k] +
+                                                hn[3] * cor[i+1, j+1, k] + hn[4] * cor[i, j+1, k] +
+                                                hn[5] * cor[i, j, k+1] + hn[6] * cor[i+1, j, k+1] +
+                                                hn[7] * cor[i+1, j+1, k+1] + hn[8] * cor[i, j+1, k+1]
                   end
             end
       end
