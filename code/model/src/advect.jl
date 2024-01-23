@@ -1,4 +1,3 @@
-using .header
 using .fortVar
 
 function ultim(up::rc_kind, ct::rc_kind, dn::rc_kind, gdn::rc_kind, gup::rc_kind, courinv::rc_kind, fc::rc_kind)

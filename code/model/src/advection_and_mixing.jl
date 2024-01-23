@@ -1,4 +1,3 @@
-using .header
 using .fortVar
 using .cppdefs
 
@@ -87,28 +86,28 @@ function advection_and_mixing(m, n, dtimel, step)
             end
 
             if (selvar == 1)
-                if (cppdefs.implicit)
+                @static if (cppdefs.implicit)
                     mat_D[:,:,:,selvar] = T_h[1:NI, 1:NJ, 1:NK]
                 else
                     @views @. uvarx[1:NI, 1:NJ, 1:NK] -= T_h[1:NI, 1:NJ, 1:NK]
                 end
             end
             if (selvar == 3)
-                if (cppdefs.implicit)
+                @static if (cppdefs.implicit)
                     mat_D[:,:,:,selvar] = u_w[1:NI, 1:NJ, 1:NK]
                 else
                     @views @. uvarx[1:NI, 1:NJ, 1:NK] -= u_w[1:NI, 1:NJ, 1:NK]
                 end
             end
             if (selvar == 4)
-                if (cppdefs.implicit)
+                @static if (cppdefs.implicit)
                     mat_D[:,:,:,selvar] = v_w[1:NI, 1:NJ, 1:NK]
                 else
                     @views @. uvarx[1:NI, 1:NJ, 1:NK] -= v_w[1:NI, 1:NJ, 1:NK]
                 end
             end
 
-            if (!cppdefs.implicit)
+            @static if (!cppdefs.implicit)
                 if (selvar == 3 || selvar == 4)
                     @views @. uvarx[1:NI, 1:NJ, 1] .+= @fortGet("rr", rc_kind) * (1e0 / (@fortGet("ul", rc_kind) * @fortGet("delta", rc_kind))) * (Jac[1:NI, 1:NJ, 1] * wz[1:NI, 1:NJ, 1]) * var[1:NI, 1:NJ, 1]
                 end

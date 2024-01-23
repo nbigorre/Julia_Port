@@ -1,4 +1,3 @@
-using .header
 using .fortVar
 
 function mixing_horizontal_l1(area, vy, var, Ky_l, vardif)

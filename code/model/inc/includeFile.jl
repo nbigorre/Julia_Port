@@ -2,13 +2,18 @@ if (!@isdefined(INCLUDE_All))
     global INCLUDE_All = true
 
     import Pkg
-    if (Base.find_package("ExportAll") === nothing)
-        Pkg.add("ExportAll")
-    end
     if (Base.find_package("OffsetArrays") === nothing)
         Pkg.add("OffsetArrays")
     end
     using OffsetArrays
+    if (Base.find_package("NetCDF") === nothing)
+        Pkg.add("NetCDF")
+    end
+    using NetCDF
+    if (Base.find_package("YAML") === nothing)
+        Pkg.add("YAML")
+    end
+    using YAML
 
     include("../inc/fortVar.jl")
     
@@ -63,6 +68,37 @@ if (!@isdefined(INCLUDE_All))
     include("../src/facediv.jl")
     include("../src/conadjust_sT.jl")
     include("../src/diag_n2.jl")
+    include("../src/ini_setup.jl")
+    include("../src/ini_topog.jl")
+    include("../src/spline.jl")
+    include("../src/seval.jl")
+    include("../src/smooth.jl")
+    include("../src/ini_st.jl")
+    include("../src/ini_h.jl")
+    include("../src/staticsigma.jl")
+    include("../src/findsigma.jl")
+    include("../src/meanh.jl")
+    include("../src/ini_tracer.jl")
+    include("../src/hsave.jl")
+    include("../src/ini_uv.jl")
+    include("../src/srcface_nopy.jl")
+    include("../src/setbc.jl")
+    include("../src/correctbc.jl")
+    include("../src/checks.jl")
+    include("../src/write_cdf.jl")
+    include("../src/write_cdf_1D_mooring.jl")
+    include("../src/diag_pv.jl")
+    include("../src/write_cdf_2D_sigma.jl")
+    include("../src/write_cdf_2D_x.jl")
+    include("../src/uv_geostrophic.jl")
+    include("../src/diag_streamfunction.jl")
+    include("../src/write_cdf_3D.jl")
+    include("../src/write_cdf_3D_strain.jl")
+    include("../src/write_bin_mod.jl")
+    include("../src/write_bin.jl")
+    include("../src/diag_energy.jl")
+    include("../src/diag_n2budget.jl")
+    
     
     
 end

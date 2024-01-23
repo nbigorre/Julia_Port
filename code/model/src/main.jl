@@ -1,7 +1,6 @@
 include("../inc/includeFile.jl")
 
 using .fortVar
-using .header
 using .cppdefs
 
 
@@ -37,19 +36,26 @@ function main()
         # ALLOCATE ARRAY
     end
 
-    @ccall "./PSOM_LIB.so".ini_setup_(pointer(pcorr)::Ptr{rc_kind})::Cvoid
+    ini_setup(pcorr)
+    #@ccall "./PSOM_LIB.so".ini_setup_(pointer(pcorr)::Ptr{rc_kind})::Cvoid
 
-    @ccall "./PSOM_LIB.so".meanh_(Ref(NI)::Ptr{Int}, Ref(NJ)::Ptr{Int}, @lkGet("h", rc_kind)::Ptr{rc_kind}, @lkGet("hmean", rc_kind)::Ptr{rc_kind})::Cvoid
+    @fortSet("hmean", meanh(NI, NJ, h), rc_kind)
+    #@ccall "./PSOM_LIB.so".meanh_(Ref(NI)::Ptr{Int}, Ref(NJ)::Ptr{Int}, @lkGet("h", rc_kind)::Ptr{rc_kind}, @lkGet("hmean", rc_kind)::Ptr{rc_kind})::Cvoid
 
     sigma()
     #@ccall "./PSOM_LIB.so".sigma_()::Cvoid
-    @ccall "./PSOM_LIB.so".staticsigma_()::Cvoid
 
-    @ccall "./PSOM_LIB.so".tracerinit_(Ref(0)::Ptr{Int})::Cvoid
+    staticsigma()
+    #@ccall "./PSOM_LIB.so".staticsigma_()::Cvoid
 
-    @ccall "./PSOM_LIB.so".hsave_()::Cvoid
+    tracerinit(0)
+    #@ccall "./PSOM_LIB.so".tracerinit_(Ref(0)::Ptr{Int})::Cvoid
 
-    @ccall "./PSOM_LIB.so".ini_uv_(Ref(0)::Ptr{Int})::Cvoid
+    hsave()
+    #@ccall "./PSOM_LIB.so".hsave_()::Cvoid
+
+    ini_uv(0)
+    #@ccall "./PSOM_LIB.so".ini_uv_(Ref(0)::Ptr{Int})::Cvoid
 
     fdiv = facediv(EPS)
     #@ccall "./PSOM_LIB.so".facediv_(Ref(EPS)::Ptr{rc_kind}, Ref(fdiv)::Ptr{rc_kind})::Cvoid
@@ -79,10 +85,14 @@ function main()
 
     #tim = dtime
 
-    @ccall "./PSOM_LIB.so".setbc_(Ref(step)::Ptr{Int})::Cvoid
-    @ccall "./PSOM_LIB.so".correctbc_()::Cvoid
+    setbc(step)
+    #@ccall "./PSOM_LIB.so".setbc_(Ref(step)::Ptr{Int})::Cvoid
+    
+    correctbc()
+    #@ccall "./PSOM_LIB.so".correctbc_()::Cvoid
 
-    @ccall "./PSOM_LIB.so".checks_()::Cvoid
+    checks()
+    #@ccall "./PSOM_LIB.so".checks_()::Cvoid
 
     @fortSet("lv_test_output_bin", cppdefs.file_output && cppdefs.file_output_bin, Int)
 
@@ -104,14 +114,16 @@ function main()
 
     @static if (cppdefs.file_output)
         @static if (cppdefs.file_output_cdf)
-            @ccall "./PSOM_LIB.so".write_cdf_(Ref(step)::Ptr{Int}, Ref(0)::Ptr{Int})::Cvoid
+            write_cdf(step, 0)
+            #@ccall "./PSOM_LIB.so".write_cdf_(Ref(step)::Ptr{Int}, Ref(0)::Ptr{Int})::Cvoid
         end
         @static if (cppdefs.file_output_bin)
-            @ccall "./PSOM_LIB.so".write_bin_(Ref(step)::Ptr{Int})::Cvoid
+            #@ccall "./PSOM_LIB.so".write_bin_(Ref(step)::Ptr{Int})::Cvoid
         end
     end
 
-    @ccall "./PSOM_LIB.so".diag_energy_(Ref(step)::Ptr{Int})::Cvoid
+    diag_energy(step)
+    #@ccall "./PSOM_LIB.so".diag_energy_(Ref(step)::Ptr{Int})::Cvoid
 
 
     #########################################################
@@ -131,17 +143,20 @@ function main()
         end
 
         diag_n2()
-        @ccall "./PSOM_LIB.so".diag_n2_()::Cvoid
+        #@ccall "./PSOM_LIB.so".diag_n2_()::Cvoid
 
         #@ccall "./PSOM_LIB.so".momentum_(pointer(pcorr)::Ptr{rc_kind}, Ref(step)::Ptr{Int})::Cvoid
         momentum(pcorr, step)
 
 
-        @ccall "./PSOM_LIB.so".diag_n2budget_(Ref(step)::Ptr{Int})::Cvoid
+        diag_n2budget(step)
+        #@ccall "./PSOM_LIB.so".diag_n2budget_(Ref(step)::Ptr{Int})::Cvoid
 
-        @ccall "./PSOM_LIB.so".diag_energy_(Ref(step)::Ptr{Int})::Cvoid
+        diag_energy(step)
+        #@ccall "./PSOM_LIB.so".diag_energy_(Ref(step)::Ptr{Int})::Cvoid
 
-        @ccall "./PSOM_LIB.so".meanh_(Ref(NI)::Ptr{Int}, Ref(NJ)::Ptr{Int}, @lkGet("h", rc_kind)::Ptr{rc_kind}, @lkGet("hmean", rc_kind)::Ptr{rc_kind})::Cvoid
+        @fortSet("hmean", meanh(NI, NJ, h), rc_kind)
+        #@ccall "./PSOM_LIB.so".meanh_(Ref(NI)::Ptr{Int}, Ref(NJ)::Ptr{Int}, @lkGet("h", rc_kind)::Ptr{rc_kind}, @lkGet("hmean", rc_kind)::Ptr{rc_kind})::Cvoid
 
         @static if (cppdefs.allow_particle)
             #                       IMPLEM JULIA
@@ -149,10 +164,11 @@ function main()
 
         @static if (cppdefs.file_output)
             @static if (cppdefs.file_output_cdf)
-                @ccall "./PSOM_LIB.so".write_cdf_(Ref(step)::Ptr{Int}, Ref(0)::Ptr{Int})::Cvoid
+                write_cdf(step, 0)
+                #@ccall "./PSOM_LIB.so".write_cdf_(Ref(step)::Ptr{Int}, Ref(0)::Ptr{Int})::Cvoid
             end
             @static if (cppdefs.file_output_bin)
-                @ccall "./PSOM_LIB.so".write_bin_(Ref(step)::Ptr{Int})::Cvoid
+                #@ccall "./PSOM_LIB.so".write_bin_(Ref(step)::Ptr{Int})::Cvoid
             end
         end
 

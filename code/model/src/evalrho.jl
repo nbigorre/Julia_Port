@@ -1,5 +1,4 @@
 using .cppdefs
-using .header
 
 function evalrho(rhonew, nl)
   @static if (cppdefs.rhoonly)

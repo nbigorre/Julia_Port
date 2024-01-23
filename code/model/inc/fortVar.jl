@@ -11,8 +11,10 @@ function fortSetStr(v_name, value, v_type, size)
     local ptr = cglobal(("header_mp_" * v_name * "_", "./PSOM_LIB.so"), v_type)
     #unsafe_store!(ptr, pointer(value))
     local arr = fill(UInt8(32), size)
-    Base._memcpy!(arr, value, length(value))
-    Base._memcpy!(ptr, arr, size)
+    for i in eachindex(value)
+        arr[i] = value[i]
+    end
+    Base.memcpy(ptr, pointer(arr), size)
 end
 
 function fortGet(v_name, v_type)

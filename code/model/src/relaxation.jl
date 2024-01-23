@@ -1,6 +1,5 @@
 module relaxation
 
-    using ..header : NI, NJ, NK,  LEN, T, T_ref, r_sponge, rc_kind
     using ..fortVar
 
 

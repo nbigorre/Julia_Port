@@ -50,19 +50,19 @@ function mgrid(p, dtime, edt, cfcdiv)
           loci[m] = loci[m-1] + ntint[m-1]
           loccp[m] = loccp[m-1] + 19 * ntint[m-1]
      end
-     
+
 
      cpfine(dtime, cp, rhs)
      #@ccall "./PSOM_LIB.so".cpfine_(Ref(dtime)::Ref{rc_kind}, pointer(cp)::Ptr{rc_kind}, pointer(rhs)::Ptr{rc_kind})::Cvoid
 
-     
+
      for m in 2:ngrid
           local cpf = reshape(view(cp, loccp[m-1]:(loccp[m-1]-1+(19*nx[m]*2*ny[m]*2*nz[m]*2))), 19, nx[m] * 2, ny[m] * 2, nz[m] * 2)
           local cpc = reshape(view(cp, loccp[m]:(loccp[m]-1+(19*nx[m]*ny[m]*nz[m]))), 19, nx[m], ny[m], nz[m])
           cpcors(nx[m], ny[m], nz[m], cpf, cpc)
           #@ccall "./PSOM_LIB.so".cpcors_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(cp,loccp[m-1])::Ptr{rc_kind}, pointer(cp,loccp[m])::Ptr{rc_kind})::Cvoid
      end
-     
+
 
      for ncycle in 1:noc
           for l in loco[2]:maxout
@@ -71,20 +71,20 @@ function mgrid(p, dtime, edt, cfcdiv)
           local m = 1
 
           for l in 1:nu1
-               
+
                local cp_r = reshape(view(cp, loccp[m]:(loccp[m]-1+(19*nx[m]*ny[m]*nz[m]))), 19, nx[m], ny[m], nz[m])
-               local p_r = OffsetArrays.reshape(view(p, loco[m]:(loco[m]-1+((nx[m]+2)*(ny[m]+2)*(nz[m]+2)))), 0:nx[m] + 1, 0:ny[m] + 1, 0:nz[m] + 1)
+               local p_r = OffsetArrays.reshape(view(p, loco[m]:(loco[m]-1+((nx[m]+2)*(ny[m]+2)*(nz[m]+2)))), 0:nx[m]+1, 0:ny[m]+1, 0:nz[m]+1)
                local rhs_r = reshape(view(rhs, loci[m]:(loci[m]-1+(nx[m]*ny[m]*nz[m]))), nx[m], ny[m], nz[m])
                linerelax(nx[m], ny[m], nz[m], cp_r, p_r, rhs_r)
                #@ccall "./PSOM_LIB.so".linerelax_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(cp,loccp[m])::Ptr{rc_kind}, pointer(p, loco[m])::Ptr{rc_kind}, pointer(rhs, loci[m])::Ptr{rc_kind})::Cvoid
 
-               mgpfill(dtime, reshape(view(p, 1:((NI+2)*(NJ+2)*(NK+2))), (NI + 2), (NJ + 2), (NK + 2)))
+               mgpfill(dtime, OffsetArrays.reshape(view(p, 1:((NI+2)*(NJ+2)*(NK+2))), 0:NI+1, 0:NJ+1, 0:NK+1))
                #@ccall "./PSOM_LIB.so".mgpfill_(Ref(dtime)::Ref{rc_kind}, pointer(p)::Ptr{rc_kind})::Cvoid
           end
 
           let
                local cp_r = reshape(view(cp, loccp[m]:(loccp[m]-1+(19*nx[m]*ny[m]*nz[m]))), 19, nx[m], ny[m], nz[m])
-               local p_r = OffsetArrays.reshape(view(p, loco[m]:(loco[m]-1+((nx[m]+2)*(ny[m]+2)*(nz[m]+2)))), 0:nx[m] + 1, 0:ny[m] + 1, 0:nz[m] + 1)
+               local p_r = OffsetArrays.reshape(view(p, loco[m]:(loco[m]-1+((nx[m]+2)*(ny[m]+2)*(nz[m]+2)))), 0:nx[m]+1, 0:ny[m]+1, 0:nz[m]+1)
                local rhs_r = reshape(view(rhs, loci[m]:(loci[m]-1+(nx[m]*ny[m]*nz[m]))), nx[m], ny[m], nz[m])
                local res_r = reshape(view(res, 1:(nx[m]*ny[m]*nz[m])), nx[m], ny[m], nz[m])
                maxres[] = resid(m, nx[m], ny[m], nz[m], cp_r, p_r, rhs_r, res_r)
@@ -96,16 +96,16 @@ function mgrid(p, dtime, edt, cfcdiv)
           end
           let
                local res_r = reshape(view(res, 1:(nx[m]*ny[m]*nz[m])), nx[m], ny[m], nz[m])
-               local rhs_rp1 = reshape(view(rhs, loci[m+1]:(loci[m+1]-1+(div(nx[m],2)*div(ny[m],2)*div(nz[m],2)))), div(nx[m],2), div(ny[m],2), div(nz[m],2))
+               local rhs_rp1 = reshape(view(rhs, loci[m+1]:(loci[m+1]-1+(div(nx[m], 2)*div(ny[m], 2)*div(nz[m], 2)))), div(nx[m], 2), div(ny[m], 2), div(nz[m], 2))
                restrict(nx[m], ny[m], nz[m], res_r, rhs_rp1)
                #@ccall "./PSOM_LIB.so".restrict_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(res)::Ptr{rc_kind}, pointer(rhs, loci[m+1])::Ptr{rc_kind})::Cvoid
           end
           for m in 2:ngrid-1
                local cp_r = reshape(view(cp, loccp[m]:(loccp[m]-1+(19*nx[m]*ny[m]*nz[m]))), 19, nx[m], ny[m], nz[m])
-               local p_r = OffsetArrays.reshape(view(p, loco[m]:(loco[m]-1+((nx[m]+2)*(ny[m]+2)*(nz[m]+2)))), 0:nx[m] + 1, 0:ny[m] + 1, 0:nz[m] + 1)
+               local p_r = OffsetArrays.reshape(view(p, loco[m]:(loco[m]-1+((nx[m]+2)*(ny[m]+2)*(nz[m]+2)))), 0:nx[m]+1, 0:ny[m]+1, 0:nz[m]+1)
                local rhs_r = reshape(view(rhs, loci[m]:(loci[m]-1+(nx[m]*ny[m]*nz[m]))), nx[m], ny[m], nz[m])
                local res_r = reshape(view(res, 1:(nx[m]*ny[m]*nz[m])), nx[m], ny[m], nz[m])
-               local rhs_rp1 = reshape(view(rhs, loci[m+1]:(loci[m+1]-1+(div(nx[m],2)*div(ny[m],2)*div(nz[m],2)))), div(nx[m],2), div(ny[m],2), div(nz[m],2))
+               local rhs_rp1 = reshape(view(rhs, loci[m+1]:(loci[m+1]-1+(div(nx[m], 2)*div(ny[m], 2)*div(nz[m], 2)))), div(nx[m], 2), div(ny[m], 2), div(nz[m], 2))
                for _ in 1:nu1
                     linerelax(nx[m], ny[m], nz[m], cp_r, p_r, rhs_r)
                     #@ccall "./PSOM_LIB.so".linerelax_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(cp, loccp[m])::Ptr{rc_kind}, pointer(p, loco[m])::Ptr{rc_kind}, pointer(rhs, loci[m])::Ptr{rc_kind})::Cvoid
@@ -119,7 +119,7 @@ function mgrid(p, dtime, edt, cfcdiv)
 
           for m in ngrid:-1:2
                local cp_r = reshape(view(cp, loccp[m]:(loccp[m]-1+(19*nx[m]*ny[m]*nz[m]))), 19, nx[m], ny[m], nz[m])
-               local p_r = OffsetArrays.reshape(view(p, loco[m]:(loco[m]-1+((nx[m]+2)*(ny[m]+2)*(nz[m]+2)))), 0:nx[m] + 1, 0:ny[m] + 1, 0:nz[m] + 1)
+               local p_r = OffsetArrays.reshape(view(p, loco[m]:(loco[m]-1+((nx[m]+2)*(ny[m]+2)*(nz[m]+2)))), 0:nx[m]+1, 0:ny[m]+1, 0:nz[m]+1)
                local rhs_r = reshape(view(rhs, loci[m]:(loci[m]-1+(nx[m]*ny[m]*nz[m]))), nx[m], ny[m], nz[m])
                if m == ngrid
                     sor(nx[m], ny[m], nz[m], cp_r, p_r, rhs_r)
@@ -140,17 +140,17 @@ function mgrid(p, dtime, edt, cfcdiv)
                end
           end
      end
-     
+
 
      local m = 1
      let
           local cp_r = reshape(view(cp, loccp[m]:(loccp[m]-1+(19*nx[m]*ny[m]*nz[m]))), 19, nx[m], ny[m], nz[m])
-          local p_r = OffsetArrays.reshape(view(p, loco[m]:(loco[m]-1+((nx[m]+2)*(ny[m]+2)*(nz[m]+2)))), 0:nx[m] + 1, 0:ny[m] + 1, 0:nz[m] + 1)
+          local p_r = OffsetArrays.reshape(view(p, loco[m]:(loco[m]-1+((nx[m]+2)*(ny[m]+2)*(nz[m]+2)))), 0:nx[m]+1, 0:ny[m]+1, 0:nz[m]+1)
           local p_base = reshape(view(p, 1:((NI+2)*(NJ+2)*(NK+2))), (NI + 2), (NJ + 2), (NK + 2))
           for l in 1:nu1
                linerelax(nx[m], ny[m], nz[m], cp_r, p_r, rhs_r)
                #@ccall "./PSOM_LIB.so".linerelax_(Ref(nx[m])::Ref{Int}, Ref(ny[m])::Ref{Int}, Ref(nz[m])::Ref{Int}, pointer(cp, loccp[m])::Ptr{rc_kind}, pointer(p, loco[m])::Ptr{rc_kind}, pointer(rhs, loci[m])::Ptr{rc_kind})::Cvoid
-               
+
                mgpfill(dtime, p_base)
                #@ccall "./PSOM_LIB.so".mgpfill_(Ref(dtime)::Ref{rc_kind}, pointer(p)::Ptr{rc_kind})::Cvoid
           end
@@ -161,5 +161,5 @@ function mgrid(p, dtime, edt, cfcdiv)
      end
      maxres[] = maxres[] / edt
 
-     
+
 end

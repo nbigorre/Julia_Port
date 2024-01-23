@@ -1,25 +1,32 @@
-
-using .cppdefs
-
-
 function findzall()
-  local dztop = @fortGet("dztop", rc_kind)
-  local dzbot = cppdefs.fixed_bottom_thickness ? @fortGet("dzbot", rc_kind) : 9090909090e0
-  local dnkm1 = rc_kind(NK-1)
+  #     -------------------------------------------------------           
+  #     finds the value of z (non-dim by DL) given the value of sigma.    
+  #     ht and dep are non-dim by DL.                                     
+  #     At every (i,j), the column is divided into NK equal-depth cells.  
+  #integer i,j,k 
+  #REAL(kind=rc_kind) :: sigma,dep,ht,epm1,dnkm1,epm1inv,hpd, dnkm1inv,xfac                                                
+
+  #---------------------------
+
+  # around NK...
+  local dnkm1 = rc_kind(NK - 1)
   local dnkm1inv = 1e0 / dnkm1
-  
+
   # stretching of the vertical grid
   #    pfac is the stretching in z. higher pfac gives more points near surf.
-  local pfac = 2e0
-  
+  local pfac = 2.0e0
+  @fortSet("pfac", pfac, rc_kind)
   local epm1 = exp(pfac) - 1e0
-  local epm1inv = 1e0 / epm1
-  
+  local epm1inv = 1e0 / (exp(pfac) - 1e0)
+
   for j in 0:NJ+1
     for i in 0:NI+1
-      local hpd = h[i, j] * @fortGet("hdl",rc_kind) + @fortGet("dztop", rc_kind)
+
+      #  In the surface layer                                              
+
+      local hpd = h[i, j] * HDL + @fortGet("dztop", rc_kind)
       for k in NK:NK+1
-        local sigma = rc_kind(k) - 0.5e0
+        local sigma = rc_kind(k) - 0.5
         zc[i, j, k] = (sigma - dnkm1) * hpd - @fortGet("dztop", rc_kind)
       end
       for k in NK-1:NK+1
@@ -28,56 +35,64 @@ function findzall()
       end
     end
   end
-  
-  
+
+
   @static if (cppdefs.fixed_bottom_thickness)
-    dnkm1 = rc_kind(NK - 2)
+
+    dnkm1 = rc_kind(NK - 1 - 1)
     dnkm1inv = 1e0 / dnkm1
   end
-  
+
+
   for j in 0:NJ+1
     for i in 0:NI+1
+
+      #  Below the surface layer                                           
+
       for k in 0:NK-1
+        local sigma = rc_kind(k) - 0.5
         @static if (cppdefs.fixed_bottom_thickness)
-          local sigma = rc_kind(k-1) - 0.5e0
-        else
-          local sigma = rc_kind(k) - 0.5e0
+          sigma = rc_kind(k - 1) - 0.5
         end
         local xfac = (dnkm1 - sigma) * dnkm1inv
-        
+
         @static if (cppdefs.fixed_bottom_thickness)
-          zc[i, j, k] = (exp(pfac*xfac) - 1e0) * epm1inv * (D[i,j] + dzbot + dztop) - dztop
+          zc[i, j, k] = (exp(pfac * xfac) - 1e0) * epm1inv * (D[i, j] + @fortGet("dzbot", rc_kind) + @fortGet("dztop", rc_kind)) - @fortGet("dztop", rc_kind)
         else
-          zc[i, j, k] = (exp(pfac*xfac) - 1e0) * epm1inv * (D[i,j] + dztop) - dztop
+          zc[i, j, k] = (exp(pfac * xfac) - 1e0) * epm1inv * (D[i, j] + @fortGet("dztop", rc_kind)) - @fortGet("dztop", rc_kind)
         end
 
       end
       for k in -1:NK-2
+        local sigma = rc_kind(k)
         @static if (cppdefs.fixed_bottom_thickness)
-          local sigma = rc_kind(k-1)
-        else
-          local sigma = rc_kind(k)
+          sigma = rc_kind(k - 1)
         end
         local xfac = (dnkm1 - sigma) * dnkm1inv
+
         @static if (cppdefs.fixed_bottom_thickness)
-          zf[i, j, k] = (exp(pfac*xfac) - 1e0) * epm1inv * (D[i,j] + dzbot + dztop) - dztop
+          zf[i, j, k] = (exp(pfac * xfac) - 1e0) * epm1inv * (D[i, j] + @fortGet("dzbot", rc_kind) + @fortGet("dztop", rc_kind)) - @fortGet("dztop", rc_kind)
         else
-          zf[i, j, k] = (exp(pfac*xfac) - 1e0) * epm1inv * (D[i,j] + dztop) - dztop
+          zf[i, j, k] = (exp(pfac * xfac) - 1e0) * epm1inv * (D[i, j] + @fortGet("dztop", rc_kind)) - @fortGet("dztop", rc_kind)
+
         end
       end
-      
+
       @static if (cppdefs.fixed_bottom_thickness)
+
+        #     For the bottom boundary layer
+        #     -------------------------------
         for k in 0:1
-          local sigma = rc_kind(k) - 0.5e0
-          zc[i, j, k] = ((sigma - 0e0) / 1e0) * dzbot + D[i, j]
+          local sigma = rc_kind(k) - 0.5
+          zc[i, j, k] = ((sigma - 0e0) / rc_kind(1)) * @fortGet("dzbot", rc_kind) + D[i, j]
         end
         for k in -1:1
           local sigma = rc_kind(k)
-          zf[i, j, k] = ((sigma - 0e0) / 1e0) * dzbot + D[i, j]
+          zf[i, j, k] = ((sigma - 0e0) / rc_kind(1)) * @fortGet("dzbot", rc_kind) + D[i, j]
         end
       end
-      
     end
   end
+
 
 end

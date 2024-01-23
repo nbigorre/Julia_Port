@@ -1,4 +1,3 @@
-using .header
 using .fortVar
 
 function cfdiv(maxdiv::Ref{rc_kind})

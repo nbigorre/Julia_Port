@@ -1,4 +1,3 @@
-using .header
 using .fortVar
 using .cppdefs
 
@@ -17,21 +16,25 @@ function mixing_vertical_worker(area, fac, var, vardif)
 
         local dfactor = fac * Jac[i, j, 1] * wz[i, j, 1]
         @static if (cppdefs.implicit)
-            #########################################################################################################
+            mat_B[i,j,k,selvar] = (-1e0)*dfactor*(Kz[i,j,k]*wz[i,j,k] ) 
+            mat_C[i,j,k,selvar] = dfactor*Kz[i,j,k]*wz[i,j,k]
         else
             vardif[i, j, 1] = dfactor * (dvardzfc[1] * Kz[i, j, 1] - dvardzfc[0] * Kz[i, j, 0])
         end
         for k in 2:NK-1
             local dfactor = fac * Jac[i, j, k] * wz[i, j, k]
             @static if (cppdefs.implicit)
-                #########################################################################################################
+                mat_A[i,j,k,selvar] = dfactor*kz[i,j,k-1]*wz[i,j,k-1]
+	            mat_B[i,j,k,selvar] = (-1e0)*dfactor*( Kz[i,j,k]*wz[i,j,k] + Kz[i,j,k-1]*wz[i,j,k-1] )
+	            mat_C[i,j,k,selvar] = dfactor*Kz[i,j,k]*wz[i,j,k]
             else
                 vardif[i, j, k] = dfactor * (dvardzfc[k] * Kz[i, j, k] - dvardzfc[k-1] * Kz[i, j, k-1])
             end
         end
         local dfactor = fac * Jac[i, j, NK] * wz[i, j, NK]
         @static if (cppdefs.implicit)
-            #########################################################################################################
+            mat_A[i,j,k,selvar] = dfactor*Kz[i,j,k-1]*wz[i,j,k-1]
+            mat_B[i,j,k,selvar] = (-1e0)*dfactor*Kz[i,j,k-1]*wz[i,j,k-1]   
         else
             vardif[i, j, NK] = dfactor * (dvardzfc[NK] * Kz[i, j, NK] - dvardzfc[NK-1] * Kz[i, j, NK-1])
         end
@@ -46,7 +49,19 @@ function mixing_vertical(var, vardif, m, step, iv_compute_kzl)
     local fac = 1e0 / (@fortGet("ul", rc_kind) * DL * @fortGet("delta", rc_kind))
     local fact = DL / @fortGet("ul", rc_kind)
     @static if (cppdefs.gotm_call)
-        ###################################################################################################################################
+        for j in 1:NJ
+            for i in 1:NI
+                if ivb == 1
+                    @ccall "./PSOM_LIB.so".shearn2_(Ref(i)::Ref{Int}, Ref(j)::Ref{int})::Cvoid
+                end
+                @ccall "./PSOM_LIB.so".couple_gotm_(Ref(i)::Ref{Int}, Ref(j)::Ref{int})::Cvoid
+                if (selvar == 1 || selvar == 2)
+                    Kz[i, j, 1:NK] = KzTr[i, j, 1:NK]
+                elseif (selvar == 3 || selvar == 4 || selvar==5)
+                    Kz[i,j,1:NK] = KzMom[i,j,1:NK]
+                end
+            end
+        end
     else
         if (iv_compute_kzl == 1)
             for j in 1:NJ
