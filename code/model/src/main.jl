@@ -32,10 +32,6 @@ function main()
         set_coef()
     end
 
-    @static if (cppdefs.allow_particle)
-        # ALLOCATE ARRAY
-    end
-
     ini_setup(pcorr)
     #@ccall "./PSOM_LIB.so".ini_setup_(pointer(pcorr)::Ptr{rc_kind})::Cvoid
 
@@ -84,7 +80,7 @@ function main()
 
     diag_n2()
     #@ccall "./PSOM_LIB.so".diag_n2_()::Cvoid
-    
+
     diag_n2budget(step)
     #@ccall "./PSOM_LIB.so".diag_n2budget_(Ref(step)::Ptr{Int})::Cvoid
 
@@ -92,7 +88,7 @@ function main()
 
     setbc(step)
     #@ccall "./PSOM_LIB.so".setbc_(Ref(step)::Ptr{Int})::Cvoid
-    
+
     correctbc()
     #@ccall "./PSOM_LIB.so".correctbc_()::Cvoid
 
@@ -106,7 +102,7 @@ function main()
         initial_step = 0
         println("No Pickup")
     else
-        if (! lv_test_output_bin)
+        if (!lv_test_output_bin)
             error("Error: A pickup is required but the binary I/O is not activated")
             exit(1)
         else
@@ -123,6 +119,7 @@ function main()
             #@ccall "./PSOM_LIB.so".write_cdf_(Ref(step)::Ptr{Int}, Ref(0)::Ptr{Int})::Cvoid
         end
         @static if (cppdefs.file_output_bin)
+            write_bin(step)
             #@ccall "./PSOM_LIB.so".write_bin_(Ref(step)::Ptr{Int})::Cvoid
         end
     end
@@ -146,7 +143,19 @@ function main()
 
         #preproc allow_particle
         @static if (cppdefs.allow_particle)
-            #                       IMPLEM JULIA
+            if (step == ini_particle_time)
+                println("INITIALIZATION OF PARTICLES ", NPR)
+                particles.ini_particles(step) #get the particle velocity for the first step
+                particles.get_parti_vel(step)
+                for i in 1:NP
+                    parti[i].i = parti[i].i + dtf * parti[i].u
+                    parti[i].j = parti[i].j + dtf * parti[i].v
+                    parti[i].k = parti[i].k + dtf * parti[i].w
+                    parti[i].u0 = parti[i].u
+                    parti[i].v0 = parti[i].v
+                    parti[i].w0 = parti[i].w
+                end
+            end
         end
 
         diag_n2()
@@ -167,7 +176,14 @@ function main()
         #@ccall "./PSOM_LIB.so".meanh_(Ref(NI)::Ptr{Int}, Ref(NJ)::Ptr{Int}, @lkGet("h", rc_kind)::Ptr{rc_kind}, @lkGet("hmean", rc_kind)::Ptr{rc_kind})::Cvoid
 
         @static if (cppdefs.allow_particle)
-            #                       IMPLEM JULIA
+            if (step > ini_particle_time - 1)
+                then
+                get_parti_vel(step)
+                parti_forward()
+                if (mod(step, parti_outfreq) == 0)
+                    save_parti(step)
+                end
+            end
         end
 
         @static if (cppdefs.file_output)
@@ -176,6 +192,7 @@ function main()
                 #@ccall "./PSOM_LIB.so".write_cdf_(Ref(step)::Ptr{Int}, Ref(0)::Ptr{Int})::Cvoid
             end
             @static if (cppdefs.file_output_bin)
+                write_bin(step)
                 #@ccall "./PSOM_LIB.so".write_bin_(Ref(step)::Ptr{Int})::Cvoid
             end
         end

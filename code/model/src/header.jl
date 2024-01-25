@@ -275,6 +275,9 @@ end
 @static if (cppdefs.allow_particle)
     global parti_file_num::Int = 0
     global NPR::Int = 0
+    global ini_particle_time::Int = 0
+    global parti_outfreq::Int = 0
+
 end
 
 

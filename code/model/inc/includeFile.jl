@@ -99,6 +99,7 @@ if (!@isdefined(INCLUDE_All))
     include("../src/diag_energy.jl")
     include("../src/diag_n2budget.jl")
     include("../src/diag_vort.jl")
+    include("../src/sigma2z.jl")
     
     
     

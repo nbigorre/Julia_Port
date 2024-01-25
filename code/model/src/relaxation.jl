@@ -3,12 +3,14 @@ module relaxation
     using ..fortVar
 
 
-    local r_T = zeros(rc_kind, (NJ+2, NK+2))
-    local varbar = zeros(rc_kind, (NJ+2, NK+2))
+    local r_T = OffsetArrays.zeros(rc_kind, 0:NJ+1, 0:NK+1)
+    local varbar = OffsetArrays.zeros(rc_kind, 0:NJ+1, 0:NK+1)
 
     function set_coef()
         local gamma_T = 1e0 / (5e0 * 86400e0 * UL / LEN)
-        r_T .= gamma_T * r_sponge
+        for k in 0:NK+1
+            @views r_T[:, k] .= gamma_T .* r_sponge
+        end
     end
 
     function sponge(n, dtime)
@@ -21,7 +23,7 @@ module relaxation
         for i in 0:NI+1
             for j in 0:NJ+1
                 for k in 0:NK+1
-                    T[i, j, k, n] -= dtime * r_T[j+1, k+1] * (T[i, j, k, n] - T_ref[i, j, k])
+                    T[i, j, k, n] -= dtime * r_T[j, k] * (T[i, j, k, n] - T_ref[i, j, k])
                 end
             end
         end
