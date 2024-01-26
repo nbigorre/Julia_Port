@@ -23,15 +23,6 @@ function heat_flux(Tdif, step)
     @views @. swr = 0e0
     @views @. qloss = 0e0
 
-    # Add sinusoidal heat flux
-    local swrtemp::rc_kind = 0e0 * sin((2e0 * 3.14159e0 / (24 * 3600)) * step * dtf * 1e05)
-    swrtemp = max(0e0, swrtemp)
-
-    for j in 1:NJ
-        swr[j] = 900e0 * sin(rc_kind(j - 1) / rc_kind(NJ - 1) * PI / 2)
-    end
-    @views @. qloss = 0e0 / 3.14159
-
 
     local fac = 1e0 / (UL * DL * delta)
     for j in 1:NJ

@@ -1,0 +1,42 @@
+PARAM:
+  nsteps: 4800
+  dtime_dim: 60e0
+  fnhhy: 1e0
+  fplane: 0
+  phi0deg: 35
+  dx: 1.2e3
+  dy: 1.2e3
+  dztop_dim: 3
+  lv_flat_bottom: true
+  total_depth: 450e0
+  use_Shchepetkin: false
+  Kx: 5e0
+  Ky: 5e0
+  RR: 0e0
+  out1d_int: 200000
+  out2d_int: 2
+  out3d_int: 1000
+  dirout: "../../../output/"
+  pickup_int: 600
+  pickup_step: -999
+
+
+TRAJ:
+  npr: 3000
+  ini_particle_time: 1
+  parti_file_num: 30
+  parti_outfreq: 50
+  pcx: 0.5
+  pcy: 0.5
+  pcz: 0.8
+  pcr: 0.4
+
+USER:
+  user1: 0e0
+  user2: 0e0
+  user3: 0e0
+  user4: 0e0
+  user5: 0e0
+  user6: 0e0
+  user7: 0e0
+  user8: 0e0

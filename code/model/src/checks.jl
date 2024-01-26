@@ -48,7 +48,7 @@ function checks()
 
       local r1 = nsteps * dtf * TL / 3600e0
       if (r1 > 24)
-         local n1 = Int(r1 / 24e0)
+         local n1 = div(r1,24e0)
          r1 = r1 - n1 * 24e0
          println("# ", dtime_dim, " sec  x      ", nsteps, "           = ", n1, " days and ", r1, " h")
       else
