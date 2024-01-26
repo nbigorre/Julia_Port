@@ -33,3 +33,8 @@ CASE 3: You want to change the grid size.
 
   step 2: Compile and run.
 
+CASE 4: You want to change the julia arguments.
+
+  4.a: Pass additional arguments to the julia_launch script (ex: ./julia_launch.sh nh namelist --check-bounds=no)
+
+  4.b: Edit the julia_lauch script to add arguments in the julia_options variable.
