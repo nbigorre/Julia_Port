@@ -23,7 +23,7 @@ Once you have done that, you simply follow the "compile, run" sequence:
 
 * step 4: Run.
 
-    ./exe/julia_launch nh ./namelist.yml
+    ./exe/julia_launch.sh nh ./namelist.yml
 
 
 +****************************************************************************************************************************************************

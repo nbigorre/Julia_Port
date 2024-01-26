@@ -34,16 +34,16 @@ function write_bin(step)
 # PICKUP
 
 #Reading pickup files, only once, when step is equal to pickup_step
-if (pickup_step>-0.5)
-  if (step==pickup_step)
-    r_pickup(string(dirout,"/op.pickup.",lpad(step, 10, "0"),".bin"))
-  end
-end
+#if (pickup_step>-0.5)
+#  if (step==pickup_step)
+#    r_pickup(string(dirout,"/op.pickup.",lpad(step, 10, "0"),".cdf"))
+#  end
+#end
 
 
 # Writing pickup files at some frequency
 if (mod(step,pickup_int) == 0) 
-  w_pickup(string(dirout,"/op.pickup.",lpad(step, 10, "0"),".bin"))
+  w_pickup(string(dirout,"/op.pickup.",lpad(step, 10, "0"),".cdf"))
 end
 
 end

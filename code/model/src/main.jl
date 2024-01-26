@@ -109,6 +109,8 @@ function main()
             println("The simulation will start from step ", pickup_step)
             initial_step = pickup_step
             step = initial_step
+            r_pickup(string(dirout,"/op.pickup.",lpad(step, 10, "0"),".cdf"))
+
         end
 
     end
