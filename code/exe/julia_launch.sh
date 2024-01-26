@@ -19,7 +19,7 @@ echo "$namelist"
 #number of thread julia may use (may be set to auto)
 threads=16
 
-julia_options="-t$threads $3"
+julia_options="-t$threads ${@:3}"
 
 
 julia $julia_options -- src/main.jl "$namelist" "./PSOM_LIB.so"
