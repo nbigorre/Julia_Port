@@ -22,59 +22,64 @@ You will have to follow this procedure:
     |
     + Create a directory that will contain the source files specific to this experiment. Ex: you want to create and experiment with the name "Z". First, create a directory code/expe_Z , in which you will create two subdirectories /inc and /src . To do that, in code/, you can run 
     |           ****************************
-    |           * cp -r expe_template expe_Z 
+    |           * mkdir expe_Z
+    |           * mkdir expe_Z/src
+    |           * mkdir expe_Z/inc
     |           ****************************
-    |    (expe_template is a template directory of an "experiment directory").
     |
     |
     |      
     +->   * For every routine that will be specific to this experiment, 
              |     
              |     
-             + Create new subroutines. Ex: if you want to change the initial conditions, copy code/model/src/ini_st.f90 to code/expe_Z/src/ . 
+             + Create a new function . Ex: if you want to change the initial conditions, copy code/model/src/ini_st.jl to code/expe_Z/src/ . 
              |         ****************************
-             |         * cp model/src/routine_I_want_to_change.f90 expe_Z/src/
+             |         * cp model/src/routine_I_want_to_change.jl expe_Z/src/
              |         ****************************
              | 
-             + Alter the subroutines. Ex: modify code/expe_Z/src/ini_st.f90 to your convenience.
+             + If the created file does not exist in the original model folder add it to includeFile.jl
              |         ****************************
-             |         * edit (vi, textedit,...) expe_Z/src/routine_I_want_to_change.f90
+             |         * cp model/inc/includeFile.jl expe_Z/inc/
+             |         * edit expe_Z/inc/includeFile.jl
+             |         * add | include("../src/name_of_file.jl")
+             |         ****************************
+             | 
+             + Alter the subroutines. Ex: modify code/expe_Z/src/ini_st.jl to your convenience.
+             |         ****************************
+             |         * edit (vi, textedit,...) expe_Z/src/routine_I_want_to_change.jl
              |         ****************************
              |
     |     <- +
     |   
     |      
-    | The files in ./expe_Z will overtake those from ./model. The next step details how to create the executable exe/nh_expe_Z, based on a combination of old and new .f90 files.   
+    | The files in ./expe_Z will overtake those from ./model. The next step details how to create the executable exe/nh_expe_Z, based on a combination of old and new .jl files.   
     | 
     + In order to compile, you simply have to run
     |         
     |    ****************************
-    |    * sh tools/compile.sh expe_Z
+    |    * sh tools/compile_julia.sh expe_Z
     |    ****************************
     |   
-    |    This step includes a superseding procedure that will take into account the new version of ini_st.f90 (in code/expe_Z/src/) and 
-    |     discard the standard version of ini_st.f90 (in code/model/src).
-    |    More precisely, it will create the makefile based on this new state of the model (in ./mkfile), compile and create the executable code/exe/nh_expe_Z.
+    |    This step includes a superseding procedure that will take into account the new version of ini_st.jl (in code/expe_Z/src/) and 
+    |     discard the standard version of ini_st.jl (in code/model/src).
     | 
-    |    More details on compile.sh may be found by running " sh tools/compile.sh -help "
-    |  
     | 
-    + Once you have a customized working version of the model, copy namelist to expe_Z/src/namelist_expe_Z (for instance) 
+    + Once you have a customized working version of the model, copy namelist to expe_Z/src/namelist_expe_Z.yml (for instance) 
     |
     |     ****************************
-    |     * cp namelist expe_Z/src/namelist_expe_Z
+    |     * cp namelist.yml expe_Z/src/namelist_expe_Z.yml
     |     ****************************
     |
     + To change variables of the model (time step, diffusion coefficients) or the output directory, edit the namelist file. Note that the directory you choose must exist.
     |
     |     ****************************
-    |     * edit (vi, textedit, ...) expe_Z/src/namelist_expe_Z
+    |     * edit (vi, textedit, ...) expe_Z/src/namelist_expe_Z.yml
     |     ****************************
     |
     + Finally, to run the model, then simply do
     |
     |     ****************************
-    |     * ./exe/nh_expe_Z < ./expe_Z/src/namelist_expe_Z
+    |     * ./exe/julia_lauch.sh nh_expe_Z expe_Z/src/namelist_expe_Z.jl
     |     ****************************
     |
 | <-+   
@@ -83,7 +88,7 @@ You will have to follow this procedure:
 
 
   Some comments:
-   - This procedure enables to simultaneously work on several configurations of the model. You can have as many code/expe_* you want, and using compile.sh, you can create as many nh_expe_* you need.
+   - This procedure enables to simultaneously work on several configurations of the model. You can have as many code/expe_* you want, and using compile_julia.sh, you can create as many nh_expe_* you need.
    - You can develop a part of the model without losing track of the standard version which is still in code/model. If a new version of the model is released, you can update your working core of the model by simply copying ./code/model directory. Minor changes will likely be needed to adapt your versions of the model to the new version.
    - If you want to share a model setting with a collaborator, you simply have to copy expe_Z, that only contains the files that are specific to your simulation. He should be able to compile and run seamlessly. 
 
